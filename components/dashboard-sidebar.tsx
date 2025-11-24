@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { NavMainAdmins } from '@/components/nav-main-admins';
 import { LayoutGrid, LucideIcon, UserRoundCog, UserRoundPlus, UsersRound } from 'lucide-react';
 import { NavMainUsers } from '@/components/nav-main-users';
+import { NavUser } from './nav-user';
 
 type NavItem = {
     title: string;
@@ -14,9 +15,17 @@ type NavItem = {
     isActive?: boolean;
 }
 
-export default function DashboardSidebar({
-    ...props
-}: React.ComponentProps<typeof Sidebar>) {
+type UserProps = {
+    name: string;
+    email: string;
+    avatar?: string;
+};
+
+type DashboardSidebarProps = React.ComponentProps<typeof Sidebar> & {
+    user: UserProps;
+};
+
+export default function DashboardSidebar({ user, ...props }: DashboardSidebarProps) {
     const adminNavItems: NavItem[] = [
         { title: 'Admins', href: '/dashboard/admins', icon: UserRoundCog },
         { title: 'Users', href: '/dashboard/admins/users', icon: UsersRound },
@@ -42,7 +51,9 @@ export default function DashboardSidebar({
                 <NavMainAdmins items={adminNavItems} />
                 <NavMainUsers items={userNavItems} />
             </SidebarContent>
-            <SidebarFooter />
+            <SidebarFooter>
+                <NavUser user={user} />
+            </SidebarFooter>
             <SidebarRail />
         </Sidebar>
     );

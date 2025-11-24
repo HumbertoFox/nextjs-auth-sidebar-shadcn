@@ -1,6 +1,11 @@
 import DashboardSidebar from '@/components/dashboard-sidebar';
 import { SidebarInset, SidebarProvider, } from '@/components/ui/sidebar';
 
+const user = {
+    name: "shadcn Ui",
+    email: "shadcn.ui@example.com",
+};
+
 export default function DashboardLayout({
     children
 }: Readonly<{
@@ -8,7 +13,7 @@ export default function DashboardLayout({
 }>) {
     return (
         <SidebarProvider>
-            <DashboardSidebar />
+            <DashboardSidebar user={user} />
             <SidebarInset>
                 {children}
             </SidebarInset>
