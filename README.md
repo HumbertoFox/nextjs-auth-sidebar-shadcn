@@ -735,3 +735,382 @@ Adicionando usruário Fixo para exemplo sem passar Avatar
 
 ```
 
+```tsx
+    // app/dashboard/settings/layout.tsx
+
+    import Heading from '@/components/heading';
+    import SettingsLayoutComponents from '@/components/settings-layout';
+    import { Separator } from '@/components/ui/separator';
+    import { type PropsWithChildren } from 'react';
+
+    export default function SettingsLayout({ children }: PropsWithChildren) {
+        return (
+            <>
+                <Heading
+                    title="Configurações"
+                    description="Gerencie seu perfil e as configurações da conta"
+                />
+
+                <div className="flex flex-col space-y-8 lg:flex-row lg:space-y-0 lg:space-x-12 px-4">
+                    <SettingsLayoutComponents />
+
+                    <Separator className="my-6 md:hidden" />
+
+                    <div className="flex-1 md:max-w-2xl">
+                        <section className="max-w-xl space-y-12">{children}</section>
+                    </div>
+                </div>
+            </>
+        );
+    }
+
+```
+
+```tsx
+    // components/settings-layout.tsx
+
+    'use client';
+
+    import { usePathname } from 'next/navigation';
+    import { Button } from '@/components/ui/button';
+    import Link from 'next/link';
+    import { cn } from '@/lib/utils';
+
+    type NavItem = {
+        text: string;
+        href: string;
+    }
+
+    export default function SettingsLayoutComponents() {
+        const currentPath = usePathname();
+        const sidebarNavItems: NavItem[] = [
+            { text: 'settings', href: '/dashboard/settings', },
+            { text: 'Profile', href: '/dashboard/settings/profile', },
+            { text: 'Password', href: '/dashboard/settings/password', },
+            { text: 'Appearance', href: '/dashboard/settings/appearance', },
+        ];
+        return (
+            <aside className="w-full max-w-xl lg:w-48">
+                <nav className="flex flex-col space-y-1 space-x-0">
+                    {sidebarNavItems.map((item, index) => (
+                        <Button
+                            key={`${item.href}-${index}`}
+                            size="sm"
+                            variant="ghost"
+                            asChild
+                            className={cn('w-full justify-start', {
+                                'bg-muted': currentPath === item.href,
+                            })}
+                        >
+                            <Link href={item.href} prefetch>
+                                {item.text}
+                            </Link>
+                        </Button>
+                    ))}
+                </nav>
+            </aside>
+        );
+    }
+
+```
+
+```tsx
+    // components/heading.tsx
+
+    'use client';
+
+    import { DashboardSidebarHeader } from '@/components/dashboard-sidebar-header';
+    import { usePathname } from 'next/navigation';
+
+    type HeadingProps = {
+        title: string;
+        description?: string;
+    }
+
+    type BreadcrumbItemType = {
+        text: string;
+        href?: string;
+    }
+
+    export default function Heading({ title, description }: HeadingProps) {
+        const currentPath = usePathname();
+        const breadcrumbMap: Record<string, BreadcrumbItemType[]> = {
+            '/dashboard/settings': [
+                { text: 'Dashboard', href: '/dashboard' },
+                { text: 'Settings' },
+            ],
+            '/dashboard/settings/profile': [
+                { text: 'Dashboard', href: '/dashboard' },
+                { text: 'Settings', href: '/dashboard/settings' },
+                { text: 'Profile' },
+            ],
+            '/dashboard/settings/password': [
+                { text: 'Dashboard', href: '/dashboard' },
+                { text: 'Settings', href: '/dashboard/settings' },
+                { text: 'Password' },
+            ],
+            '/dashboard/settings/appearance': [
+                { text: 'Dashboard', href: '/dashboard' },
+                { text: 'Settings', href: '/dashboard/settings' },
+                { text: 'Appearance' },
+            ],
+        };
+        const breadcrumbItems = breadcrumbMap[currentPath] || [];
+
+        return (
+            <>
+                <DashboardSidebarHeader items={breadcrumbItems} />
+                <div className="mb-8 my-1 px-4 space-y-0.5">
+                    <h2 className="text-xl font-semibold tracking-tight">{title}</h2>
+                    {description && <p className="text-muted-foreground text-sm">{description}</p>}
+                </div>
+            </>
+        );
+    }
+
+```
+
+## 📦 Configuração do Banco de Dados (PostgreSQL)
+
+Este endpoint realiza automaticamente a configuração inicial do banco de dados, criando tipos, tabelas, funções e triggers necessários para o sistema de autenticação e gerenciamento de usuários.
+
+Abaixo estão descritas todas as queries, com explicações detalhadas.
+
+### 🧩 1. Criação do ENUM user_role
+
+```sql
+
+    DO $$
+    BEGIN
+        IF NOT EXISTS (
+            SELECT 1 FROM pg_type WHERE typname = 'user_role'
+        ) THEN
+            CREATE TYPE user_role AS ENUM ('ADMIN', 'USER');
+        END IF;
+    END$$;
+
+```
+
+### 🔍 Explicação
+
+Cria um tipo ENUM chamado user_role, utilizado para representar o papel do usuário dentro do sistema.
+
+Valores possíveis:
+
+- ADMIN
+
+- USER
+
+O bloco IF NOT EXISTS garante que o tipo não seja recriado caso já exista no banco.
+
+### 👤 2. Criação da tabela users
+
+```sql
+
+    CREATE TABLE IF NOT EXISTS users (
+        id TEXT PRIMARY KEY,
+        name TEXT NOT NULL,
+        email TEXT UNIQUE NOT NULL,
+        password TEXT NOT NULL,
+        role user_role NOT NULL DEFAULT 'USER',
+        email_verified TIMESTAMP NULL,
+        avatar TEXT NULL,
+        deleted_at TIMESTAMP NULL,
+        created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+        updated_at TIMESTAMP NOT NULL DEFAULT NOW()
+    );
+
+```
+
+### 🔍 Explicação
+
+Cria a tabela principal de usuários com os seguintes campos:
+
+| Campo            | Tipo        | Descrição                    |
+| ---------------- | ----------- | ---------------------------- |
+| `id`             | TEXT        | ID único do usuário          |
+| `name`           | TEXT        | Nome completo                |
+| `email`          | TEXT UNIQUE | Email único                  |
+| `password`       | TEXT        | Hash da senha                |
+| `role`           | user_role   | Enum com `ADMIN` ou `USER`   |
+| `email_verified` | TIMESTAMP   | Data de verificação do email |
+| `avatar`         | TEXT        | URL da imagem de perfil      |
+| `deleted_at`     | TIMESTAMP   | Soft delete                  |
+| `created_at`     | TIMESTAMP   | Data de criação              |
+| `updated_at`     | TIMESTAMP   | Última atualização           |
+
+
+IF NOT EXISTS impede erros caso a tabela já exista.
+
+### 🔄 3. Função para atualizar updated_at
+
+```sql
+
+    CREATE OR REPLACE FUNCTION update_updated_at()
+    RETURNS TRIGGER AS $$
+    BEGIN
+        NEW.updated_at = NOW();
+        RETURN NEW;
+    END;
+    $$ LANGUAGE plpgsql;
+
+```
+
+### 🔍 Explicação
+
+Cria uma função Trigger que:
+
+Atualiza automaticamente o campo updated_at
+
+É executada sempre que um registro da tabela users for atualizado
+
+Isso mantém o controle automático de timestamps sem depender da aplicação.
+
+### ⏱ 4. Trigger para atualizar updated_at automaticamente
+
+```sql
+
+    DO $$
+    BEGIN
+        IF NOT EXISTS (
+            SELECT 1
+            FROM pg_trigger
+            WHERE tgname = 'trigger_update_users_updated_at'
+        ) THEN
+            CREATE TRIGGER trigger_update_users_updated_at
+            BEFORE UPDATE ON users
+            FOR EACH ROW
+            EXECUTE FUNCTION update_updated_at();
+        END IF;
+    END$$;
+
+```
+
+### 🔍 Explicação
+
+Cria o trigger trigger_update_users_updated_at, que executa:
+
+Antes de qualquer UPDATE
+
+Na tabela users
+
+Chamando a função update_updated_at()
+
+Assim, updated_at é sempre atualizado automaticamente — sem necessidade de alterar manualmente na aplicação.
+
+### 🔐 5. Criação da tabela verification_tokens
+
+```sql
+
+    CREATE TABLE IF NOT EXISTS verification_tokens (
+        identifier TEXT NOT NULL,
+        token TEXT NOT NULL,
+        expires_at TIMESTAMP NOT NULL,
+        PRIMARY KEY (identifier, token)
+    );
+
+```
+
+### 🔍 Explicação
+
+Essa tabela armazena tokens de verificação, utilizados para:
+
+- Verificação de email
+
+- Reset de senha
+
+- Fluxos temporários de autenticação
+
+A chave primária é composta por (identifier, token), permitindo:
+
+- Unicidade por par identificador + token
+
+- A mesma pessoa pode ter múltiplos tokens válidos simultaneamente
+
+### ✅ Resultado Final
+
+Após a execução de todas as queries acima:
+
+- ✔ Tipo ENUM user_role criado (ADMIN / USER)
+- ✔ Tabela users pronta com controle automático de timestamps
+- ✔ Trigger configurado para atualizar updated_at
+- ✔ Tabela verification_tokens criada
+- ✔ Banco preparado para autenticação, roles e tokens
+
+## 🗺️ Diagrama Completo do Banco de Dados
+
+```mermaid
+
+erDiagram
+
+    %% ===========================
+    %%       ENUMS
+    %% ===========================
+    USER_ROLE {
+        ENUM ADMIN 🛠️
+        ENUM USER 👤
+    }
+
+    %% ===========================
+    %%       TABELAS
+    %% ===========================
+    USERS {
+        TEXT id PK 📛
+        TEXT name 🧍
+        TEXT email UNIQUE ✉️
+        TEXT password 🔑
+        user_role role 🧩
+        TIMESTAMP email_verified ✅
+        TEXT avatar 🖼️
+        TIMESTAMP deleted_at 🗑️
+        TIMESTAMP created_at 🕒
+        TIMESTAMP updated_at 🔄
+    }
+
+    VERIFICATION_TOKENS {
+        TEXT identifier PK 🆔
+        TEXT token PK 🔐
+        TIMESTAMP expires_at ⏳
+    }
+
+    %% ===========================
+    %%    RELACIONAMENTOS
+    %% ===========================
+    USERS ||--o{ VERIFICATION_TOKENS : "identifier → users.email ✉️"
+    USERS ||--|| USER_ROLE : "role → user_role 🧩"
+
+```
+
+## 🔍 O que este diagrama mostra?
+
+### 🧩 ENUMS
+
+`USER_ROLE`
+
+`ADMIN` 🛠️
+
+`USER` 👤
+
+### 👤 Tabela `USERS`
+
+- Campos básicos de usuário
+
+- Controle automático de timestamps
+
+- Soft delete (`deleted_at`)
+
+- `ENUM` `role` ligado visualmente à entidade `USER_ROLE`
+
+### 🔐 Tabela VERIFICATION_TOKENS
+
+- Tokens vinculados por `identifier → email`
+
+- PK composta (`identifier`, `token`)
+
+- Usada para verificação de email, reset de senha, MFA etc.
+
+### 🔗 Relacionamentos
+
+- USERS → VERIFICATION_TOKENS (`email → identifier`)
+
+- USERS → USER_ROLE (`role → enum`)
