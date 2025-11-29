@@ -1,12 +1,34 @@
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { useInitials } from '@/hooks/use-initials';
+
+const user = {
+    name: "shadcn Ui",
+    email: "shadcn.ui@example.com",
+    avatar: null,
+};
+
 export default function SettingsPage() {
+    const getInitials = useInitials();
     return (
-        <div className="flex flex-1 flex-col gap-4 p-4">
-            <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-                {[...Array(3)].map((_, index) => (
-                    <div key={index} className="bg-muted/50 aspect-video rounded-xl" />
-                ))}
+        <div className="flex flex-1 gap-4 p-4">
+            <div className="size-40 rounded-full overflow-hidden border border-gray-300">
+                <Avatar className="size-full overflow-hidden rounded-full">
+                    {user.avatar ? (
+                        <AvatarImage
+                            src={user.avatar}
+                            alt={user.name}
+                        />
+                    ) : (
+                        <AvatarFallback className="font-bold text-6xl bg-neutral-200 text-black dark:bg-neutral-700 dark:text-white cursor-default">
+                            {getInitials(user.name)}
+                        </AvatarFallback>
+                    )}
+                </Avatar>
             </div>
-            <div className="bg-muted/50 min-h-screen flex-1 rounded-xl md:min-h-min" />
+            <div className=" flex flex-col justify-center gap-2 text-left leading-tight">
+                <span className="truncate font-medium text-xl">{user.name}</span>
+                <span className="text-muted-foreground truncate text-sm">{user.email}</span>
+            </div>
         </div>
     );
 }
