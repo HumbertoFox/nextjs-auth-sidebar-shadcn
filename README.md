@@ -1046,41 +1046,38 @@ erDiagram
     %% ===========================
     %%       ENUMS
     %% ===========================
-
     USER_ROLE {
-        ENUM ADMIN 🛠️
-        ENUM USER 👤
+        ENUM ADMIN
+        ENUM USER
     }
 
     %% ===========================
     %%       TABELAS
     %% ===========================
-
     USERS {
-        TEXT id PK 📛
-        TEXT name 🧍
-        TEXT email UNIQUE ✉️
-        TEXT password 🔑
-        user_role role 🧩
-        TIMESTAMP email_verified ✅
-        TEXT avatar 🖼️
-        TIMESTAMP deleted_at 🗑️
-        TIMESTAMP created_at 🕒
-        TIMESTAMP updated_at 🔄
+        TEXT id PK
+        TEXT name
+        TEXT email UNIQUE
+        TEXT password
+        user_role role
+        TIMESTAMP email_verified
+        TEXT avatar
+        TIMESTAMP deleted_at
+        TIMESTAMP created_at
+        TIMESTAMP updated_at
     }
-
+    
     VERIFICATION_TOKENS {
-        TEXT identifier PK 🆔
-        TEXT token PK 🔐
-        TIMESTAMP expires_at ⏳
+        TEXT identifier PK
+        TEXT token PK
+        TIMESTAMP expires_at
     }
 
     %% ===========================
     %%    RELACIONAMENTOS
     %% ===========================
-    
-    USERS ||--o{ VERIFICATION_TOKENS : "identifier → users.email ✉️"
-    USERS ||--|| USER_ROLE : "role → user_role 🧩"
+    USERS ||--o{ VERIFICATION_TOKENS : "identifier → users.email"
+    USERS ||--|| USER_ROLE : "role → user_role"
 
 ```
 
