@@ -1046,6 +1046,7 @@ erDiagram
     %% ===========================
     %%       ENUMS
     %% ===========================
+
     USER_ROLE {
         ENUM ADMIN 🛠️
         ENUM USER 👤
@@ -1054,6 +1055,7 @@ erDiagram
     %% ===========================
     %%       TABELAS
     %% ===========================
+
     USERS {
         TEXT id PK 📛
         TEXT name 🧍
@@ -1076,6 +1078,7 @@ erDiagram
     %% ===========================
     %%    RELACIONAMENTOS
     %% ===========================
+    
     USERS ||--o{ VERIFICATION_TOKENS : "identifier → users.email ✉️"
     USERS ||--|| USER_ROLE : "role → user_role 🧩"
 
