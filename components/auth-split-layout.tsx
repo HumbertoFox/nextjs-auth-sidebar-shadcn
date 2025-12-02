@@ -1,19 +1,21 @@
 'use client';
 
-import appInfo from '@/lib/appInfo.json';
-import AppLogoIcon from '@/components/app-logo-icon';
 import Link from 'next/link';
 import { useEffect, useRef, type PropsWithChildren } from 'react';
 import gsap from 'gsap';
+import AppLogoIconSvg from '@/components/app-logo-icon-svg';
 
 interface AuthLayoutProps {
     title?: string;
     description?: string;
 };
 
-export default function AuthSplitLayout({ children, title, description }: PropsWithChildren<AuthLayoutProps>) {
+export default function AuthSplitLayout({
+    children,
+    title,
+    description
+}: PropsWithChildren<AuthLayoutProps>) {
     const logoRef = useRef<HTMLDivElement>(null);
-    const { quote } = appInfo;
     useEffect(() => {
         if (!logoRef.current) return;
         const tl = gsap.timeline();
@@ -33,28 +35,26 @@ export default function AuthSplitLayout({ children, title, description }: PropsW
                 <div className="absolute inset-0 bg-zinc-900" />
                 <div className="flex">
                     <Link href="/" className="relative z-20 flex items-center text-lg font-medium">
-                        <AppLogoIcon className="mr-2 size-8 fill-current" />
-                        {appInfo.name}
+                        <AppLogoIconSvg className="mr-2 size-8 fill-current" />
+                        NextJs
                     </Link>
                 </div>
                 <div className="flex items-center justify-center h-full z-10">
                     <div ref={logoRef} className="opacity-0">
-                        <AppLogoIcon className="size-50 fill-white dark:bg-black rounded-full" />
+                        <AppLogoIconSvg className="size-50 fill-white dark:bg-black rounded-full" />
                     </div>
                 </div>
-                {quote && (
-                    <div className="relative z-20 mt-auto">
-                        <blockquote className="space-y-2">
-                            <p className="text-lg">&ldquo;{quote.message}&rdquo;</p>
-                            <footer className="text-sm text-neutral-300">{quote.author}</footer>
-                        </blockquote>
-                    </div>
-                )}
+                <div className="relative z-20 mt-auto">
+                    <blockquote className="space-y-2">
+                        <p className="text-lg">&ldquo;Teste&rdquo;</p>
+                        <footer className="text-sm text-neutral-300">Teste</footer>
+                    </blockquote>
+                </div>
             </div>
             <div className="w-full lg:p-8">
                 <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
                     <Link href="/" className="relative z-20 flex items-center justify-center lg:hidden">
-                        <AppLogoIcon className="h-10 fill-current text-black sm:h-12" />
+                        <AppLogoIconSvg className="h-10 fill-current text-black sm:h-12" />
                     </Link>
                     <div className="flex flex-col items-start gap-2 text-left sm:items-center sm:text-center">
                         <h1 className="text-xl font-medium">{title}</h1>

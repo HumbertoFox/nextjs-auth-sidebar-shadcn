@@ -35,11 +35,11 @@ export default function DashboardSidebar({ user, ...props }: DashboardSidebarPro
         { title: 'Dashboard', href: '/dashboard', icon: LayoutGrid, },
     ];
     return (
-        <Sidebar collapsible="offcanvas" {...props}>
+        <Sidebar collapsible="icon" variant="floating" {...props}>
             <SidebarHeader>
                 <SidebarMenu>
                     <SidebarMenuItem>
-                        <SidebarMenuButton asChild>
+                        <SidebarMenuButton size="lg" asChild>
                             <Link href="/dashboard" prefetch>
                                 <AppLogoSvg />
                             </Link>
@@ -49,6 +49,8 @@ export default function DashboardSidebar({ user, ...props }: DashboardSidebarPro
             </SidebarHeader>
             <SidebarContent>
                 <NavMainAdmins items={adminNavItems} />
+            </SidebarContent>
+            <SidebarContent>
                 <NavMainUsers items={userNavItems} />
             </SidebarContent>
             <SidebarFooter>
