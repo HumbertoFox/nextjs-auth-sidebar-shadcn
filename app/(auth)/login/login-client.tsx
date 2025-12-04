@@ -66,9 +66,9 @@ export function LoginClient() {
         <>
             <form
                 onSubmit={submit}
-                className="flex flex-col gap-6"
+                className="w-full max-w-xs flex flex-col gap-6"
             >
-                <div className="grid gap-6">
+                <div className=" grid gap-6">
                     <div className="grid gap-2">
                         <Label htmlFor="email">Endereço de email</Label>
                         <Input

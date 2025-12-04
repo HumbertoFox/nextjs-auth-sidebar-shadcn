@@ -4,11 +4,11 @@ import { type PropsWithChildren } from 'react';
 export default function SettingsLayout({ children }: PropsWithChildren) {
     return (
         <>
-            <div className="flex flex-col space-y-8 lg:flex-row lg:space-y-0 lg:space-x-12 px-4">
+            <div className="flex flex-col lg:flex-row lg:space-y-0">
                 <AuthSplitLayout />
-                <div className="flex-1 md:max-w-2xl">
-                    <section className="max-w-xl flex flex-col gap-4 p-4">{children}</section>
-                </div>
+                <section className="w-full flex justify-center items-center h-screen">
+                    {children}
+                </section>
             </div>
         </>
     );

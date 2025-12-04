@@ -1,16 +1,13 @@
 'use client';
 
 import { Eye, EyeClosed, LoaderCircle } from 'lucide-react';
-import { startTransition, useActionState, useEffect, useRef, useState } from 'react';
+import { startTransition, useActionState, useRef, useState } from 'react';
 import { InputError } from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import AuthLayout from '@/components/layouts/auth-layout';
-import { Icon } from '@/components/ui/icon';
 import { createAdmin } from '@/app/api/actions/createadmin';
-import TextLink from '@/components/text-link';
-import { useRouter } from 'next/navigation';
+import { TextLink } from '@/components/text-link';
 import { handleImageChange } from '@/lib/handleimagechange';
 import Image from 'next/image';
 
@@ -24,7 +21,6 @@ type RegisterForm = {
 
 export default function RegisterAdmin({ TitleIntl }: { TitleIntl: string }) {
     const emailRef = useRef<HTMLInputElement>(null);
-    const router = useRouter();
     const [state, action, pending] = useActionState(createAdmin, undefined);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
     const [imageFile, setImageFile] = useState<File | null>(null);
@@ -58,24 +54,14 @@ export default function RegisterAdmin({ TitleIntl }: { TitleIntl: string }) {
         if (imageFile) formData.append('file', imageFile);
         startTransition(() => action(formData));
     };
-    useEffect(() => {
-        if (state?.message) {
-            setData({
-                name: '',
-                email: '',
-                password: '',
-                password_confirmation: '',
-                avatar: undefined,
-            });
-
-            router.push('/dashboard');
-        };
-    }, [state, router]);
     return (
-        <AuthLayout
-            title={TitleIntl}
-            description="Insira seus dados abaixo para criar sua conta"
-        >
+        <>
+            <div className="flex flex-col items-center gap-2 text-center">
+                <h1 className="text-xl font-medium">{TitleIntl}</h1>
+                <p className="text-muted-foreground text-sm text-balance">
+                    Insira seus dados abaixo para criar sua conta
+                </p>
+            </div>
             <form
                 onSubmit={submit}
                 className="flex flex-col gap-6"
@@ -167,7 +153,6 @@ export default function RegisterAdmin({ TitleIntl }: { TitleIntl: string }) {
                                 type={showPassword ? "text" : "password"}
                                 required
                                 tabIndex={4}
-                                autoComplete="new-password"
                                 value={data.password}
                                 onChange={handleChange}
                                 disabled={pending}
@@ -179,7 +164,7 @@ export default function RegisterAdmin({ TitleIntl }: { TitleIntl: string }) {
                                 onClick={toggleShowPassword}
                                 className="btn-icon-toggle"
                             >
-                                {showPassword ? <Icon iconNode={Eye} /> : <Icon iconNode={EyeClosed} />}
+                                {showPassword ? <Eye /> : <EyeClosed />}
                             </button>
                         </div>
                         {state?.errors?.password?.[0] && <InputError message={state.errors.password[0]} />}
@@ -194,7 +179,6 @@ export default function RegisterAdmin({ TitleIntl }: { TitleIntl: string }) {
                                 type={showPasswordConfirm ? "text" : "password"}
                                 required
                                 tabIndex={5}
-                                autoComplete="new-password"
                                 value={data.password_confirmation}
                                 onChange={handleChange}
                                 disabled={pending}
@@ -206,7 +190,7 @@ export default function RegisterAdmin({ TitleIntl }: { TitleIntl: string }) {
                                 onClick={toggleShowPasswordConfirm}
                                 className="btn-icon-toggle"
                             >
-                                {showPasswordConfirm ? <Icon iconNode={Eye} /> : <Icon iconNode={EyeClosed} />}
+                                {showPasswordConfirm ? <Eye /> : <EyeClosed />}
                             </button>
                         </div>
                         {state?.errors?.password_confirmation?.[0] && <InputError message={state.errors.password_confirmation[0]} />}
@@ -234,6 +218,6 @@ export default function RegisterAdmin({ TitleIntl }: { TitleIntl: string }) {
 
             {state?.warning && <div className="mb-4 text-center text-sm font-medium text-orange-400">{state.warning}</div>}
             {state?.message && <div className="mb-4 text-center text-sm font-medium text-blue-400">Conta criada com Sucesso! Redirecionando para o Painel, aguarde...</div>}
-        </AuthLayout>
+        </>
     );
 }
