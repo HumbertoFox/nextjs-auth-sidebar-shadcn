@@ -15,12 +15,12 @@ export const sendPasswordResetEmail = async (to: string, resetLink: string) => {
         const result = await transporter.sendMail({
             from: `'nextjs-starter-kit' <${process.env.SMTP_USER}>`,
             to,
-            subject: 'Redefinição de senha',
+            subject: 'Password reset',
             html: `
-                <p>Você solicitou uma redefinição de senha.</p>
-                <p>Clique no link abaixo para criar uma nova senha:</p>
+                <p>You requested a password reset.</p>
+                <p>Click the link below to create a new password:</p>
                 <a href='${resetLink}'>${resetLink}</a>
-                <p>Se você não solicitou isso, ignore este e-mail.</p>
+                <p>If you did not request this, please ignore this email.</p>
             `,
         });
         return { ok: true, result };
@@ -35,12 +35,12 @@ export const sendEmailVerification = async (to: string, link: string) => {
         const result = await transporter.sendMail({
             from: `'nextjs-starter-kit' <${process.env.SMTP_USER}>`,
             to,
-            subject: 'Verifique seu e-mail',
+            subject: 'Check your email.',
             html: `
-                <h2>Confirmação por e-mail</h2>
-                <p>Clique no link abaixo para confirmar seu e-mail:</p>
+                <h2>Email confirmation</h2>
+                <p>Click the link below to confirm your email:</p>
                 <a href='${link}'>${link}</a>
-                <p>Se você não solicitou isso, pode ignorar este e-mail.</p>
+                <p>If you did not request this, you can ignore this email.</p>
             `,
         });
         return { ok: true, result };

@@ -9,11 +9,11 @@ export async function handleImageChange(e: React.ChangeEvent<HTMLInputElement>):
     if (!file) return { file: null, preview: null, error: null };
 
     if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
-        return { file: null, preview: null, error: 'Apenas imagens JPEG, PNG ou WebP são permitidas.' };
+        return { file: null, preview: null, error: 'Only JPEG, PNG, or WebP images are allowed.' };
     }
 
     if (file.size > 512 * 1024) {
-        return { file: null, preview: null, error: 'A imagem não pode ultrapassar 512 KB.' };
+        return { file: null, preview: null, error: 'The image cannot exceed 512 KB.' };
     }
 
     try {
@@ -24,11 +24,11 @@ export async function handleImageChange(e: React.ChangeEvent<HTMLInputElement>):
             return {
                 file: null,
                 preview: null,
-                error: `A imagem não pode ter dimensões maiores que 512x512 pixels (atual: ${width}x${height}).`,
+                error: `The image cannot have dimensions larger than 512x512 pixels. (current: ${width}x${height}).`,
             };
         }
     } catch {
-        return { file: null, preview: null, error: 'Falha ao ler as dimensões da imagem.' };
+        return { file: null, preview: null, error: 'Failed to read image dimensions.' };
     }
 
     return {

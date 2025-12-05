@@ -9,7 +9,7 @@ export async function getIsAdmin() {
 
         return result.rows.length > 0;
     } catch (error) {
-        console.error('Erro ao acessar o banco:', error);
+        console.error('Error accessing the database:', error);
         return null;
     }
 }
