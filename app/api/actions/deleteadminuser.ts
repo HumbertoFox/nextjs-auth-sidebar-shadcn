@@ -1,6 +1,6 @@
 'use server';
 
-import { UserRepository } from '@/lib/userRepository';
+import { UserRepository } from '@/_lib/userRepository';
 import { revalidatePath } from 'next/cache';
 
 export async function deleteUserById(formData: FormData) {

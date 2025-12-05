@@ -1,10 +1,10 @@
 'use server';
 
-import { getUser } from '@/lib/dal';
-import { sendEmailVerification } from '@/lib/mail';
+import { getUser } from '@/_lib/dal';
+import { sendEmailVerification } from '@/_lib/mail';
 import crypto from 'crypto';
-import { VerificationTokenRepository } from '@/lib/verification-token-repository';
-import { UserRepository } from '@/lib/userRepository';
+import { VerificationTokenRepository } from '@/_lib/verification-token-repository';
+import { UserRepository } from '@/_lib/userRepository';
 
 export async function emailVerifiedChecked() {
     const sessionUser = await getUser();;

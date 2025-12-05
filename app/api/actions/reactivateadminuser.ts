@@ -1,6 +1,6 @@
 'use server';
 
-import { UserRepository } from '@/lib/userRepository';
+import { UserRepository } from '@/_lib/userRepository';
 import { revalidatePath } from 'next/cache';
 
 export async function reactivateAdminUserById(formData: FormData) {
@@ -10,7 +10,9 @@ export async function reactivateAdminUserById(formData: FormData) {
 
     const user = await UserRepository.reactivateById(userId);
 
-    user.role === 'ADMIN'
-        ? revalidatePath('/dashboard/admins')
-        : revalidatePath('/dashboard/admins/users');
+    if (user.role === 'ADMIN') {
+        revalidatePath('/dashboard/admins')
+    } else {
+        revalidatePath('/dashboard/admins/users');
+    }
 }

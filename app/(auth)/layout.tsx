@@ -1,4 +1,4 @@
-import AuthSplitLayout from '@/components/auth-split-layout';
+import AuthSplitLayout from '@/_components/auth-split-layout';
 import { type PropsWithChildren } from 'react';
 
 export default function SettingsLayout({ children }: PropsWithChildren) {

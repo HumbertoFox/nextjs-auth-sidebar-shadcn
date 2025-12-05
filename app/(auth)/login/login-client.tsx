@@ -2,11 +2,11 @@
 
 import { Eye, EyeClosed, LoaderCircle } from 'lucide-react';
 import { startTransition, useActionState, useEffect, useRef, useState } from 'react';
-import { InputError } from '@/components/input-error';
-import { TextLink } from '@/components/text-link';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { InputError } from '@/_components/input-error';
+import { TextLink } from '@/_components/text-link';
+import { Button } from '@/_components/ui/button';
+import { Input } from '@/_components/ui/input';
+import { Label } from '@/_components/ui/label';
 import { loginUser } from '@/app/api/actions/loginuser';
 import { useRouter, useSearchParams } from 'next/navigation';
 
@@ -24,7 +24,10 @@ export function LoginClient() {
     const passwordRef = useRef<HTMLInputElement>(null);
     const [state, action, pending] = useActionState(loginUser, undefined);
     const [isVisibledPassword, setIsVisibledPassword] = useState<boolean>(false);
-    const [data, setData] = useState<LoginForm>({ email: '', password: '' });
+    const [data, setData] = useState<LoginForm>({
+        email: '',
+        password: '',
+    });
 
     const togglePasswordVisibility = () => setIsVisibledPassword(!isVisibledPassword);
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -54,7 +57,10 @@ export function LoginClient() {
     }, [searchParams]);
     useEffect(() => {
         if (state?.message) {
-            setData({ email: '', password: '' });
+            setData({
+                email: '',
+                password: ''
+            });
             router.push('/dashboard');
         };
         if (state?.warning && emailRef.current) {
@@ -63,14 +69,20 @@ export function LoginClient() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [state]);
     return (
-        <>
+        <div className="space-y-6">
+            <div className="flex flex-col items-center gap-2 text-center">
+                <h1 className="text-xl font-medium">Log in to your account</h1>
+                <p className="text-muted-foreground text-sm text-balance">
+                    Enter your email and password below to log in.
+                </p>
+            </div>
             <form
                 onSubmit={submit}
                 className="w-full max-w-xs flex flex-col gap-6"
             >
                 <div className=" grid gap-6">
                     <div className="grid gap-2">
-                        <Label htmlFor="email">Endereço de email</Label>
+                        <Label htmlFor="email">Email address</Label>
                         <Input
                             id="email"
                             name="email"
@@ -82,17 +94,21 @@ export function LoginClient() {
                             autoComplete="email"
                             value={data.email}
                             onChange={handleChange}
-                            placeholder="email@exemplo.com"
+                            placeholder="email@exemple.com"
                         />
                         {state?.errors?.email?.[0] && <InputError message={state.errors.email[0]} />}
                     </div>
 
                     <div className="grid gap-2">
                         <div className="flex items-center">
-                            <Label htmlFor="password">Senha</Label>
+                            <Label htmlFor="password">Password</Label>
                             {canResetPassword && (
-                                <TextLink href="/auth/forgot-password" className="ml-auto text-sm" tabIndex={5}>
-                                    Esqueceu sua senha?
+                                <TextLink
+                                    href="/forgot-password"
+                                    className="ml-auto text-sm"
+                                    tabIndex={5}
+                                >
+                                    Forgot your password?
                                 </TextLink>
                             )}
                         </div>
@@ -108,7 +124,7 @@ export function LoginClient() {
                                 autoComplete="current-password"
                                 value={data.password}
                                 onChange={handleChange}
-                                placeholder="Senha"
+                                placeholder="Password"
                             />
                             <button
                                 type="button"
@@ -129,16 +145,16 @@ export function LoginClient() {
                         disabled={pending}
                     >
                         {pending && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                        Entrar
+                        Log in
                     </Button>
 
                     <div className="text-muted-foreground text-center text-sm">
-                        Não tem uma conta!&nbsp;&nbsp;
+                        There is no account!&nbsp;&nbsp;
                         <TextLink
                             href="/register"
                             tabIndex={4}
                         >
-                            Cadastrar-se
+                            Sign up
                         </TextLink>
                     </div>
                 </div>
@@ -147,6 +163,6 @@ export function LoginClient() {
             {status && <div className="mb-4 text-center text-sm font-medium text-blue-600">{status}</div>}
             {state?.message && <div className="mb-4 text-center text-sm font-medium text-blue-600">{state.message}</div>}
             {state?.warning && <div className="mb-4 text-center text-sm font-medium text-red-400">{state.warning}</div>}
-        </>
+        </div>
     );
 }

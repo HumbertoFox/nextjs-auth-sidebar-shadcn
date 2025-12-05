@@ -1,11 +1,11 @@
 'use server';
 
-import { getUser } from '@/lib/dal';
-import { FormStatePasswordUpdate, passwordUpdateSchema } from '@/lib/definitions';
+import { getUser } from '@/_lib/dal';
+import { FormStatePasswordUpdate, passwordUpdateSchema } from '@/_lib/definitions';
 import { compare, hash } from 'bcrypt-ts';
 import { redirect } from 'next/navigation';
 import z from 'zod';
-import { UserRepository } from '@/lib/userRepository';
+import { UserRepository } from '@/_lib/userRepository';
 
 export async function updatePassword(state: FormStatePasswordUpdate, formData: FormData): Promise<FormStatePasswordUpdate> {
     const validatedFields = passwordUpdateSchema.safeParse({

@@ -1,6 +1,6 @@
 'use client';
 
-import LoadingLoginSplit from '@/components/loadings/loading-login-split';
+import { LoadingLoginSplit } from '@/_components/loadings/loading-login-split';
 import { useRouter } from 'next/navigation';
 import { deleteSession } from '@/app/api/actions/logoutuser';
 import { useEffect } from 'react';

@@ -2,13 +2,13 @@
 
 import { Eye, EyeClosed, LoaderCircle } from 'lucide-react';
 import { startTransition, useActionState, useRef, useState } from 'react';
-import { InputError } from '@/components/input-error';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { InputError } from '@/_components/input-error';
+import { Button } from '@/_components/ui/button';
+import { Input } from '@/_components/ui/input';
+import { Label } from '@/_components/ui/label';
 import { createAdmin } from '@/app/api/actions/createadmin';
-import { TextLink } from '@/components/text-link';
-import { handleImageChange } from '@/lib/handleimagechange';
+import { TextLink } from '@/_components/text-link';
+import { handleImageChange } from '@/_lib/handleimagechange';
 import Image from 'next/image';
 
 type RegisterForm = {
@@ -55,11 +55,11 @@ export default function RegisterAdmin({ TitleIntl }: { TitleIntl: string }) {
         startTransition(() => action(formData));
     };
     return (
-        <>
+        <div className="space-y-6">
             <div className="flex flex-col items-center gap-2 text-center">
                 <h1 className="text-xl font-medium">{TitleIntl}</h1>
                 <p className="text-muted-foreground text-sm text-balance">
-                    Insira seus dados abaixo para criar sua conta
+                    Enter your details below to create your account.
                 </p>
             </div>
             <form
@@ -68,7 +68,7 @@ export default function RegisterAdmin({ TitleIntl }: { TitleIntl: string }) {
             >
                 <div className="grid gap-6">
                     <div className="grid gap-2">
-                        <Label htmlFor="file">Foto de perfil</Label>
+                        <Label htmlFor="file">Profile picture</Label>
                         <div className="flex flex-col items-center gap-3">
                             <div className="relative w-24 h-24 rounded-full overflow-hidden border border-gray-300">
                                 {imagePreview ? (
@@ -81,17 +81,17 @@ export default function RegisterAdmin({ TitleIntl }: { TitleIntl: string }) {
                                     />
                                 ) : (
                                     <div className="w-full h-full flex items-center justify-center text-sm text-gray-400 bg-gray-50">
-                                        Sem imagem
+                                        No image
                                     </div>
                                 )}
                             </div>
 
                             <Label
                                 htmlFor="file"
-                                title={imageError ? "Click em Selecionar imagem e em Cancelar" : "Selecionar imagem de perfil"}
+                                title={imageError ? "Click on Select image and then Cancel." : "Select profile picture"}
                                 className="cursor-pointer px-3 py-1 text-sm border rounded-md hover:bg-gray-50"
                             >
-                                Selecionar imagem
+                                Select image
                             </Label>
                             <Input
                                 id="file"
@@ -104,12 +104,12 @@ export default function RegisterAdmin({ TitleIntl }: { TitleIntl: string }) {
                                 className="hidden"
                             />
                             {imageError && <InputError message={imageError} />}
-                            {state?.errors?.image?.[0] && <InputError message={state.errors.image[0]} />}
+                            {state?.errors?.avatar?.[0] && <InputError message={state.errors.avatar[0]} />}
                         </div>
                     </div>
 
                     <div className="grid gap-2">
-                        <Label htmlFor="name">Nome</Label>
+                        <Label htmlFor="name">Name</Label>
                         <Input
                             id="name"
                             name="name"
@@ -121,13 +121,13 @@ export default function RegisterAdmin({ TitleIntl }: { TitleIntl: string }) {
                             value={data.name}
                             onChange={handleChange}
                             disabled={pending}
-                            placeholder="Nome completo"
+                            placeholder="Full name"
                         />
                         {state?.errors?.name?.[0] && <InputError message={state.errors.name[0]} />}
                     </div>
 
                     <div className="grid gap-2">
-                        <Label htmlFor="email">Endereço de email</Label>
+                        <Label htmlFor="email">Email address</Label>
                         <Input
                             id="email"
                             name="email"
@@ -139,13 +139,13 @@ export default function RegisterAdmin({ TitleIntl }: { TitleIntl: string }) {
                             value={data.email}
                             onChange={handleChange}
                             disabled={pending}
-                            placeholder="email@exemplo.com"
+                            placeholder="email@exemple.com"
                         />
                         {state?.errors?.email?.[0] && <InputError message={state.errors.email[0]} />}
                     </div>
 
                     <div className="grid gap-2">
-                        <Label htmlFor="password">Senha</Label>
+                        <Label htmlFor="password">Password</Label>
                         <div className="relative">
                             <Input
                                 id="password"
@@ -156,11 +156,11 @@ export default function RegisterAdmin({ TitleIntl }: { TitleIntl: string }) {
                                 value={data.password}
                                 onChange={handleChange}
                                 disabled={pending}
-                                placeholder="Senha"
+                                placeholder="Password"
                             />
                             <button
                                 type="button"
-                                title={showPassword ? "Ocultar senha" : "Mostrar senha"}
+                                title={showPassword ? "Hide password" : "Show password"}
                                 onClick={toggleShowPassword}
                                 className="btn-icon-toggle"
                             >
@@ -171,7 +171,7 @@ export default function RegisterAdmin({ TitleIntl }: { TitleIntl: string }) {
                     </div>
 
                     <div className="grid gap-2">
-                        <Label htmlFor="password_confirmation">Confirme sua senha</Label>
+                        <Label htmlFor="password_confirmation">Confirm your password.</Label>
                         <div className="relative">
                             <Input
                                 id="password_confirmation"
@@ -182,11 +182,11 @@ export default function RegisterAdmin({ TitleIntl }: { TitleIntl: string }) {
                                 value={data.password_confirmation}
                                 onChange={handleChange}
                                 disabled={pending}
-                                placeholder="Confirme sua senha"
+                                placeholder="Confirm your password."
                             />
                             <button
                                 type="button"
-                                title={showPasswordConfirm ? "Ocultar senha" : "Mostrar senha"}
+                                title={showPasswordConfirm ? "Hide password" : "Show password"}
                                 onClick={toggleShowPasswordConfirm}
                                 className="btn-icon-toggle"
                             >
@@ -204,13 +204,13 @@ export default function RegisterAdmin({ TitleIntl }: { TitleIntl: string }) {
                         className="mt-2 w-full"
                     >
                         {pending && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                        Criar uma conta
+                        Create an account
                     </Button>
 
                     <div className="text-muted-foreground text-center text-sm">
-                        Já tem uma conta!&nbsp;&nbsp;
+                        You already have an account!&nbsp;&nbsp;
                         <TextLink href="/login" tabIndex={7}>
-                            Conecte-se
+                            Log in
                         </TextLink>
                     </div>
                 </div>
@@ -218,6 +218,6 @@ export default function RegisterAdmin({ TitleIntl }: { TitleIntl: string }) {
 
             {state?.warning && <div className="mb-4 text-center text-sm font-medium text-orange-400">{state.warning}</div>}
             {state?.message && <div className="mb-4 text-center text-sm font-medium text-blue-400">Conta criada com Sucesso! Redirecionando para o Painel, aguarde...</div>}
-        </>
+        </div>
     );
 }

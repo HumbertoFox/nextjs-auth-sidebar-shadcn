@@ -1,5 +1,5 @@
-import DashboardSidebar from '@/components/dashboard-sidebar';
-import { SidebarInset, SidebarProvider, } from '@/components/ui/sidebar';
+import DashboardSidebar from '@/_components/dashboard-sidebar';
+import { SidebarInset, SidebarProvider, } from '@/_components/ui/sidebar';
 
 const user = {
     name: "shadcn Ui",

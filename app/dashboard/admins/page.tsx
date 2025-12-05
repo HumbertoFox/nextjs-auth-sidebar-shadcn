@@ -1,4 +1,4 @@
-import { DashboardSidebarHeader } from '@/components/dashboard-sidebar-header';
+import { DashboardSidebarHeader } from '@/_components/dashboard-sidebar-header';
 
 export default function AdminsPage() {
     const breadcrumbItems = [

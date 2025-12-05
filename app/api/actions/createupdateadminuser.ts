@@ -1,12 +1,12 @@
 'use server';
 
 import { put } from '@vercel/blob';
-import { FormStateCreateUpdateAdminUser, getSignUpUpdateSchema } from '@/lib/definitions';
+import { FormStateCreateUpdateAdminUser, getSignUpUpdateSchema } from '@/_lib/definitions';
 import * as bcrypt from 'bcrypt-ts';
 import z from 'zod';
 import sharp from 'sharp';
 import { revalidatePath } from 'next/cache';
-import { UserRepository } from '@/lib/userRepository';
+import { UserRepository } from '@/_lib/userRepository';
 
 const MAX_FILE_SIZE = 512 * 1024;
 const MAX_DIMENSION = 512;
@@ -49,17 +49,17 @@ export async function createUpdateAdminUser(state: FormStateCreateUpdateAdminUse
         let imageUrl: string | undefined;
 
         if (file && file.size > 0) {
-            if (!ALLOWED_TYPES.includes(file.type)) return { errors: { image: ['Apenas JPEG, PNG ou WebP são permitidas.'] } };
+            if (!ALLOWED_TYPES.includes(file.type)) return { errors: { avatar: ['Apenas JPEG, PNG ou WebP são permitidas.'] } };
 
-            if (file.size > MAX_FILE_SIZE) return { errors: { image: ['A imagem não pode ultrapassar 512 KB.'] } };
+            if (file.size > MAX_FILE_SIZE) return { errors: { avatar: ['A imagem não pode ultrapassar 512 KB.'] } };
 
             try {
                 const buffer = Buffer.from(await file.arrayBuffer());
                 const metadata = await sharp(buffer).metadata();
                 const { width, height } = metadata;
-                if (width > MAX_DIMENSION || height > MAX_DIMENSION) return { errors: { image: [`A imagem não pode exceder 512x512px (atual: ${width}x${height})`] } };
+                if (width > MAX_DIMENSION || height > MAX_DIMENSION) return { errors: { avatar: [`A imagem não pode exceder 512x512px (atual: ${width}x${height})`] } };
             } catch {
-                return { errors: { image: ['Falha ao ler a imagem.'] } };
+                return { errors: { avatar: ['Falha ao ler a imagem.'] } };
             }
 
             const uniqueFileName = `${crypto.randomUUID()}-${file.name}`;
@@ -109,7 +109,7 @@ export async function createUpdateAdminUser(state: FormStateCreateUpdateAdminUse
                 email,
                 password: hashedPassword!,
                 role,
-                image: imageUrl ?? null,
+                avatar: imageUrl ?? null,
             });
 
             revalidatePaths(newUser.role);

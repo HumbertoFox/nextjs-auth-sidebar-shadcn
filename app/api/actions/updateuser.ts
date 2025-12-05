@@ -1,12 +1,12 @@
 'use server';
 
-import { getUser } from '@/lib/dal';
-import { FormStateUserUpdate, updateUserSchema } from '@/lib/definitions';
+import { getUser } from '@/_lib/dal';
+import { FormStateUserUpdate, updateUserSchema } from '@/_lib/definitions';
 import { redirect } from 'next/navigation';
 import z from 'zod';
 import { put, del } from '@vercel/blob';
 import crypto from 'crypto';
-import { UserRepository } from '@/lib/userRepository';
+import { UserRepository } from '@/_lib/userRepository';
 
 const MAX_FILE_SIZE = 512 * 1024;
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
@@ -35,9 +35,9 @@ export async function updateUser(state: FormStateUserUpdate, formData: FormData)
     if (sessionUser.email !== email) dataToUpdate.email = email;
 
     if (file && file.size > 0) {
-        if (!ALLOWED_TYPES.includes(file.type)) return { errors: { image: ['Apenas JPEG, PNG ou WebP são permitidas.'] } };
+        if (!ALLOWED_TYPES.includes(file.type)) return { errors: { avatar: ['Apenas JPEG, PNG ou WebP são permitidas.'] } };
 
-        if (file.size > MAX_FILE_SIZE) return { errors: { image: ['A imagem não pode ultrapassar 512 KB.'] } };
+        if (file.size > MAX_FILE_SIZE) return { errors: { avatar: ['A imagem não pode ultrapassar 512 KB.'] } };
 
         try {
             if (sessionUser.image) {
@@ -58,7 +58,7 @@ export async function updateUser(state: FormStateUserUpdate, formData: FormData)
             }
         } catch (error) {
             console.error('Erro ao enviar imagem:', error);
-            return { errors: { image: ['Erro ao enviar imagem. Tente novamente.'] } };
+            return { errors: { avatar: ['Erro ao enviar imagem. Tente novamente.'] } };
         }
     }
 

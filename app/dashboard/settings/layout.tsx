@@ -1,6 +1,6 @@
-import Heading from '@/components/heading';
-import SettingsLayoutComponents from '@/components/settings-layout';
-import { Separator } from '@/components/ui/separator';
+import Heading from '@/_components/heading';
+import SettingsLayoutComponents from '@/_components/settings-layout';
+import { Separator } from '@/_components/ui/separator';
 import { type PropsWithChildren } from 'react';
 
 export default function SettingsLayout({ children }: PropsWithChildren) {

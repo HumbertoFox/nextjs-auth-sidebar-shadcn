@@ -1,4 +1,4 @@
-import { getIsAdmin } from '@/lib/getisadmin';
+import { getIsAdmin } from '@/_lib/getisadmin';
 import RegisterAdmin from './form-register-admin';
 import { Metadata } from 'next';
 

@@ -1,10 +1,10 @@
 'use server';
 
-import { getUser } from '@/lib/dal';
-import { deleteUserSchema, FormStateUserDelete } from '@/lib/definitions';
+import { getUser } from '@/_lib/dal';
+import { deleteUserSchema, FormStateUserDelete } from '@/_lib/definitions';
 import * as bcrypt from 'bcrypt-ts';
 import z from 'zod';
-import { UserRepository } from '@/lib/userRepository';
+import { UserRepository } from '@/_lib/userRepository';
 
 export async function deleteUser(state: FormStateUserDelete, formData: FormData): Promise<FormStateUserDelete> {
     const validatedFields = deleteUserSchema.safeParse({ password: formData.get('password') as string });
