@@ -25,8 +25,8 @@ export async function GET() {
                 email_verified TIMESTAMP NULL,
                 avatar TEXT NULL,
                 deleted_at TIMESTAMP NULL,
-                created_at TIMESTAMP NOT NULL DEFAULT NOW(),
-                updated_at TIMESTAMP NOT NULL DEFAULT NOW()
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
             );
         `);
 
@@ -35,7 +35,7 @@ export async function GET() {
             CREATE OR REPLACE FUNCTION update_updated_at()
             RETURNS TRIGGER AS $$
             BEGIN
-                NEW.updated_at = NOW();
+                NEW.updated_at = CURRENT_TIMESTAMP;
                 RETURN NEW;
             END;
             $$ LANGUAGE plpgsql;

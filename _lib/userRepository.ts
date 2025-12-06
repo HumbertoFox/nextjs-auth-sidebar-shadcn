@@ -25,7 +25,10 @@ export const UserRepository = {
               email,
               role,
               email_verified,
-              avatar
+              avatar,
+              deleted_at,
+              created_at,
+              updated_at
             FROM users
             WHERE id = $1
             LIMIT 1

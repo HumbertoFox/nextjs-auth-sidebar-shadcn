@@ -70,7 +70,7 @@ export function LoginClient() {
     }, [state]);
     return (
         <div className="space-y-6">
-            <div className="flex flex-col items-center gap-2 text-center">
+            <div className="flex flex-col items-center gap-2 text-center mx-auto">
                 <h1 className="text-xl font-medium">Log in to your account</h1>
                 <p className="text-muted-foreground text-sm text-balance">
                     Enter your email and password below to log in.
@@ -78,7 +78,7 @@ export function LoginClient() {
             </div>
             <form
                 onSubmit={submit}
-                className="w-full max-w-xs flex flex-col gap-6"
+                className="w-full max-w-xs flex flex-col gap-6 mx-auto"
             >
                 <div className=" grid gap-6">
                     <div className="grid gap-2">

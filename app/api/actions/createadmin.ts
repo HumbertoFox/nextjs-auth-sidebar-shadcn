@@ -32,7 +32,7 @@ export async function createAdmin(state: FormStateCreateAdmin, formData: FormDat
 
     try {
         const existingUser = await UserRepository.findByEmail(email);
-        if (existingUser) return { warning: 'Dados já Cadastrados' };
+        if (existingUser) return { warning: 'Data already registered.' };
 
         const adminExists = await UserRepository.findAdmin();
         const role = adminExists ? 'USER' : 'ADMIN';
@@ -42,17 +42,17 @@ export async function createAdmin(state: FormStateCreateAdmin, formData: FormDat
         let imageUrl: string | undefined;
 
         if (file && file.size > 0) {
-            if (!ALLOWED_TYPES.includes(file.type)) return { errors: { avatar: ['Apenas JPEG, PNG ou WebP são permitidas.'] } };
+            if (!ALLOWED_TYPES.includes(file.type)) return { errors: { avatar: ['Only JPEG, PNG, or WebP formats are allowed.'] } };
 
-            if (file.size > MAX_FILE_SIZE) return { errors: { avatar: ['A imagem não pode ultrapassar 512 KB.'] } };
+            if (file.size > MAX_FILE_SIZE) return { errors: { avatar: ['The image cannot exceed 512 KB.'] } };
 
             try {
                 const buffer = Buffer.from(await file.arrayBuffer());
                 const metadata = await sharp(buffer).metadata();
                 const { width, height } = metadata;
-                if (width > MAX_DIMENSION || height > MAX_DIMENSION) return { errors: { avatar: [`A imagem não pode exceder 512x512px (atual: ${width}x${height})`] } };
+                if (width > MAX_DIMENSION || height > MAX_DIMENSION) return { errors: { avatar: [`The image cannot exceed 512x512px. (current: ${width}x${height})`] } };
             } catch {
-                return { errors: { avatar: ['Falha ao ler a imagem.'] } };
+                return { errors: { avatar: ['Failed to read the image.'] } };
             }
 
             const uniqueFileName = `${crypto.randomUUID()}-${file.name}`;
@@ -76,6 +76,6 @@ export async function createAdmin(state: FormStateCreateAdmin, formData: FormDat
         return { message: true };
     } catch (error) {
         console.error(error);
-        return { warning: 'Algo deu errado. Tente novamente mais tarde.' };
+        return { warning: 'Something went wrong. Please try again later.' };
     }
 }

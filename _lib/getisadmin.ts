@@ -3,7 +3,7 @@ import pool from '@/_lib/db';
 export async function getIsAdmin() {
     try {
         const result = await pool.query(
-            'SELECT 1 FROM "users" WHERE role = $1 LIMIT 1',
+            'SELECT 1 FROM users WHERE role = $1 LIMIT 1',
             ['ADMIN']
         );
 

@@ -23,7 +23,7 @@ export async function deleteUser(state: FormStateUserDelete, formData: FormData)
 
     const isPasswordCorrect = await bcrypt.compare(password, existingUser.password);
 
-    if (!isPasswordCorrect) return { errors: { password: ['Senha incorreta'] } };
+    if (!isPasswordCorrect) return { errors: { password: ['Incorrect password'] } };
 
     await UserRepository.softDeleteById(sessionUser.id);
 

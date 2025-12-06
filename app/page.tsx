@@ -1,16 +1,38 @@
 import { Button } from '@/_components/ui/button';
+import { getSession } from '@/_lib/session';
 import Image from 'next/image';
 import Link from 'next/link';
 
-export default function Home() {
+export default async function Home() {
+  const session = await getSession();
   return (
-    <div className="flex flex-col min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <header className="flex justify-end w-full max-w-3xl px-1 py-2.5">
-        <Button asChild variant="ghost">
-          <Link href="/dashboard">Dashboard</Link>
-        </Button>
+    <div className="flex flex-col min-h-screen items-center bg-zinc-50 font-sans dark:bg-black">
+      <header className="flex justify-end gap-2 w-full max-w-3xl px-1 py-2.5">
+        {session ? (
+          <Button
+            asChild
+            variant="outline"
+          >
+            <Link href="/dashboard">Dashboard</Link>
+          </Button>
+        ) : (
+          <>
+            <Button
+              asChild
+              variant="outline"
+            >
+              <Link href="/login">Log in</Link>
+            </Button>
+            <Button
+              asChild
+              variant="outline"
+            >
+              <Link href="/register">Sign up</Link>
+            </Button>
+          </>
+        )}
       </header>
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
+      <main className="flex min-h-full w-full max-w-3xl flex-col items-center justify-between flex-1 py-32 px-16 bg-white dark:bg-black sm:items-start">
         <Image
           className="dark:invert"
           src="/next.svg"

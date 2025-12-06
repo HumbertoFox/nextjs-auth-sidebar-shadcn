@@ -7,15 +7,12 @@ export default function SettingsLayout({ children }: PropsWithChildren) {
     return (
         <>
             <Heading
-                title="Configurações"
-                description="Gerencie seu perfil e as configurações da conta"
+                title="Settings"
+                description="Manage your profile and account settings."
             />
-
             <div className="flex flex-col space-y-8 lg:flex-row lg:space-y-0 lg:space-x-12 px-4">
                 <SettingsLayoutComponents />
-
                 <Separator className="my-6 md:hidden" />
-
                 <div className="flex-1 md:max-w-2xl">
                     <section className="max-w-xl flex flex-col gap-4 p-4">{children}</section>
                 </div>

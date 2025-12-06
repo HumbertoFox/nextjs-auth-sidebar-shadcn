@@ -23,7 +23,7 @@ type Props = ProfileForm & {
     mustVerifyEmail: boolean;
 };
 
-export default function ProfilePageClient({
+export function ProfilePageClient({
     name,
     email,
     avatar,
@@ -39,7 +39,7 @@ export default function ProfilePageClient({
     const [data, setData] = useState<ProfileForm>({
         name: name,
         email: email,
-        avatar: avatar
+        avatar: avatar,
     });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -82,7 +82,7 @@ export default function ProfilePageClient({
     return (
         <>
             <div className="space-y-6">
-                <div className="mb-8 my-1 px-4 space-y-0.5">
+                <div className="mb-8 my-1 space-y-0.5">
                     <h2 className="text-xl font-semibold tracking-tight">Profile information</h2>
                     <p className="text-muted-foreground text-sm">Update your picture, name, and email address.</p>
                 </div>
@@ -142,8 +142,13 @@ export default function ProfilePageClient({
                             )}
                         </div>
 
-                        <div className="grid gap-2 text-center">
-                            <Label htmlFor="file">Foto de perfil</Label>
+                        <div className="grid gap-2">
+                            <Label
+                                htmlFor="file"
+                                className="mx-auto"
+                            >
+                                Foto de perfil
+                            </Label>
                             <div className="flex flex-col items-center gap-3">
                                 <div className="relative size-40 rounded-full overflow-hidden border border-gray-300">
                                     {imagePreview ? (

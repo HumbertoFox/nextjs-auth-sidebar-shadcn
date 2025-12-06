@@ -56,7 +56,7 @@ export default function RegisterAdmin({ TitleIntl }: { TitleIntl: string }) {
     };
     return (
         <div className="space-y-6">
-            <div className="flex flex-col items-center gap-2 text-center">
+            <div className="flex flex-col items-center gap-2 text-center mx-auto">
                 <h1 className="text-xl font-medium">{TitleIntl}</h1>
                 <p className="text-muted-foreground text-sm text-balance">
                     Enter your details below to create your account.
@@ -64,7 +64,7 @@ export default function RegisterAdmin({ TitleIntl }: { TitleIntl: string }) {
             </div>
             <form
                 onSubmit={submit}
-                className="flex flex-col gap-6"
+                className="flex flex-col gap-6 mx-auto"
             >
                 <div className="grid gap-6">
                     <div className="grid gap-2">
