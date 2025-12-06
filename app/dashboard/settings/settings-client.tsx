@@ -3,22 +3,10 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/_components/ui/avatar';
 import { useInitials } from '@/_hooks/use-initials';
 import { formatDate } from '@/_lib/dataFormat';
+import { UserSettingsClientProps } from '@/_types';
 import { BadgeAlert, BadgeCheck } from 'lucide-react';
 
-type UserProps = {
-    user: {
-        id: string;
-        name: string;
-        email: string;
-        avatar?: string | null;
-        role: string;
-        email_verified?: string | null;
-        created_at: string;
-        updated_at: string;
-    };
-}
-
-export default function SettingsPageClient({ user }: UserProps) {
+export default function SettingsPageClient({ user }: UserSettingsClientProps) {
     const getInitials = useInitials();
     return (
         <>

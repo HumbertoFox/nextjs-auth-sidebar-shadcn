@@ -1,15 +1,10 @@
 import { getUser } from '@/_lib/dal';
 import { ProfilePageClient } from './profile-client';
+import { UserProfilePageProps } from '@/_types';
 
-type UserProps = {
-    name: string;
-    email: string;
-    avatar?: string | null;
-    email_verified?: string | null;
-};
 
 export default async function ProfilePage() {
-    const user = await getUser() as UserProps;
+    const user = await getUser() as UserProfilePageProps;
     const mustVerifyEmail: boolean = !Boolean(user.email_verified);
     return (
         <>

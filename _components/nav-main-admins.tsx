@@ -1,18 +1,11 @@
 'use client';
 
 import { SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from '@/_components/ui/sidebar';
-import { LucideIcon } from 'lucide-react';
+import { NavMainItemProps } from '@/_types';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
-type NavItem = {
-    title: string;
-    href: string;
-    icon?: LucideIcon | null;
-    isActive?: boolean;
-}
-
-export function NavMainAdmins({ items = [] }: { items: NavItem[] }) {
+export function NavMainAdmins({ items = [] }: { items: NavMainItemProps[] }) {
     const pathname = usePathname();
     const { isMobile, setOpenMobile } = useSidebar();
 

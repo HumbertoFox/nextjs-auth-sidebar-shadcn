@@ -12,26 +12,17 @@ import { emailVerifiedChecked } from '@/app/api/actions/emailverified';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { handleImageChange } from '@/_lib/handleimagechange';
-
-type ProfileForm = {
-    name: string;
-    email: string;
-    avatar?: string | null;
-};
-
-type Props = ProfileForm & {
-    mustVerifyEmail: boolean;
-};
+import { ProfileForm, ProfileFormClientProps } from '@/_types';
 
 export function ProfilePageClient({
     name,
     email,
     avatar,
     mustVerifyEmail,
-}: Props) {
+}: ProfileFormClientProps) {
     const router = useRouter();
     const [state, action, pending] = useActionState(updateUser, undefined);
-    const [imagePreview, setImagePreview] = useState<string | null | undefined>(avatar ?? null);
+    const [imagePreview, setImagePreview] = useState<string | null | undefined>(avatar);
     const [imageFile, setImageFile] = useState<File | null>(null);
     const [imageError, setImageError] = useState<string | null>(null);
     const [status, setStatus] = useState<string | null>(null);

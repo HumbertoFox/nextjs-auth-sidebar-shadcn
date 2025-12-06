@@ -5,18 +5,9 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger, } from '@/_comp
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar, } from '@/_components/ui/sidebar';
 import { UserInfo } from '@/_components/user-info';
 import { UserMenuContent } from '@/_components/user-menu-content';
+import { UserComponentProps } from '@/_types';
 
-type UserProps = {
-    name: string;
-    email: string;
-    avatar?: string;
-};
-
-type UserTypeProps = {
-    user: UserProps;
-};
-
-export function NavUser({ user, }: UserTypeProps) {
+export function NavUser({ user, }: UserComponentProps) {
     const { isMobile } = useSidebar();
     return (
         <SidebarMenu>

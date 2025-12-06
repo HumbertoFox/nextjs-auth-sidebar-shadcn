@@ -4,34 +4,25 @@ import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, Sid
 import AppLogoSvg from '@/_components/app-logo-svg';
 import Link from 'next/link';
 import { NavMainAdmins } from '@/_components/nav-main-admins';
-import { LayoutGrid, LucideIcon, UserRoundCog, UserRoundPlus, UsersRound } from 'lucide-react';
+import { LayoutGrid, UserRoundCog, UserRoundPlus, UsersRound } from 'lucide-react';
 import { NavMainUsers } from '@/_components/nav-main-users';
 import { NavUser } from '@/_components/nav-user';
-
-type NavItem = {
-    title: string;
-    href: string;
-    icon?: LucideIcon | null;
-    isActive?: boolean;
-}
-
-type UserProps = {
-    name: string;
-    email: string;
-    avatar?: string;
-};
+import { NavMainItemProps, ProfileForm } from '@/_types';
 
 type DashboardSidebarProps = React.ComponentProps<typeof Sidebar> & {
-    user: UserProps;
-};
+    user: ProfileForm;
+}
 
-export default function DashboardSidebar({ user, ...props }: DashboardSidebarProps) {
-    const adminNavItems: NavItem[] = [
+export default function DashboardSidebar({
+    user,
+    ...props
+}: DashboardSidebarProps) {
+    const adminNavItems: NavMainItemProps[] = [
         { title: 'Admins', href: '/dashboard/admins', icon: UserRoundCog },
         { title: 'Users', href: '/dashboard/admins/users', icon: UsersRound },
         { title: 'Register User', href: '/dashboard/admins/register', icon: UserRoundPlus },
     ];
-    const userNavItems: NavItem[] = [
+    const userNavItems: NavMainItemProps[] = [
         { title: 'Dashboard', href: '/dashboard', icon: LayoutGrid, },
     ];
     return (

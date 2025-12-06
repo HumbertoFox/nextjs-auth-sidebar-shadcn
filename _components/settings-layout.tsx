@@ -4,15 +4,12 @@ import { usePathname } from 'next/navigation';
 import { Button } from '@/_components/ui/button';
 import Link from 'next/link';
 import { cn } from '@/_lib/utils';
+import { SidebarNavItemProps } from '@/_types';
 
-type NavItem = {
-    text: string;
-    href: string;
-}
 
 export default function SettingsLayoutComponents() {
     const currentPath = usePathname();
-    const sidebarNavItems: NavItem[] = [
+    const sidebarNavItems: SidebarNavItemProps[] = [
         { text: 'settings', href: '/dashboard/settings', },
         { text: 'Profile', href: '/dashboard/settings/profile', },
         { text: 'Password', href: '/dashboard/settings/password', },

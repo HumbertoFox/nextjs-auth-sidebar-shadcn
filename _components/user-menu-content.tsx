@@ -3,20 +3,11 @@
 import { DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator } from '@/_components/ui/dropdown-menu';
 import { UserInfo } from '@/_components/user-info';
 import { useMobileNavigation } from '@/_hooks/use-mobile-navigation';
+import { UserComponentProps } from '@/_types';
 import { LogOut, Settings } from 'lucide-react';
 import Link from 'next/link';
 
-type UserProps = {
-    name: string;
-    email: string;
-    avatar?: string;
-};
-
-type UserTypeProps = {
-    user: UserProps;
-};
-
-export function UserMenuContent({ user }: UserTypeProps) {
+export function UserMenuContent({ user }: UserComponentProps) {
     const cleanup = useMobileNavigation();
     return (
         <>

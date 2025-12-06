@@ -1,21 +1,12 @@
 'use client';
 
 import { DashboardSidebarHeader } from '@/_components/dashboard-sidebar-header';
+import { BreadcrumbItemProps, HeadingProps } from '@/_types';
 import { usePathname } from 'next/navigation';
-
-type HeadingProps = {
-    title: string;
-    description?: string;
-}
-
-type BreadcrumbItemType = {
-    text: string;
-    href?: string;
-}
 
 export default function Heading({ title, description }: HeadingProps) {
     const currentPath = usePathname();
-    const breadcrumbMap: Record<string, BreadcrumbItemType[]> = {
+    const breadcrumbMap: Record<string, BreadcrumbItemProps[]> = {
         '/dashboard/settings': [
             { text: 'Dashboard', href: '/dashboard' },
             { text: 'Settings' },

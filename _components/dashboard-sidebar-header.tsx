@@ -5,15 +5,7 @@ import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbP
 import { Separator } from '@/_components/ui/separator';
 import React from 'react';
 import Link from 'next/link';
-
-type BreadcrumbItemType = {
-    text: string;
-    href?: string;
-};
-
-type DashboardSidebarHeaderProps = {
-    items: BreadcrumbItemType[];
-};
+import { DashboardSidebarHeaderProps } from '@/_types';
 
 export function DashboardSidebarHeader({ items }: DashboardSidebarHeaderProps) {
     const lastIndex = items.length - 1;
