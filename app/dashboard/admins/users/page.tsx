@@ -142,15 +142,9 @@ export default async function UsersPage(props: { searchParams?: Promise<{ page?:
                         <PaginationContent>
                             <PaginationItem>
                                 <PaginationPrevious
-                                    href={currentPage > 1
-                                        ? `?page=${currentPage - 1}`
-                                        : '#'
-                                    }
+                                    href={currentPage > 1 ? `?page=${currentPage - 1}` : '#'}
                                     aria-disabled={currentPage <= 1}
-                                    className={currentPage <= 1
-                                        ? 'pointer-events-none opacity-50'
-                                        : ''
-                                    }
+                                    className={currentPage <= 1 ? 'pointer-events-none opacity-50' : ''}
                                 />
                             </PaginationItem>
                             {getVisiblePagination(currentPage, totalPages).map((page, index) => (
@@ -175,15 +169,9 @@ export default async function UsersPage(props: { searchParams?: Promise<{ page?:
                             ))}
                             <PaginationItem>
                                 <PaginationNext
-                                    href={currentPage < totalPages
-                                        ? `?page=${currentPage + 1}`
-                                        : '#'
-                                    }
+                                    href={currentPage < totalPages ? `?page=${currentPage + 1}` : '#'}
                                     aria-disabled={currentPage >= totalPages}
-                                    className={currentPage >= totalPages
-                                        ? 'pointer-events-none opacity-50'
-                                        : ''
-                                    }
+                                    className={currentPage >= totalPages ? 'pointer-events-none opacity-50' : ''}
                                 />
                             </PaginationItem>
                         </PaginationContent>

@@ -10,14 +10,7 @@ import { createAdmin } from '@/app/api/actions/createadmin';
 import { TextLink } from '@/_components/text-link';
 import { handleImageChange } from '@/_lib/handleimagechange';
 import Image from 'next/image';
-
-type RegisterForm = {
-    name: string;
-    email: string;
-    password: string;
-    password_confirmation: string;
-    avatar?: File;
-};
+import { RegisterFormProps } from '@/_types';
 
 export default function RegisterAdmin({ TitleIntl }: { TitleIntl: string }) {
     const emailRef = useRef<HTMLInputElement>(null);
@@ -27,7 +20,7 @@ export default function RegisterAdmin({ TitleIntl }: { TitleIntl: string }) {
     const [imageError, setImageError] = useState<string | null>(null);
     const [showPassword, setShowPassword] = useState<boolean>(false);
     const [showPasswordConfirm, setShowPasswordConfirm] = useState<boolean>(false);
-    const [data, setData] = useState<RegisterForm>({
+    const [data, setData] = useState<RegisterFormProps>({
         name: '',
         email: '',
         password: '',

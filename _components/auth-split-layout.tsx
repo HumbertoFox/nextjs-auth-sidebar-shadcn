@@ -27,7 +27,7 @@ export default function AuthSplitLayout() {
                 <div className="flex">
                     <Link href="/" className="relative z-20 flex items-center text-lg font-medium">
                         <AppLogoIconSvg className="mr-2 size-8 fill-current" />
-                        Next.Js + Vercel
+                        Next.Js + Vercel + Shadcn.ui
                     </Link>
                 </div>
                 <div className="flex items-center justify-center h-full z-10">

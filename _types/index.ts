@@ -66,3 +66,16 @@ export type HeadingProps = {
     title: string;
     description?: string;
 }
+
+export type RegisterFormProps = {
+    name: string;
+    email: string;
+    password: string;
+    password_confirmation: string;
+    avatar?: File;
+}
+
+export type LoginFormProps = {
+    email: string;
+    password: string;
+}

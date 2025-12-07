@@ -126,7 +126,7 @@ export function ProfilePageClient({
 
                                     {status === 'verification-link-sent' && (
                                         <div className="mt-2 text-sm font-medium text-green-600">
-                                            Um novo link de verificação foi enviado para seu endereço de e-mail.
+                                            A new verification link has been sent to your email address.
                                         </div>
                                     )}
                                 </div>
@@ -138,7 +138,7 @@ export function ProfilePageClient({
                                 htmlFor="file"
                                 className="mx-auto"
                             >
-                                Foto de perfil
+                                Profile picture
                             </Label>
                             <div className="flex flex-col items-center gap-3">
                                 <div className="relative size-40 rounded-full overflow-hidden border border-gray-300">

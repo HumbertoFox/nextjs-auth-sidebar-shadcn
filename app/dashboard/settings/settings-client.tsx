@@ -37,30 +37,22 @@ export default function SettingsPageClient({ user }: UserSettingsClientProps) {
                     </span>
                     <span className="text-muted-foreground truncate text-sm gap-x-1.5 inline-flex">
                         {user.email}
-                        {user.email_verified
-                            ? <BadgeCheck className="text-green-500" />
-                            : <BadgeAlert className="text-orange-500" />
-                        }
+                        {user.email_verified ? <BadgeCheck className="text-green-500" /> : <BadgeAlert className="text-orange-500" />}
                     </span>
                     <div>
                         <strong>Tipo de Conta : </strong>
-                        <span className={`font-pirata
-                        ${user.role === 'ADMIN'
-                                ? 'text-blue-800'
-                                : 'text-green-800'
-                            }`}
-                        >
+                        <span className={`font-pirata ${user.role === 'ADMIN' ? 'text-blue-800' : 'text-green-800'}`}>
                             {user.role}
                         </span>
                     </div>
                 </div>
             </div>
             <div>
-                <strong>Usuário criado em : </strong>
+                <strong>User created on : </strong>
                 <span>{formatDate(user.created_at)}</span>
             </div>
             <div>
-                <strong>Usuário atualizado em : </strong>
+                <strong>User updated on : </strong>
                 <span>{formatDate(user.updated_at)}</span>
             </div>
         </>

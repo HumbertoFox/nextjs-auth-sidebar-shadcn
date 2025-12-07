@@ -56,10 +56,7 @@ export default async function AdminsPage() {
                                         {!admin.deleted_at ? (
                                             <>
                                                 <Link
-                                                    href={admin.id === loggedAdmin
-                                                        ? '/dashboard/settings/profile'
-                                                        : `/dashboard/admins/${admin.id}/update`
-                                                    }
+                                                    href={admin.id === loggedAdmin ? '/dashboard/settings/profile' : `/dashboard/admins/${admin.id}/update`}
                                                     title={`Atualizar ${admin.name}`}
                                                 >
                                                     <UserRoundPen

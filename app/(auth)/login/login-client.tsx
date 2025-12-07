@@ -9,11 +9,7 @@ import { Input } from '@/_components/ui/input';
 import { Label } from '@/_components/ui/label';
 import { loginUser } from '@/app/api/actions/loginuser';
 import { useRouter, useSearchParams } from 'next/navigation';
-
-type LoginForm = {
-    email: string;
-    password: string;
-};
+import { LoginFormProps } from '@/_types';
 
 export function LoginClient() {
     const searchParams = useSearchParams();
@@ -24,7 +20,7 @@ export function LoginClient() {
     const passwordRef = useRef<HTMLInputElement>(null);
     const [state, action, pending] = useActionState(loginUser, undefined);
     const [isVisibledPassword, setIsVisibledPassword] = useState<boolean>(false);
-    const [data, setData] = useState<LoginForm>({
+    const [data, setData] = useState<LoginFormProps>({
         email: '',
         password: '',
     });
