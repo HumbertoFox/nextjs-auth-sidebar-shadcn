@@ -5,9 +5,9 @@ import { LoadingLoginSplit } from '@/_components/loadings/loading-login-split';
 
 export const generateMetadata = async (): Promise<Metadata> => {
     return {
-        title: 'Conecte-se'
+        title: 'Log in'
     };
-};
+}
 
 export default function LoginPage() {
     return (

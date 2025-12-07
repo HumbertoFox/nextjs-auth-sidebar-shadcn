@@ -1,3 +1,11 @@
+import { Metadata } from 'next';
+
+export const generateMetadata = async (): Promise<Metadata> => {
+    return {
+        title: 'Appearance of System'
+    };
+}
+
 export default function AppearancePage() {
     return (
         <>

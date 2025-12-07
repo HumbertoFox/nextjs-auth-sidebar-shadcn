@@ -1,7 +1,7 @@
 import 'server-only';
 import { cache } from 'react';
 import { verifySession } from '@/_lib/session';
-import { UserRepository } from '@/_lib/userRepository';
+import { UserRepository } from '@/_lib/userrepository';
 
 export const getUser = cache(async () => {
     const session = await verifySession();

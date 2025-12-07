@@ -3,8 +3,8 @@
 import { getUser } from '@/_lib/dal';
 import { sendEmailVerification } from '@/_lib/mail';
 import crypto from 'crypto';
-import { VerificationTokenRepository } from '@/_lib/verification-token-repository';
-import { UserRepository } from '@/_lib/userRepository';
+import { VerificationTokenRepository } from '@/_lib/verificationtokenrepository';
+import { UserRepository } from '@/_lib/userrepository';
 
 export async function emailVerifiedChecked() {
     const sessionUser = await getUser();;

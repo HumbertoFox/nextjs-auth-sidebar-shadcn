@@ -6,7 +6,7 @@ import * as bcrypt from 'bcrypt-ts';
 import z from 'zod';
 import sharp from 'sharp';
 import { revalidatePath } from 'next/cache';
-import { UserRepository } from '@/_lib/userRepository';
+import { UserRepository } from '@/_lib/userrepository';
 
 const MAX_FILE_SIZE = 512 * 1024;
 const MAX_DIMENSION = 512;

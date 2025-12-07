@@ -1,3 +1,11 @@
+import { Metadata } from 'next';
+
+export const generateMetadata = async (): Promise<Metadata> => {
+    return {
+        title: 'Update Password User'
+    };
+}
+
 export default function PasswordPage() {
     return (
         <div className="flex flex-1 flex-col gap-4 p-4">

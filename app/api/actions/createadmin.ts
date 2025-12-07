@@ -6,7 +6,7 @@ import { createSession } from '@/_lib/session';
 import * as bcrypt from 'bcrypt-ts';
 import z from 'zod';
 import sharp from 'sharp';
-import { UserRepository } from '@/_lib/userRepository';
+import { UserRepository } from '@/_lib/userrepository';
 
 const MAX_FILE_SIZE = 512 * 1024;
 const MAX_DIMENSION = 512;

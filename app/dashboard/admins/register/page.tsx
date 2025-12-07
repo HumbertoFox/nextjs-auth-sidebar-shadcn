@@ -1,4 +1,11 @@
 import { DashboardSidebarHeader } from '@/_components/dashboard-sidebar-header';
+import { Metadata } from 'next';
+
+export const generateMetadata = async (): Promise<Metadata> => {
+    return {
+        title: 'Register User'
+    };
+}
 
 export default function RegisterUsersPage() {
     const breadcrumbItems = [

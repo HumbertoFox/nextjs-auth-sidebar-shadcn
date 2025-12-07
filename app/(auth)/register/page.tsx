@@ -7,7 +7,7 @@ export const generateMetadata = async (): Promise<Metadata> => {
   return {
     title: isAdmin ? 'Register User' : 'Register Administrator'
   };
-};
+}
 
 export default async function RegisterPage() {
   const isAdmin = await getIsAdmin();

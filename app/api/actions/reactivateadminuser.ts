@@ -1,6 +1,6 @@
 'use server';
 
-import { UserRepository } from '@/_lib/userRepository';
+import { UserRepository } from '@/_lib/userrepository';
 import { revalidatePath } from 'next/cache';
 
 export async function reactivateAdminUserById(formData: FormData) {

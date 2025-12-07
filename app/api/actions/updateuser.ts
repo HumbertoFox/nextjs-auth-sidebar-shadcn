@@ -6,7 +6,7 @@ import { redirect } from 'next/navigation';
 import z from 'zod';
 import { put, del } from '@vercel/blob';
 import crypto from 'crypto';
-import { UserRepository } from '@/_lib/userRepository';
+import { UserRepository } from '@/_lib/userrepository';
 
 const MAX_FILE_SIZE = 512 * 1024;
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];

@@ -5,7 +5,7 @@ import { FormStatePasswordUpdate, passwordUpdateSchema } from '@/_lib/definition
 import { compare, hash } from 'bcrypt-ts';
 import { redirect } from 'next/navigation';
 import z from 'zod';
-import { UserRepository } from '@/_lib/userRepository';
+import { UserRepository } from '@/_lib/userrepository';
 
 export async function updatePassword(state: FormStatePasswordUpdate, formData: FormData): Promise<FormStatePasswordUpdate> {
     const validatedFields = passwordUpdateSchema.safeParse({

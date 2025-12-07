@@ -4,7 +4,7 @@ import { FormStateLoginUser, signInSchema } from '@/_lib/definitions';
 import { compare } from 'bcrypt-ts';
 import { createSession } from '@/_lib/session';
 import z from 'zod';
-import { UserRepository } from '@/_lib/userRepository';
+import { UserRepository } from '@/_lib/userrepository';
 
 export async function loginUser(state: FormStateLoginUser, formData: FormData): Promise<FormStateLoginUser> {
     const validatedFields = signInSchema.safeParse({
