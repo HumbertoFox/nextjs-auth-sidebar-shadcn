@@ -4,10 +4,8 @@ import { getUser } from '@/_lib/dal';
 import { UserDetailsProps } from '@/_types';
 
 export default async function DashboardLayout({
-    children
-}: Readonly<{
-    children: React.ReactNode;
-}>) {
+    children,
+}: Readonly<{ children: React.ReactNode; }>) {
     const user = await getUser() as UserDetailsProps;
     return (
         <SidebarProvider>

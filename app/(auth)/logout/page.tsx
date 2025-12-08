@@ -1,6 +1,6 @@
 'use client';
 
-import { LoadingLoginSplit } from '@/_components/loadings/loading-login-split';
+import { LoadingLogin } from '@/_components/loadings/loading-login';
 import { useRouter } from 'next/navigation';
 import { deleteSession } from '@/app/api/actions/logoutuser';
 import { useEffect } from 'react';
@@ -19,5 +19,5 @@ export default function Logout() {
         const timer = setTimeout(logout, 1000);
         return () => clearTimeout(timer);
     }, [router]);
-    return <LoadingLoginSplit />;
+    return <LoadingLogin />;
 }

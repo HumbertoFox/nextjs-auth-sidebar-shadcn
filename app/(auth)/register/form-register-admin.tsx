@@ -12,7 +12,9 @@ import { handleImageChange } from '@/_lib/handleimagechange';
 import Image from 'next/image';
 import { RegisterFormProps } from '@/_types';
 
-export default function RegisterAdmin({ TitleIntl }: { TitleIntl: string }) {
+export default function RegisterAdmin({
+    TitleIntl,
+}: { TitleIntl: string }) {
     const emailRef = useRef<HTMLInputElement>(null);
     const [state, action, pending] = useActionState(createAdmin, undefined);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -61,7 +63,12 @@ export default function RegisterAdmin({ TitleIntl }: { TitleIntl: string }) {
             >
                 <div className="grid gap-6">
                     <div className="grid gap-2">
-                        <Label htmlFor="file">Profile picture</Label>
+                        <Label
+                            htmlFor="file"
+                            className="mx-auto"
+                        >
+                            Profile picture
+                        </Label>
                         <div className="flex flex-col items-center gap-3">
                             <div className="relative w-24 h-24 rounded-full overflow-hidden border border-gray-300">
                                 {imagePreview ? (

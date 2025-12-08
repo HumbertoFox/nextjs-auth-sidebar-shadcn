@@ -3,7 +3,9 @@ import SettingsLayoutComponents from '@/_components/settings-layout';
 import { Separator } from '@/_components/ui/separator';
 import { type PropsWithChildren } from 'react';
 
-export default function SettingsLayout({ children }: PropsWithChildren) {
+export default function SettingsLayout({
+    children,
+}: PropsWithChildren) {
     return (
         <>
             <Heading

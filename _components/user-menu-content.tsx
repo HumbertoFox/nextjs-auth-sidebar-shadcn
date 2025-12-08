@@ -7,7 +7,9 @@ import { UserComponentProps } from '@/_types';
 import { LogOut, Settings } from 'lucide-react';
 import Link from 'next/link';
 
-export function UserMenuContent({ user }: UserComponentProps) {
+export function UserMenuContent({
+    user,
+}: UserComponentProps) {
     const cleanup = useMobileNavigation();
     return (
         <>

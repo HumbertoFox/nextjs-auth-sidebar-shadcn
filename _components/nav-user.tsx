@@ -7,7 +7,9 @@ import { UserInfo } from '@/_components/user-info';
 import { UserMenuContent } from '@/_components/user-menu-content';
 import { UserComponentProps } from '@/_types';
 
-export function NavUser({ user, }: UserComponentProps) {
+export function NavUser({
+    user,
+}: UserComponentProps) {
     const { isMobile } = useSidebar();
     return (
         <SidebarMenu>

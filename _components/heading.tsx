@@ -4,7 +4,10 @@ import { DashboardSidebarHeader } from '@/_components/dashboard-sidebar-header';
 import { BreadcrumbItemProps, HeadingProps } from '@/_types';
 import { usePathname } from 'next/navigation';
 
-export default function Heading({ title, description }: HeadingProps) {
+export default function Heading({
+    title,
+    description,
+}: HeadingProps) {
     const currentPath = usePathname();
     const breadcrumbMap: Record<string, BreadcrumbItemProps[]> = {
         '/dashboard/settings': [

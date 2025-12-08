@@ -7,7 +7,9 @@ import React from 'react';
 import Link from 'next/link';
 import { DashboardSidebarHeaderProps } from '@/_types';
 
-export function DashboardSidebarHeader({ items }: DashboardSidebarHeaderProps) {
+export function DashboardSidebarHeader({
+    items,
+}: DashboardSidebarHeaderProps) {
     const lastIndex = items.length - 1;
     return (
         <header className="flex h-10 shrink-0 items-center gap-2 border-b">

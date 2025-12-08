@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 import { LoginClient } from '@/app/(auth)/login/login-client';
 import { Metadata } from 'next';
-import { LoadingLoginSplit } from '@/_components/loadings/loading-login-split';
+import { LoadingLogin } from '@/_components/loadings/loading-login';
 
 export const generateMetadata = async (): Promise<Metadata> => {
     return {
@@ -11,7 +11,7 @@ export const generateMetadata = async (): Promise<Metadata> => {
 
 export default function LoginPage() {
     return (
-        <Suspense fallback={<LoadingLoginSplit />}>
+        <Suspense fallback={<LoadingLogin />}>
             <LoginClient />
         </Suspense>
     );
