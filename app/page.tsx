@@ -1,5 +1,6 @@
 import { Button } from '@/_components/ui/button';
 import { getSession } from '@/_lib/session';
+import { Plus } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -33,14 +34,27 @@ export default async function Home() {
         )}
       </header>
       <main className="flex min-h-full w-full max-w-3xl flex-col items-center justify-between flex-1 py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
+        <div className="flex gap-6">
+          <Image
+            className="dark:invert"
+            src="/next.svg"
+            alt="Next.js logo"
+            width={100}
+            height={20}
+            priority
+          />
+          <div className="flex items-center">
+            <Plus />
+          </div>
+          <Image
+            className="dark:invert"
+            src="/vercel-original.svg"
+            alt="Vercel logo"
+            width={100}
+            height={20}
+            priority
+          />
+        </div>
         <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
           <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
             To get started, edit the page.tsx file.
