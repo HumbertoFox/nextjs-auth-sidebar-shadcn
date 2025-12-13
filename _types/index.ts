@@ -42,40 +42,54 @@ export type UserComponentProps = {
 }
 
 export type BreadcrumbItemProps = {
-    text: string;
-    href?: string;
+    readonly text: string;
+    readonly href?: string;
 }
 
 export type SidebarNavItemProps = {
-    text: string;
-    href: string;
+    readonly text: string;
+    readonly href: string;
 }
 
 export type NavMainItemProps = {
-    title: string;
-    href: string;
-    icon?: LucideIcon | null;
-    isActive?: boolean;
+    readonly title: string;
+    readonly href: string;
+    readonly icon?: LucideIcon | null;
+    readonly isActive?: boolean;
 }
 
 export type DashboardSidebarHeaderProps = {
-    items: BreadcrumbItemProps[];
+    readonly items: BreadcrumbItemProps[];
 }
 
 export type HeadingProps = {
-    title: string;
-    description?: string;
+    readonly title: string;
+    readonly description?: string;
 }
 
 export type RegisterFormProps = {
-    name: string;
-    email: string;
-    password: string;
-    password_confirmation: string;
-    avatar?: File;
+    readonly name: string;
+    readonly email: string;
+    readonly password: string;
+    readonly password_confirmation: string;
+    readonly avatar?: File;
 }
 
 export type LoginFormProps = {
-    email: string;
-    password: string;
+    readonly email: string;
+    readonly password: string;
+}
+
+export type UserFormProps = ProfileForm & {
+    readonly id: string;
+    readonly role: string;
+    readonly password: string;
+    readonly password_confirmation?: string;
+}
+
+export type RegisterFormUserProps = {
+    readonly user?: UserFormProps;
+    readonly isEdit?: boolean;
+    readonly titleForm: string;
+    readonly valueButton?: string;
 }
