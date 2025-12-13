@@ -46,6 +46,7 @@ export const UserRepository = {
                 name,
                 email,
                 role,
+                password,
                 avatar,
                 deleted_at
             FROM users

@@ -6,6 +6,7 @@ import { compare, hash } from 'bcrypt-ts';
 import { redirect } from 'next/navigation';
 import z from 'zod';
 import { UserRepository } from '@/_lib/userrepository';
+import { revalidatePath } from 'next/cache';
 
 export async function updatePassword(state: FormStatePasswordUpdate, formData: FormData): Promise<FormStatePasswordUpdate> {
     const validatedFields = passwordUpdateSchema.safeParse({
@@ -35,6 +36,8 @@ export async function updatePassword(state: FormStatePasswordUpdate, formData: F
     const hashedPassword = await hash(password, 12);
 
     await UserRepository.updatePassword(sessionUser.id, hashedPassword);
+    
+    revalidatePath('/dashboard/settings/password');
 
     return { message: true };
 }

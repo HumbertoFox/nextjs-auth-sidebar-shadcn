@@ -20,6 +20,77 @@ Fiz o clone no meu repositório de desenvolvimento local
 
 ```
 
+---
+
+### ✅ 📘 Modelo do Banco de Dados — Users & Verification Tokens
+📌 Visão Geral
+
+O banco possui:
+
+Um ENUM para papéis de usuário (ADMIN, USER)
+
+Uma tabela principal users
+
+Uma tabela auxiliar verification_tokens
+
+Um trigger que atualiza automaticamente updated_at em users
+
+### 📊 Modelo Entidade-Relacionamento (ER)
+
+```scss
+
+┌───────────────┐             ┌───────────────────────────┐
+│    users      │ 1        N  │   verification_tokens     │
+├───────────────┤             ├───────────────────────────┤
+│ id (PK)       │<────────────│ identifier (PK, FK?)      │
+│ name          │             │ token (PK)                │
+│ email (U)     │             │ expires_at                │
+│ password      │             └───────────────────────────┘
+│ role (ENUM)   │
+│ email_verified│
+│ avatar        │
+│ deleted_at    │
+│ created_at    │
+│ updated_at    │
+└───────────────┘
+
+
+```
+
+### 📑 Descrição das Tabelas
+### 🧍 users
+
+|Campo	        | Tipo	      | Descrição
+|---------------|-------------|---------------------------|
+|id	            | TEXT (PK)   | UUID/string identificador |
+|name	        | TEXT	      | Nome do usuário           |
+|email	        | TEXT UNIQUE | E-mail único              |
+|password       | TEXT	      | Senha hash                |
+|role	        | user_role   | ADMIN/USER                |
+|email_verified | TIMESTAMP   | Quando confirmou o email  |
+|avatar	        | TEXT	      | URL do avatar             |
+|deleted_at	    | TIMESTAMP   | Soft delete               |
+|created_at	    | TIMESTAMP   | Criado em                 |
+|updated_at	    | TIMESTAMP   | Atualizado em             |
+
+Trigger automático
+
+Sempre que um usuário for atualizado, updated_at recebe o timestamp atual.
+
+### 🔐 verification_tokens
+
+Usada para login mágico, verificação de e-mail, etc.
+
+|Campo      | Tipo	    | Descrição        |
+|-----------|-----------|------------------|
+|identifier | TEXT      | Email do usuário |
+|token      | TEXT      | Token único      |
+|expires_at | TIMESTAMP | Expiração        |
+
+PK composta: (identifier, token)
+
+---
+
 Primeiro commit no repositório
 
 Adicionando as mudanças

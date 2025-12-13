@@ -7,6 +7,7 @@ import z from 'zod';
 import { put, del } from '@vercel/blob';
 import crypto from 'crypto';
 import { UserRepository } from '@/_lib/userrepository';
+import { revalidatePath } from 'next/cache';
 
 const MAX_FILE_SIZE = 512 * 1024;
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
@@ -65,6 +66,8 @@ export async function updateUser(state: FormStateUserUpdate, formData: FormData)
     if (Object.keys(dataToUpdate).length === 0) return { message: 'No changes made.' };
 
     await UserRepository.updateByIdUserActive(sessionUser.id, dataToUpdate);
+
+    revalidatePath('/dasboard/settings/profile');
 
     return { success: true };
 }

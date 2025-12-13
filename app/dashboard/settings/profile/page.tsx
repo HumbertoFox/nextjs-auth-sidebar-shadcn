@@ -13,13 +13,11 @@ export default async function ProfilePage() {
     const user = await getUser() as UserProfilePageProps;
     const mustVerifyEmail: boolean = !Boolean(user.email_verified);
     return (
-        <>
-            <ProfilePageClient
-                name={user.name}
-                email={user.email}
-                avatar={user.avatar}
-                mustVerifyEmail={mustVerifyEmail}
-            />
-        </>
+        <ProfilePageClient
+            name={user.name}
+            email={user.email}
+            avatar={user.avatar}
+            mustVerifyEmail={mustVerifyEmail}
+        />
     );
 }
