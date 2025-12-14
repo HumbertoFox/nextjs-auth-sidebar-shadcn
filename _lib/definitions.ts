@@ -174,6 +174,7 @@ export type FormStatePasswordForgot =
             email?: string[];
         }
         message?: string;
+        error?: string;
     } | undefined;
 
 export type FormStatePasswordReset =
