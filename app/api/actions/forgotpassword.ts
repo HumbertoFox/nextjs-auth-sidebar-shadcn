@@ -16,11 +16,15 @@ export async function forgotPassword(state: FormStatePasswordForgot, formData: F
 
     const user = await UserRepository.findByEmail(email);
 
-    if (!user) return { message: 'If your email is registered, you will receive a link to reset your password.' };
+    const genericMessage = {
+        message: 'If your email is registered, you will receive a link to reset your password.'
+    };
+
+    if (!user) return genericMessage;
 
     const tokenExisting = await VerificationTokenRepository.findByIdentifier(email);
 
-    if (!tokenExisting || new Date() > tokenExisting.expires) {
+    if (!tokenExisting) {
         const token = crypto.randomBytes(32).toString('hex');
         const expires = new Date(Date.now() + 60 * 60 * 1000);
 
@@ -31,11 +35,12 @@ export async function forgotPassword(state: FormStatePasswordForgot, formData: F
             console.error("Error sending verification email:", response.error);
             return { error: 'email-send-error' };
         }
-
+        
+        await VerificationTokenRepository.deleteByIdentifier(email);
         await VerificationTokenRepository.create({ identifier: email, token, expires });
 
-        return { message: 'If your email is registered, you will receive a link to reset your password.' };
+        return genericMessage;
     }
 
-    return { message: 'If your email is registered, you will receive a link to reset your password.' };
+    return genericMessage;
 }

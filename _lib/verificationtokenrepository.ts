@@ -13,6 +13,8 @@ export const VerificationTokenRepository = {
             SELECT *
             FROM verification_tokens
             WHERE identifier = $1
+                AND expires > NOW()
+            ORDER BY expires DESC
             LIMIT 1
             `,
             [identifier]
@@ -52,6 +54,16 @@ export const VerificationTokenRepository = {
         );
 
         return result.rows[0];
+    },
+
+    async deleteByIdentifier(identifier: string) {
+        await pool.query(
+            `
+            DELETE FROM verification_tokens
+            WHERE identifier = $1
+            `,
+            [identifier]
+        );
     },
 
     async delete(identifier: string, token: string) {

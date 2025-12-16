@@ -20,7 +20,7 @@ export async function resetPassword(state: FormStatePasswordReset, formData: For
 
     const tokenExisting = await VerificationTokenRepository.findValidToken(email, token);
 
-    if (!tokenExisting || tokenExisting.expires < new Date()) return { warning: 'Invalid or expired token.' };
+    if (!tokenExisting) return { warning: 'Invalid or expired token.' };
 
     const hashedPassword = await hash(password, 12);
 
