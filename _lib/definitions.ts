@@ -2,17 +2,17 @@ import * as z from 'zod';
 
 export const createAdminSchema = z.object({
     name: z.string()
-        .min(1, 'Nome é obrigatório'),
-    email: z.email('Endereço de e-mail inválido')
+        .min(1, 'Name is required.'),
+    email: z.email('Invalid email address')
         .trim()
         .toLowerCase(),
     password: z.string()
-        .min(8, 'A senha deve ter pelo menos 8 caracteres'),
+        .min(8, 'The password must be at least 8 characters long.'),
     password_confirmation: z.string()
-        .min(1, 'Por favor confirme sua senha')
+        .min(1, 'Please confirm your password.')
 })
     .refine((data) => data.password === data.password_confirmation, {
-        message: 'As senhas não correspondem',
+        message: "The passwords don't match.",
         path: ['password_confirmation']
     });
 
@@ -21,18 +21,18 @@ export function getSignUpUpdateSchema(formData: FormData) {
 
     return z.object({
         name: z.string()
-            .min(1, 'Nome é obrigatório'),
-        email: z.email('Endereço de e-mail inválido')
+            .min(1, 'Name is required.'),
+        email: z.email('Invalid email address')
             .trim()
             .toLowerCase(),
         password: isEdit
             ? z.string().optional()
-            : z.string().min(8, 'A senha deve ter pelo menos 8 caracteres'),
+            : z.string().min(8, 'The password must be at least 8 characters long.'),
         password_confirmation: isEdit
             ? z.string().optional()
-            : z.string().min(1, 'Por favor confirme sua senha'),
+            : z.string().min(1, 'Please confirm your password.'),
         role: z.enum(['ADMIN', 'USER'], {
-            error: 'A função deve ser USUÁRIA(O) ou ADMINISTRADOR(A)'
+            error: 'The role must be USER or ADMINISTRATOR.'
         })
     })
         .superRefine((data, ctx) => {
@@ -40,65 +40,65 @@ export function getSignUpUpdateSchema(formData: FormData) {
                 ctx.addIssue({
                     path: ['password_confirmation'],
                     code: 'custom',
-                    message: 'As senhas não correspondem',
+                    message: "The passwords don't match.",
                 });
             }
         });
 }
 
 export const signInSchema = z.object({
-    email: z.email('E-mail inválido')
+    email: z.email('Invalid email address')
         .trim()
         .toLowerCase(),
     password: z.string()
-        .min(8, 'A senha deve ter mais de 8 caracteres')
-        .max(32, 'A senha deve ter menos de 32 caracteres')
+        .min(8, 'The password must be longer than 8 characters.')
+        .max(32, 'The password must be less than 32 characters long.')
 })
 
 export const updateUserSchema = z.object({
     name: z.string()
-        .min(1, 'Nome é obrigatório'),
-    email: z.email('E-mail inválido')
+        .min(1, 'Name is required.'),
+    email: z.email('Invalid email address')
         .trim()
         .toLowerCase()
 })
 
 export const deleteUserSchema = z.object({
     password: z.string()
-        .min(8, 'A senha deve ter pelo menos 8 caracteres')
+        .min(8, 'The password must be at least 8 characters long.')
 })
 
 export const passwordUpdateSchema = z.object({
     current_password: z.string()
-        .min(8, 'A senha deve ter pelo menos 8 caracteres'),
+        .min(8, 'The password must be at least 8 characters long.'),
     password: z.string()
-        .min(8, 'A senha deve ter pelo menos 8 caracteres'),
+        .min(8, 'The password must be at least 8 characters long.'),
     password_confirmation: z.string()
-        .min(8, 'Por favor confirme sua senha')
+        .min(8, 'Please confirm your password.')
 })
     .refine((data) => data.password === data.password_confirmation, {
-        message: 'As senhas não correspondem',
+        message: "The passwords don't match.",
         path: ['password_confirmation']
     });
 
 export const passwordResetSchema = z.object({
-    email: z.email('E-mail inválido')
+    email: z.email('Invalid email address')
         .trim()
         .toLowerCase(),
     token: z.string()
-        .min(1, 'Token é necessário'),
+        .min(1, 'A token is required.'),
     password: z.string()
-        .min(8, 'A senha deve ter mais de 8 caracteres'),
+        .min(8, 'The password must be longer than 8 characters.'),
     password_confirmation: z.string()
-        .min(1, 'Por favor confirme sua senha')
+        .min(1, 'Please confirm your password.')
 })
     .refine((data) => data.password === data.password_confirmation, {
-        message: 'As senhas não correspondem',
+        message: "The passwords don't match.",
         path: ['password_confirmation']
     });
 
 export const passwordForgotSchema = z.object({
-    email: z.email('E-mail inválido')
+    email: z.email('Invalid email address')
         .trim()
         .toLowerCase()
 });
