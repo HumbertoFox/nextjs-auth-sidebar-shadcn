@@ -16,7 +16,9 @@ export default function SettingsLayout({
                 <SettingsLayoutComponents />
                 <Separator className="my-6 md:hidden" />
                 <div className="flex-1 md:max-w-2xl">
-                    <section className="max-w-xl flex flex-col gap-4 p-4">{children}</section>
+                    <section className="max-w-xl flex flex-col gap-4 p-4">
+                        {children}
+                    </section>
                 </div>
             </div>
         </>
