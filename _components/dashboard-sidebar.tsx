@@ -11,10 +11,12 @@ import { NavMainItemProps, ProfileForm } from '@/_types';
 
 type DashboardSidebarProps = React.ComponentProps<typeof Sidebar> & {
     user: ProfileForm;
+    isAdmin: boolean;
 }
 
 export default function DashboardSidebar({
     user,
+    isAdmin,
     ...props
 }: DashboardSidebarProps) {
     const adminNavItems: NavMainItemProps[] = [
@@ -38,9 +40,11 @@ export default function DashboardSidebar({
                     </SidebarMenuItem>
                 </SidebarMenu>
             </SidebarHeader>
-            <SidebarContent>
-                <NavMainAdmins items={adminNavItems} />
-            </SidebarContent>
+            {isAdmin && (
+                <SidebarContent>
+                    <NavMainAdmins items={adminNavItems} />
+                </SidebarContent>
+            )}
             <SidebarContent>
                 <NavMainUsers items={userNavItems} />
             </SidebarContent>

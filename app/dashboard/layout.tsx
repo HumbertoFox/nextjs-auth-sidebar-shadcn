@@ -7,9 +7,13 @@ export default async function DashboardLayout({
     children,
 }: Readonly<{ children: React.ReactNode; }>) {
     const user = await getUser() as UserDetailsProps;
+    const isAdmin = user.role === 'ADMIN';
     return (
         <SidebarProvider>
-            <DashboardSidebar user={user} />
+            <DashboardSidebar
+                user={user}
+                isAdmin={isAdmin}
+            />
             <SidebarInset>
                 {children}
             </SidebarInset>
