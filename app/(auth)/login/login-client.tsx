@@ -13,15 +13,15 @@ import { LoginFormProps } from '@/_types';
 
 export function LoginClient() {
     const searchParams = useSearchParams();
-    const [status, setStatus] = useState<string | boolean>(false);
-    const canResetPassword = !status;
+    const emailFromParams = searchParams.get('email') ?? '';
+    const statusFromParams = searchParams.get('status');
     const router = useRouter();
     const emailRef = useRef<HTMLInputElement>(null);
     const passwordRef = useRef<HTMLInputElement>(null);
     const [state, action, pending] = useActionState(loginUser, undefined);
     const [isVisibledPassword, setIsVisibledPassword] = useState<boolean>(false);
     const [data, setData] = useState<LoginFormProps>({
-        email: '',
+        email: emailFromParams,
         password: '',
     });
 
@@ -35,35 +35,21 @@ export function LoginClient() {
         const formData = new FormData(e.currentTarget);
         startTransition(() => action(formData));
     };
-
     useEffect(() => {
-        const statusFromParams = searchParams.get('status');
-        const emailFromParams = searchParams.get('email');
+        if (!state?.message) return;
 
-        if (emailFromParams) {
-            setData((prevData) => ({ ...prevData, email: emailFromParams }));
-            passwordRef?.current?.focus();
+        if (state?.warning && emailRef.current) {
+            emailRef.current.focus();
         };
 
-        if (statusFromParams) {
-            setStatus(statusFromParams);
-            const timer = setTimeout(() => setStatus(true), 5000);
-            return () => clearTimeout(timer);
-        };
-    }, [searchParams]);
-    useEffect(() => {
-        if (state?.message) {
+        startTransition(() => {
             setData({
                 email: '',
                 password: ''
             });
-            router.push('/dashboard');
-        };
-        if (state?.warning && emailRef.current) {
-            emailRef.current.focus();
-        };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [state]);
+        });
+        router.push('/dashboard');
+    }, [state, router]);
     return (
         <div className="space-y-6">
             <div className="flex flex-col items-center gap-2 text-center mx-auto">
@@ -85,6 +71,7 @@ export function LoginClient() {
                             type="email"
                             ref={emailRef}
                             required
+                            disabled={Boolean(emailFromParams)}
                             autoFocus
                             tabIndex={1}
                             autoComplete="email"
@@ -98,7 +85,7 @@ export function LoginClient() {
                     <div className="grid gap-2">
                         <div className="flex items-center">
                             <Label htmlFor="password">Password</Label>
-                            {canResetPassword && (
+                            {!statusFromParams && (
                                 <TextLink
                                     href="/forgot-password"
                                     className="ml-auto text-sm"
@@ -156,7 +143,7 @@ export function LoginClient() {
                 </div>
             </form>
 
-            {status && <div className="mb-4 text-center text-sm font-medium text-blue-600">{status}</div>}
+            {statusFromParams && <div className="mb-4 text-center text-sm font-medium text-blue-600">{statusFromParams}</div>}
             {state?.message && <div className="mb-4 text-center text-sm font-medium text-blue-600">{state.message}</div>}
             {state?.warning && <div className="mb-4 text-center text-sm font-medium text-red-400">{state.warning}</div>}
         </div>

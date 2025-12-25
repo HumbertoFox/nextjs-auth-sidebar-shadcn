@@ -188,3 +188,9 @@ export type FormStatePasswordReset =
         message?: string;
         warning?: string;
     } | undefined;
+
+export type FormStateEmailVerification = {
+    error?: string;
+    status?: string;
+    success?: string;
+} | undefined;

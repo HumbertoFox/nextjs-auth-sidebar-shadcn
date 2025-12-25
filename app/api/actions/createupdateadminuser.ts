@@ -49,17 +49,17 @@ export async function createUpdateAdminUser(state: FormStateCreateUpdateAdminUse
         let imageUrl: string | undefined;
 
         if (file && file.size > 0) {
-            if (!ALLOWED_TYPES.includes(file.type)) return { errors: { avatar: ['Apenas JPEG, PNG ou WebP são permitidas.'] } };
+            if (!ALLOWED_TYPES.includes(file.type)) return { errors: { avatar: ['Only JPEG, PNG, or WebP formats are allowed.'] } };
 
-            if (file.size > MAX_FILE_SIZE) return { errors: { avatar: ['A imagem não pode ultrapassar 512 KB.'] } };
+            if (file.size > MAX_FILE_SIZE) return { errors: { avatar: ['The image cannot exceed 512 KB.'] } };
 
             try {
                 const buffer = Buffer.from(await file.arrayBuffer());
                 const metadata = await sharp(buffer).metadata();
                 const { width, height } = metadata;
-                if (width > MAX_DIMENSION || height > MAX_DIMENSION) return { errors: { avatar: [`A imagem não pode exceder 512x512px (atual: ${width}x${height})`] } };
+                if (width > MAX_DIMENSION || height > MAX_DIMENSION) return { errors: { avatar: [`The image cannot exceed 512x512px. (current: ${width}x${height})`] } };
             } catch {
-                return { errors: { avatar: ['Falha ao ler a imagem.'] } };
+                return { errors: { avatar: ['Failed to read the image.'] } };
             }
 
             const uniqueFileName = `${crypto.randomUUID()}-${file.name}`;
@@ -77,7 +77,7 @@ export async function createUpdateAdminUser(state: FormStateCreateUpdateAdminUse
 
             const existingUser = await UserRepository.findByEmail(email);
 
-            if (existingUser && existingUser.id !== id) return { errors: { email: ['Este e-mail já está em uso!'] } };
+            if (existingUser && existingUser.id !== id) return { errors: { email: ['This email address is already in use!'] } };
 
             const hasChanges =
                 userInDb.name !== name ||
@@ -102,7 +102,7 @@ export async function createUpdateAdminUser(state: FormStateCreateUpdateAdminUse
         } else {
             const existingUser = await UserRepository.findByEmail(email);
 
-            if (existingUser) return { errors: { email: ['Este e-mail já está em uso!'] } };
+            if (existingUser) return { errors: { email: ['This email address is already in use!'] } };
 
             const newUser = await UserRepository.create({
                 name,

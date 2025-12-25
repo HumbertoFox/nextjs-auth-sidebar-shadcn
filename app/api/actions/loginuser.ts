@@ -19,17 +19,17 @@ export async function loginUser(state: FormStateLoginUser, formData: FormData): 
     try {
         const user = await UserRepository.findByEmailActive(email);
 
-        if (!user) return { warning: 'E-mail ou senha inválidos' };
+        if (!user) return { warning: 'Invalid email or password' };
 
         const isPasswordValid = await compare(password, user.password);
 
-        if (!isPasswordValid) return { warning: 'E-mail ou senha inválidos' };
+        if (!isPasswordValid) return { warning: 'Invalid email or password' };
 
         await createSession(user.id, user.role);
 
-        return { message: 'Autenticação bem-sucedida! Redirecionando para o Painel, aguarde...' };
+        return { message: 'Authentication successful! Redirecting to the Dashboard, please wait...' };
     } catch (error) {
         console.error('Unknown error occurred:', error);
-        return { warning: 'Algo deu errado. Tente novamente mais tarde.' };
+        return { warning: 'Something went wrong. Please try again later.' };
     };
 }

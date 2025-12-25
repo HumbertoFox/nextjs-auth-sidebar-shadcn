@@ -1,15 +1,10 @@
 'use server';
 
+import { FormStateEmailVerification } from '@/_lib/definitions';
 import { sendEmailVerification } from '@/_lib/mail';
 import { UserRepository } from '@/_lib/userrepository';
 import { VerificationTokenRepository } from '@/_lib/verificationtokenrepository';
 import crypto from 'crypto';
-
-type FormStateEmailVerification = {
-    error?: string;
-    status?: string;
-    success?: string;
-}
 
 export async function handleEmailVerification(state: FormStateEmailVerification | undefined, formData: FormData) {
     const email = formData.get('email') as string;
@@ -21,7 +16,9 @@ export async function handleEmailVerification(state: FormStateEmailVerification 
 
     if (isCheckedUserEmail?.emailVerified) return { error: 'Email already verified!' };
 
-    const tokenExisting = await VerificationTokenRepository.findByIdentifier(email);
+    const tokenExisting = await VerificationTokenRepository.findValidToken(email, token);
+    
+    if (!tokenExisting) return { error: 'Invalid or expired token' };
 
     if (tokenExisting && new Date() > tokenExisting.expires) {
         await VerificationTokenRepository.delete(email, tokenExisting.token);
@@ -37,7 +34,11 @@ export async function handleEmailVerification(state: FormStateEmailVerification 
             return { error: 'email-send-error' };
         }
 
-        await VerificationTokenRepository.create({ identifier: email, token, expires });
+        await VerificationTokenRepository.create({
+            identifier: email,
+            token,
+            expires
+        });
 
         return { status: 'verification-link-sent' };
     }

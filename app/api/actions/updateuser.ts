@@ -29,23 +29,23 @@ export async function updateUser(state: FormStateUserUpdate, formData: FormData)
 
     const emailInUse = await UserRepository.findByEmailActive(email);
 
-    if (emailInUse && emailInUse.id !== sessionUser.id) return { errors: { email: ['Este e-mail já está em uso'] } };
+    if (emailInUse && emailInUse.id !== sessionUser.id) return { errors: { email: ['This email address is already in use.'] } };
 
     const dataToUpdate: { name?: string; email?: string, image?: string | null } = {};
     if (sessionUser.name !== name) dataToUpdate.name = name;
     if (sessionUser.email !== email) dataToUpdate.email = email;
 
     if (file && file.size > 0) {
-        if (!ALLOWED_TYPES.includes(file.type)) return { errors: { avatar: ['Apenas JPEG, PNG ou WebP são permitidas.'] } };
+        if (!ALLOWED_TYPES.includes(file.type)) return { errors: { avatar: ['Only JPEG, PNG, or WebP formats are allowed.'] } };
 
-        if (file.size > MAX_FILE_SIZE) return { errors: { avatar: ['A imagem não pode ultrapassar 512 KB.'] } };
+        if (file.size > MAX_FILE_SIZE) return { errors: { avatar: ['The image cannot exceed 512 KB.'] } };
 
         try {
             if (sessionUser.image) {
                 try {
                     await del(sessionUser.image);
                 } catch (deleteErr) {
-                    console.warn('Não foi possível deletar imagem anterior:', deleteErr);
+                    console.warn('It was not possible to delete the previous image:', deleteErr);
                 }
             }
 
@@ -58,8 +58,8 @@ export async function updateUser(state: FormStateUserUpdate, formData: FormData)
                 dataToUpdate.image = blob.url;
             }
         } catch (error) {
-            console.error('Erro ao enviar imagem:', error);
-            return { errors: { avatar: ['Erro ao enviar imagem. Tente novamente.'] } };
+            console.error('Error sending image:', error);
+            return { errors: { avatar: ['Error sending image. Please try again.'] } };
         }
     }
 

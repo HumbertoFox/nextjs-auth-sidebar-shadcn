@@ -32,7 +32,7 @@ export async function emailVerifiedChecked() {
             expires
         });
 
-        const verifyLink = `${process.env.NEXT_URL}/auth/verify-email?token=${token}&email=${email}`;
+        const verifyLink = `${process.env.NEXT_URL}/verify-email?token=${token}&email=${email}`;
         await sendEmailVerification(email, verifyLink);
 
         return 'verification-link-sent';

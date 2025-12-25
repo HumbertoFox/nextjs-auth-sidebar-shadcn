@@ -8,13 +8,7 @@ import { Input } from '@/_components/ui/input';
 import { Label } from '@/_components/ui/label';
 import { useSearchParams } from 'next/navigation';
 import { resetPassword } from '@/app/api/actions/resetpassword';
-
-type ResetPasswordForm = {
-    token: string;
-    email: string;
-    password: string;
-    password_confirmation: string;
-};
+import { ResetPasswordForm } from '@/_types';
 
 export default function ResetPasswordClient() {
     const searchParams = useSearchParams();
@@ -131,7 +125,11 @@ export default function ResetPasswordClient() {
                         {state?.errors?.password_confirmation?.[0] && <InputError message={state.errors.password_confirmation[0]} />}
                     </div>
 
-                    <input type="hidden" name="token" value={data.token} />
+                    <input
+                        type="hidden"
+                        name="token"
+                        value={data.token}
+                    />
 
                     <Button
                         type="submit"

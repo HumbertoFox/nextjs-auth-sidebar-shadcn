@@ -65,7 +65,7 @@ export default function VerifyEmailClient() {
                 </Button>
 
                 <TextLink
-                    href={!state?.status ? "/login" : "/login?status=email verified"}
+                    href={!state?.status ? "/login" : `/login?status=email%20verified&email=${email}`}
                     className="mx-auto block text-sm"
                 >
                     Log in

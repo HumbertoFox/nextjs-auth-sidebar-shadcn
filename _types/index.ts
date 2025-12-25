@@ -93,3 +93,10 @@ export type RegisterFormUserProps = {
     readonly titleForm: string;
     readonly valueButton?: string;
 }
+
+export type ResetPasswordForm = {
+    readonly token: string;
+    readonly email: string;
+    readonly password: string;
+    readonly password_confirmation: string;
+}
