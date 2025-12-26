@@ -11,7 +11,10 @@ export default function AppearancePageClient({
 }: HTMLAttributes<HTMLDivElement>) {
     const { theme, setTheme } = useTheme();
     const [mounted, setMounted] = useState(false);
-    useEffect(() => setMounted(true), []);
+    useEffect(() => {
+        const timer = setTimeout(() => setMounted(true), 0);
+        return () => clearTimeout(timer);
+    }, []);
     const tabs: {
         value: 'light' | 'dark' | 'system';
         icon: LucideIcon;
@@ -40,9 +43,7 @@ export default function AppearancePageClient({
                             onClick={() => setTheme(value)}
                             className={cn(
                                 "flex items-center rounded-md px-3.5 py-1.5 cursor-pointer transition-colors",
-                                theme === value
-                                    ? "bg-white shadow-xs dark:bg-neutral-700 dark:text-neutral-100"
-                                    : "text-neutral-500 hover:bg-neutral-200/60 hover:text-black dark:text-neutral-400 dark:hover:bg-neutral-700/60",
+                                theme === value ? "bg-white shadow-xs dark:bg-neutral-700 dark:text-neutral-100" : "text-neutral-500 hover:bg-neutral-200/60 hover:text-black dark:text-neutral-400 dark:hover:bg-neutral-700/60",
                             )}
                         >
                             <Icon className="-ml-1 h-4 w-4" />
