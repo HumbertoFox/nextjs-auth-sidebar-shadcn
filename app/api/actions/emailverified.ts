@@ -7,7 +7,7 @@ import { VerificationTokenRepository } from '@/_lib/verificationtokenrepository'
 import { UserRepository } from '@/_lib/userrepository';
 
 export async function emailVerifiedChecked() {
-    const sessionUser = await getUser();;
+    const sessionUser = await getUser();
 
     if (!sessionUser?.email) return null;
 

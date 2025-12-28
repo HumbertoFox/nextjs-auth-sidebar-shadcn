@@ -20,8 +20,7 @@ export async function updatePassword(state: FormStatePasswordUpdate, formData: F
     const { current_password, password } = validatedFields.data;
 
     const sessionUser = await getUser();
-
-    if (!sessionUser?.id) return redirect('/');
+    if (!sessionUser || !sessionUser?.id) return redirect('/');
 
     const authUser = await UserRepository.findActiveById(sessionUser.id);
 

@@ -15,7 +15,7 @@ export async function deleteUser(state: FormStateUserDelete, formData: FormData)
 
     const sessionUser = await getUser();
 
-    if (!sessionUser?.id) return { message: false };
+    if (!sessionUser || !sessionUser?.id) return { message: false };
 
     const existingUser = await UserRepository.findActiveById(sessionUser.id);
 
