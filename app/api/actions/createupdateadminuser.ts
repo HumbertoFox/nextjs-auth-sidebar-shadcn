@@ -18,7 +18,7 @@ export async function createUpdateAdminUser(state: FormStateCreateUpdateAdminUse
 
     const validatedFields = schema.safeParse({
         name: formData.get('name') as string,
-        email: (formData.get('email') as string)?.toLowerCase().trim(),
+        email: (formData.get('email') as string),
         password: formData.get('password') as string,
         role: formData.get('role') as string,
         password_confirmation: formData.get('password_confirmation') as string

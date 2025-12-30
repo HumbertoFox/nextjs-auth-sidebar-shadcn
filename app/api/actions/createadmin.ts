@@ -15,7 +15,7 @@ const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 export async function createAdmin(state: FormStateCreateAdmin, formData: FormData): Promise<FormStateCreateAdmin> {
     const validatedFields = createAdminSchema.safeParse({
         name: formData.get('name') as string,
-        email: (formData.get('email') as string)?.toLowerCase().trim(),
+        email: (formData.get('email') as string),
         password: formData.get('password') as string,
         password_confirmation: formData.get('password_confirmation') as string
     });

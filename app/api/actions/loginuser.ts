@@ -8,7 +8,7 @@ import { UserRepository } from '@/_lib/userrepository';
 
 export async function loginUser(state: FormStateLoginUser, formData: FormData): Promise<FormStateLoginUser> {
     const validatedFields = signInSchema.safeParse({
-        email: (formData.get('email') as string)?.toLowerCase().trim(),
+        email: (formData.get('email') as string),
         password: formData.get('password') as string,
     });
 

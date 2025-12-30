@@ -1,5 +1,6 @@
 import { getUser } from '@/_lib/dal';
 import pool from '@/_lib/db';
+import { deleteSession } from '../actions/logoutuser';
 
 export async function GET() {
     try {
@@ -17,6 +18,8 @@ export async function GET() {
             DROP TABLE IF EXISTS users;
             DROP TYPE IF EXISTS user_role;
         `);
+
+        await deleteSession();
 
         return Response.json({ ok: true, message: 'Banco resetado com sucesso.' });
 

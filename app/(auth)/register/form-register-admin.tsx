@@ -1,7 +1,7 @@
 'use client';
 
 import { Eye, EyeClosed, LoaderCircle } from 'lucide-react';
-import { startTransition, useActionState, useRef, useState } from 'react';
+import { startTransition, useActionState, useEffect, useRef, useState } from 'react';
 import { InputError } from '@/_components/input-error';
 import { Button } from '@/_components/ui/button';
 import { Input } from '@/_components/ui/input';
@@ -11,11 +11,13 @@ import { TextLink } from '@/_components/text-link';
 import { handleImageChange } from '@/_lib/handleimagechange';
 import Image from 'next/image';
 import { RegisterFormProps } from '@/_types';
+import { useRouter } from 'next/navigation';
 
 export default function RegisterAdmin({
     TitleIntl,
 }: { TitleIntl: string }) {
     const emailRef = useRef<HTMLInputElement>(null);
+    const router = useRouter();
     const [state, action, pending] = useActionState(createAdmin, undefined);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
     const [imageFile, setImageFile] = useState<File | null>(null);
@@ -49,6 +51,20 @@ export default function RegisterAdmin({
         if (imageFile) formData.append('file', imageFile);
         startTransition(() => action(formData));
     };
+    useEffect(() => {
+        if (!state?.message) return;
+
+        startTransition(() => {
+            setData({
+                name: '',
+                email: '',
+                password: '',
+                password_confirmation: '',
+                avatar: undefined,
+            });
+        });
+        router.push('/dashboard');
+    }, [state, router]);
     return (
         <div className="space-y-6">
             <div className="flex flex-col items-center gap-2 text-center mx-auto">
@@ -217,7 +233,7 @@ export default function RegisterAdmin({
             </form>
 
             {state?.warning && <div className="mb-4 text-center text-sm font-medium text-orange-400">{state.warning}</div>}
-            {state?.message && <div className="mb-4 text-center text-sm font-medium text-blue-400">Conta criada com Sucesso! Redirecionando para o Painel, aguarde...</div>}
+            {state?.message && <div className="mb-4 text-center text-sm font-medium text-blue-400">Account created successfully! Redirecting to the Dashboard, please wait...</div>}
         </div>
     );
 }

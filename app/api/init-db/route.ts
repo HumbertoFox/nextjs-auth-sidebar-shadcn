@@ -2,9 +2,10 @@ import pool from '@/_lib/db';
 
 export async function GET() {
     try {
-        /* 0. Extensão necessária para UUID */
+        /* 0. Extensão necessária para UUID e email */
         await pool.query(`
             CREATE EXTENSION IF NOT EXISTS "pgcrypto";
+            CREATE EXTENSION IF NOT EXISTS "citext";
         `);
 
         /* 1. Criar ENUM user_role */
@@ -24,8 +25,8 @@ export async function GET() {
             CREATE TABLE IF NOT EXISTS users (
                 id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
                 name TEXT NOT NULL,
-                email TEXT UNIQUE NOT NULL,
-                password TEXT NOT NULL,
+                email CITEXT UNIQUE NOT NULL,
+                password TEXT NULL,
                 role user_role NOT NULL DEFAULT 'USER',
                 email_verified TIMESTAMPTZ NULL,
                 avatar TEXT NULL,
@@ -66,7 +67,7 @@ export async function GET() {
         /* 5. Tabela verification_tokens */
         await pool.query(`
             CREATE TABLE IF NOT EXISTS verification_tokens (
-                identifier TEXT NOT NULL,
+                identifier CITEXT NOT NULL,
                 token TEXT NOT NULL,
                 expires_at TIMESTAMPTZ NOT NULL,
                 PRIMARY KEY (identifier, token)
