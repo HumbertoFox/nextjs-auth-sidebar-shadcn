@@ -2,6 +2,11 @@ import pool from '@/_lib/db';
 
 export async function GET() {
     try {
+        /* 0. Extensão necessária para UUID */
+        await pool.query(`
+            CREATE EXTENSION IF NOT EXISTS "pgcrypto";
+        `);
+
         /* 1. Criar ENUM user_role */
         await pool.query(`
             DO $$
@@ -17,16 +22,16 @@ export async function GET() {
         /* 2. Criar tabela users */
         await pool.query(`
             CREATE TABLE IF NOT EXISTS users (
-                id TEXT PRIMARY KEY,
+                id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
                 name TEXT NOT NULL,
                 email TEXT UNIQUE NOT NULL,
                 password TEXT NOT NULL,
                 role user_role NOT NULL DEFAULT 'USER',
-                email_verified TIMESTAMP NULL,
+                email_verified TIMESTAMPTZ NULL,
                 avatar TEXT NULL,
-                deleted_at TIMESTAMP NULL,
-                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+                deleted_at TIMESTAMPTZ NULL,
+                created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+                updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
             );
         `);
 
@@ -63,7 +68,7 @@ export async function GET() {
             CREATE TABLE IF NOT EXISTS verification_tokens (
                 identifier TEXT NOT NULL,
                 token TEXT NOT NULL,
-                expires_at TIMESTAMP NOT NULL,
+                expires_at TIMESTAMPTZ NOT NULL,
                 PRIMARY KEY (identifier, token)
             );
         `);

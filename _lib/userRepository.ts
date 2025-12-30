@@ -1,5 +1,4 @@
 import pool from '@/_lib/db';
-import { createId } from '@paralleldrive/cuid2';
 
 export interface User {
     id: string;
@@ -133,29 +132,21 @@ export const UserRepository = {
         name: string;
         email: string;
         password: string;
-        role: string;
+        role: 'ADMIN' | 'USER';
         avatar?: string | null;
     }) {
-        const id = createId();
-        const created_at = new Date();
-        const updated_at = new Date();
-        const result = await pool.query<
-            User & { created_at: Date; updated_at: Date }
-        >(
+        const result = await pool.query<User>(
             `
-            INSERT INTO users (id, name, email, password, role, avatar, created_at, updated_at)
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+            INSERT INTO users (name, email, password, role, avatar)
+            VALUES ($1, $2, $3, $4, $5)
             RETURNING *
             `,
             [
-                id,
                 data.name,
                 data.email,
                 data.password,
                 data.role,
                 data.avatar ?? null,
-                created_at,
-                updated_at,
             ]
         );
 

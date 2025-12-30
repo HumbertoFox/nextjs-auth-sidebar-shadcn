@@ -23,6 +23,7 @@ Fiz o clone no meu repositório de desenvolvimento local
 ---
 
 ### ✅ 📘 Modelo do Banco de Dados — Users & Verification Tokens
+
 📌 Visão Geral
 
 O banco possui:
@@ -39,41 +40,41 @@ Um trigger que atualiza automaticamente updated_at em users
 
 ```scss
 
-┌───────────────┐             ┌───────────────────────────┐
-│    users      │ 1        N  │   verification_tokens     │
-├───────────────┤             ├───────────────────────────┤
-│ id (PK)       │<────────────│ identifier (PK, FK?)      │
-│ name          │             │ token (PK)                │
-│ email (U)     │             │ expires_at                │
-│ password      │             └───────────────────────────┘
-│ role (ENUM)   │
-│ email_verified│
-│ avatar        │
-│ deleted_at    │
-│ created_at    │
-│ updated_at    │
-└───────────────┘
-
+┌────────────────┐             ┌───────────────────────────┐
+│     users      │             │    verification_tokens    │
+├────────────────┤             ├───────────────────────────┤
+│ id (PK)        │             │ identifier (PK) [email]   │
+│ name           │             │ token (PK)                │
+│ email (U)      │<────────────| logical relation          │
+│ password       │             │ expires_at                │
+│ role (ENUM)    │             └───────────────────────────┘
+│ email_verified │
+│ avatar         │
+│ deleted_at     │
+│ created_at     │
+│ updated_at     │
+└────────────────┘
 
 ```
 
 ### 📑 Descrição das Tabelas
+
 ### 🧍 users
 
 |Campo	        | Tipo	      | Descrição
-|---------------|-------------|---------------------------|
-|id	            | TEXT (PK)   | UUID/string identificador |
-|name	        | TEXT	      | Nome do usuário           |
-|email	        | TEXT UNIQUE | E-mail único              |
-|password       | TEXT	      | Senha hash                |
-|role	        | user_role   | ADMIN/USER                |
-|email_verified | TIMESTAMP   | Quando confirmou o email  |
-|avatar	        | TEXT	      | URL do avatar             |
-|deleted_at	    | TIMESTAMP   | Soft delete               |
-|created_at	    | TIMESTAMP   | Criado em                 |
-|updated_at	    | TIMESTAMP   | Atualizado em             |
+|---------------|-------------|---------------------------------|
+|id	            | UUID (PK)   | Identificador único do usuário  |
+|name	        | TEXT	      | Nome do usuário                 |
+|email	        | TEXT UNIQUE | E-mail único                    |
+|password       | TEXT	      | Senha hash                      |
+|role	        | user_role   | Papel do usuário (ADMIN / USER) |
+|email_verified | TIMESTAMPTZ | Data da verificação do e-mail   |
+|avatar	        | TEXT	      | URL do avatar                   |
+|deleted_at	    | TIMESTAMPTZ | Soft delete                     |
+|created_at	    | TIMESTAMPTZ | Data de criação                 |
+|updated_at	    | TIMESTAMPTZ | Última atualização              |
 
-Trigger automático
+<strong>Trigger automático</strong>
 
 Sempre que um usuário for atualizado, updated_at recebe o timestamp atual.
 
@@ -81,13 +82,13 @@ Sempre que um usuário for atualizado, updated_at recebe o timestamp atual.
 
 Usada para login mágico, verificação de e-mail, etc.
 
-|Campo      | Tipo	    | Descrição        |
-|-----------|-----------|------------------|
-|identifier | TEXT      | Email do usuário |
-|token      | TEXT      | Token único      |
-|expires_at | TIMESTAMP | Expiração        |
+|Campo      | Tipo	      | Descrição                       |
+|-----------|-------------|---------------------------------|
+|identifier | TEXT        | Email usado para verificação    |
+|token      | TEXT        | Token único de autenticação     |
+|expires_at | TIMESTAMPTZ | Data/hora de expiração do token |
 
-PK composta: (identifier, token)
+<strong>PK composta</strong>: (identifier, token)
 
 ---
 
