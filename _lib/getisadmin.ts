@@ -11,5 +11,5 @@ export async function getIsAdmin() {
     } catch (error) {
         console.error('Error accessing the database:', error);
         return null;
-    }
+    };
 }
