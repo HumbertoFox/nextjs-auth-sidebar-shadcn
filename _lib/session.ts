@@ -2,6 +2,7 @@ import 'server-only';
 import { SignJWT, jwtVerify } from 'jose';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
+import { UserRole } from '@/_types';
 
 if (!process.env.AUTH_SECRET) throw new Error('SECRET is not defined');
 
@@ -22,7 +23,7 @@ export async function decrypt(session: string | undefined = '') {
     };
 }
 
-export async function createSession(userId: string, role: string): Promise<void> {
+export async function createSession(userId: string, role: UserRole): Promise<void> {
     const now = Math.floor(Date.now() / 1000);
     const expTimestamp = now + TOKEN_LIFETIME;
     const expDate = new Date(expTimestamp * 1000);

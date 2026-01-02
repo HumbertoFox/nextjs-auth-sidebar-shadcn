@@ -1,11 +1,13 @@
 import { LucideIcon } from 'lucide-react';
 
+export type UserRole = 'USER' | 'ADMIN';
+
 export type UserDetailsProps = {
     readonly id: string;
     readonly name: string;
     readonly email: string;
     readonly avatar?: string | null;
-    readonly role: string;
+    readonly role: UserRole;
     readonly email_verified?: string | null;
     readonly created_at: string;
     readonly updated_at: string;
@@ -82,7 +84,7 @@ export type LoginFormProps = {
 
 export type UserFormProps = ProfileForm & {
     readonly id: string;
-    readonly role: string;
+    readonly role: UserRole;
     readonly password: string;
     readonly password_confirmation?: string;
 }
