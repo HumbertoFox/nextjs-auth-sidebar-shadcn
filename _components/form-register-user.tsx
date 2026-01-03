@@ -9,7 +9,7 @@ import { Label } from '@/_components/ui/label';
 import { handleImageChange } from '@/_lib/handleimagechange';
 import Image from 'next/image';
 import { createUpdateAdminUser } from '@/app/api/actions/createupdateadminuser';
-import { RegisterFormUserProps, UserFormProps } from '@/_types';
+import { RegisterFormUserProps, UserFormProps, UserRole } from '@/_types';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { useRouter } from 'next/navigation';
 
@@ -251,7 +251,7 @@ export default function RegisterUpdateUserForm({
                         <Select
                             required
                             value={data.role}
-                            onValueChange={(value) => setData((prev) => ({ ...prev, role: value }))}
+                            onValueChange={(value: UserRole) => setData((prev) => ({ ...prev, role: value }))}
                             disabled={pending}
                         >
                             <SelectTrigger

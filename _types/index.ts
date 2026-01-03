@@ -9,6 +9,7 @@ export type UserDetailsProps = {
     readonly avatar?: string | null;
     readonly role: UserRole;
     readonly email_verified?: string | null;
+    readonly deleted_at?: string | null;
     readonly created_at: string;
     readonly updated_at: string;
 }
@@ -101,4 +102,19 @@ export type ResetPasswordForm = {
     readonly email: string;
     readonly password: string;
     readonly password_confirmation: string;
+}
+
+export type UsersActionsProps = {
+    readonly id: string;
+    readonly name: string;
+    readonly deleted_at?: Date | null;
+}
+
+export type UserActionsProps = {
+    user: UsersActionsProps;
+}
+
+export type AdminActionsProps = {
+    admin: UsersActionsProps;
+    loggedAdmin: string;
 }

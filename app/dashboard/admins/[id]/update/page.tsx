@@ -1,8 +1,10 @@
 import { DashboardSidebarHeader } from '@/_components/dashboard-sidebar-header';
 import RegisterUpdateUserForm from '@/_components/form-register-user';
+import { LoadingRegister } from '@/_components/loadings/loading-register';
 import { UserRepository } from '@/_lib/userrepository';
 import { Metadata } from 'next';
 import { redirect } from 'next/navigation';
+import { Suspense } from 'react';
 
 export const generateMetadata = async (): Promise<Metadata> => {
     return {
@@ -24,12 +26,14 @@ export default async function Update({
     return (
         <>
             <DashboardSidebarHeader items={breadcrumbItems} />
-            <RegisterUpdateUserForm
-                user={user}
-                isEdit={true}
-                titleForm="Update User Acount"
-                valueButton="Update Account"
-            />
+            <Suspense fallback={<LoadingRegister />}>
+                <RegisterUpdateUserForm
+                    user={user}
+                    isEdit={true}
+                    titleForm="Update User Acount"
+                    valueButton="Update Account"
+                />
+            </Suspense>
         </>
     );
 }

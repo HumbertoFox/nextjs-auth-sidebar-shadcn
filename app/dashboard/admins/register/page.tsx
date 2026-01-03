@@ -1,6 +1,8 @@
 import { DashboardSidebarHeader } from '@/_components/dashboard-sidebar-header';
 import { Metadata } from 'next';
 import RegisterUser from '@/_components/form-register-user';
+import { Suspense } from 'react';
+import { LoadingRegister } from '@/_components/loadings/loading-register';
 
 export const generateMetadata = async (): Promise<Metadata> => {
     return {
@@ -17,10 +19,12 @@ export default function RegisterUsersPage() {
     return (
         <>
             <DashboardSidebarHeader items={breadcrumbItems} />
-            <RegisterUser
-                titleForm="Register User Acount"
-                valueButton="Register"
-            />
+            <Suspense fallback={<LoadingRegister />}>
+                <RegisterUser
+                    titleForm="Register User Acount"
+                    valueButton="Register"
+                />
+            </Suspense>
         </>
     );
 }
