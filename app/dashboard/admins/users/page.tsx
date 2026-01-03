@@ -87,11 +87,14 @@ export default async function UsersPage(props: { searchParams?: Promise<{ page?:
                                                             Are you sure?
                                                         </DialogTitle>
                                                         <DialogDescription>
-                                                            Once you confirm, you will not be able to reverse this action!
+                                                            After confirmation, user {user.name} will no longer be able to access the system!
                                                         </DialogDescription>
                                                         <DialogFooter>
                                                             <DialogClose asChild>
-                                                                <Button type="button" variant="secondary">
+                                                                <Button
+                                                                    type="button"
+                                                                    variant="secondary"
+                                                                >
                                                                     Cancel
                                                                 </Button>
                                                             </DialogClose>
@@ -113,23 +116,51 @@ export default async function UsersPage(props: { searchParams?: Promise<{ page?:
                                                 </Dialog>
                                             </>
                                         ) : (
-                                            <form action={reactivateAdminUserById}>
-                                                <input
-                                                    type="hidden"
-                                                    name="userId"
-                                                    value={user.id}
-                                                />
-                                                <button
-                                                    type="submit"
-                                                    title={`Ativar ${user.name}`}
-                                                    className="cursor-pointer"
-                                                >
-                                                    <UserLock
-                                                        aria-label={`Arivar ${user.name}`}
-                                                        className="size-6 text-red-600 hover:text-green-500 duration-300"
-                                                    />
-                                                </button>
-                                            </form>
+                                            <Dialog key={user.email}>
+                                                <DialogTrigger asChild>
+                                                    <button
+                                                        type="submit"
+                                                        title={`Ativar ${user.name}`}
+                                                        className="cursor-pointer"
+                                                    >
+                                                        <UserLock
+                                                            aria-label={`Arivar ${user.name}`}
+                                                            className="size-6 text-red-600 hover:text-green-500 duration-300"
+                                                        />
+                                                    </button>
+                                                </DialogTrigger>
+                                                <DialogContent>
+                                                    <DialogTitle>
+                                                        Are you sure?
+                                                    </DialogTitle>
+                                                    <DialogDescription>
+                                                        After confirmation, you will activate the user account {user.name}!
+                                                    </DialogDescription>
+                                                    <DialogFooter>
+                                                        <DialogClose asChild>
+                                                            <Button
+                                                                type="button"
+                                                                variant="destructive"
+                                                            >
+                                                                Cancel
+                                                            </Button>
+                                                        </DialogClose>
+                                                        <form action={reactivateAdminUserById}>
+                                                            <input
+                                                                type="hidden"
+                                                                name="userId"
+                                                                value={user.id}
+                                                            />
+                                                            <Button
+                                                                type="submit"
+                                                                variant="outline"
+                                                            >
+                                                                Yes, activate!
+                                                            </Button>
+                                                        </form>
+                                                    </DialogFooter>
+                                                </DialogContent>
+                                            </Dialog>
                                         )}
                                     </TableCell>
                                 </TableRow>

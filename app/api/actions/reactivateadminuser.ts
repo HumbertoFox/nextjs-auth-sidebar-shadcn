@@ -18,5 +18,5 @@ export async function reactivateAdminUserById(formData: FormData) {
         revalidatePath('/dashboard/admins')
     } else {
         revalidatePath('/dashboard/admins/users');
-    }
+    };
 }
