@@ -1,72 +1,18 @@
-'use client';
+import { Suspense } from 'react';
+import LoadingForgotPassword from '@/_components/loadings/loading-forgot-password';
+import ForgotPasswordClient from './forgot-password-client';
+import { Metadata } from 'next';
 
-import { LoaderCircle } from 'lucide-react';
-import { ChangeEvent, FormEvent, startTransition, useActionState, useState } from 'react';
-import { InputError } from '@/_components/input-error';
-import { TextLink } from '@/_components/text-link';
-import { Button } from '@/_components/ui/button';
-import { Input } from '@/_components/ui/input';
-import { Label } from '@/_components/ui/label';
-import { forgotPassword } from '@/app/api/actions/forgotpassword';
-
-export default function ForgotPassword() {
-    const [state, action, pending] = useActionState(forgotPassword, undefined);
-    const [data, setData] = useState<Required<{ email: string }>>({ email: '' });
-
-    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-        const { id, value } = e.target;
-        setData({ ...data, [id]: value });
+export const generateMetadata = async (): Promise<Metadata> => {
+    return {
+        title: 'Forgot Password'
     };
-    const submit = async (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        const formData = new FormData(e.currentTarget);
-        startTransition(() => action(formData));
-    };
+}
+
+export default function ForgotPasswordPage() {
     return (
-        <div className="space-y-6">
-            <div className="flex flex-col items-center gap-2 text-center mx-auto">
-                <h1 className="text-xl font-medium">Forgot your password?</h1>
-                <p className="text-muted-foreground text-sm text-balance">
-                    Enter your email to receive a link to reset your password.
-                </p>
-            </div>
-            {state?.message && <div className="mb-4 text-center text-sm font-medium text-blue-600">{state.message}</div>}
-            {state?.error && <div className="mb-4 text-center text-sm font-medium text-red-600">{state.error}</div>}
-
-            <div className="space-y-6">
-                <form onSubmit={submit}>
-                    <div className="grid gap-2">
-                        <Label htmlFor="email">Email address</Label>
-                        <Input
-                            id="email"
-                            type="email"
-                            name="email"
-                            autoComplete="off"
-                            value={data.email}
-                            autoFocus
-                            onChange={handleChange}
-                            placeholder="email@exemple.com"
-                            required
-                        />
-                        {state?.errors?.email?.[0] && <InputError message={state.errors.email[0]} />}
-                    </div>
-
-                    <div className="my-6 flex items-center justify-start">
-                        <Button
-                            disabled={pending}
-                            className="w-full"
-                        >
-                            {pending && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                            Link to reset email password
-                        </Button>
-                    </div>
-                </form>
-
-                <div className="text-muted-foreground space-x-1 text-center text-sm">
-                    <span>Or, go back to</span>
-                    <TextLink href="/login">Log in</TextLink>
-                </div>
-            </div>
-        </div>
+        <Suspense fallback={<LoadingForgotPassword />}>
+            <ForgotPasswordClient />
+        </Suspense>
     );
 }

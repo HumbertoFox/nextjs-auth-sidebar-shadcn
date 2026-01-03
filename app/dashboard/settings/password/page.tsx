@@ -1,5 +1,7 @@
 import { Metadata } from 'next';
 import PasswordPageClient from './password-client';
+import LoadingPassword from '@/_components/loadings/loading-password';
+import { Suspense } from 'react';
 
 export const generateMetadata = async (): Promise<Metadata> => {
     return {
@@ -9,6 +11,8 @@ export const generateMetadata = async (): Promise<Metadata> => {
 
 export default function PasswordPage() {
     return (
-        <PasswordPageClient />
+        <Suspense fallback={<LoadingPassword />}>
+            <PasswordPageClient />
+        </Suspense>
     );
 }

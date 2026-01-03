@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
-import { LoginClient } from '@/app/(auth)/login/login-client';
 import { Metadata } from 'next';
+import { LoginClient } from './login-client';
 import { LoadingLogin } from '@/_components/loadings/loading-login';
 
 export const generateMetadata = async (): Promise<Metadata> => {

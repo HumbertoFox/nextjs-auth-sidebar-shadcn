@@ -1,5 +1,7 @@
 import { Metadata } from 'next';
 import AppearancePageClient from './appearance-client';
+import LoadingAppearance from '@/_components/loadings/loading-appearance';
+import { Suspense } from 'react';
 
 export const generateMetadata = async (): Promise<Metadata> => {
     return {
@@ -9,6 +11,8 @@ export const generateMetadata = async (): Promise<Metadata> => {
 
 export default function AppearancePage() {
     return (
-        <AppearancePageClient />
+        <Suspense fallback={<LoadingAppearance />}>
+            <AppearancePageClient />
+        </Suspense>
     );
 }
