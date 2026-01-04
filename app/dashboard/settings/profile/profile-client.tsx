@@ -141,7 +141,7 @@ export function ProfilePageClient({
                                 htmlFor="file"
                                 className="mx-auto"
                             >
-                                Profile picture
+                                Profile picture &#40;optional&#41;
                             </Label>
                             <div className="flex flex-col items-center gap-3">
                                 <div className="relative size-40 rounded-full overflow-hidden border border-gray-300">

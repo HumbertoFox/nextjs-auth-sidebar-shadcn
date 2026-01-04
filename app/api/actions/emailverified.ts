@@ -8,8 +8,7 @@ import { UserRepository } from '@/_lib/userrepository';
 
 export async function emailVerifiedChecked() {
     const sessionUser = await getUser();
-
-    if (!sessionUser?.email) return null;
+    if (!sessionUser || !sessionUser?.email) return null;
 
     const email = sessionUser.email;
 

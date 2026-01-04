@@ -99,7 +99,7 @@ export default function RegisterUpdateUserForm({
                             htmlFor="file"
                             className="mx-auto"
                         >
-                            Profile picture
+                            Profile picture &#40;optional&#41;
                         </Label>
                         <div className="flex flex-col items-center gap-3">
                             <div className="relative w-24 h-24 rounded-full overflow-hidden border border-gray-300">
