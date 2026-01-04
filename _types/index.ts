@@ -22,7 +22,7 @@ export type UserProfilePageProps = {
 }
 
 export type UserSettingsClientProps = {
-    readonly user: UserDetailsProps;
+    user: UserDetailsProps;
 }
 
 export type ProfileForm = {
@@ -35,13 +35,12 @@ export type ProfileFormClientProps = ProfileForm & {
     readonly mustVerifyEmail: boolean;
 }
 
-export type UserInfoProps = {
-    readonly user: ProfileForm;
-    readonly showEmail?: boolean;
+export type UserComponentProps = {
+    user: ProfileForm;
 }
 
-export type UserComponentProps = {
-    readonly user: ProfileForm;
+export type UserInfoProps = UserComponentProps & {
+    readonly showEmail?: boolean;
 }
 
 export type BreadcrumbItemProps = {
@@ -70,17 +69,15 @@ export type HeadingProps = {
     readonly description?: string;
 }
 
-export type RegisterFormProps = {
-    readonly name: string;
-    readonly email: string;
-    readonly password: string;
-    readonly password_confirmation: string;
-    readonly avatar?: File;
-}
-
 export type LoginFormProps = {
     readonly email: string;
     readonly password: string;
+}
+
+export type RegisterFormProps = LoginFormProps & {
+    readonly name: string;
+    readonly password_confirmation: string;
+    readonly avatar?: File;
 }
 
 export type UserFormProps = ProfileForm & {
@@ -91,16 +88,14 @@ export type UserFormProps = ProfileForm & {
 }
 
 export type RegisterFormUserProps = {
-    readonly user?: UserFormProps;
+    user?: UserFormProps;
     readonly isEdit?: boolean;
     readonly titleForm: string;
     readonly valueButton?: string;
 }
 
-export type ResetPasswordForm = {
+export type ResetPasswordForm = LoginFormProps & {
     readonly token: string;
-    readonly email: string;
-    readonly password: string;
     readonly password_confirmation: string;
 }
 
