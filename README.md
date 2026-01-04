@@ -246,7 +246,7 @@ Libs Usadas...
 
     "dependencies": {
         "@headlessui/react": "^2.2.9",
-        "@next/env": "^16.1.0",
+        "@next/env": "^16.1.1",
         "@radix-ui/react-avatar": "^1.1.11",
         "@radix-ui/react-dialog": "^1.1.15",
         "@radix-ui/react-dropdown-menu": "^2.1.16",
@@ -263,27 +263,27 @@ Libs Usadas...
         "gsap": "^3.14.2",
         "jose": "^6.1.3",
         "lucide-react": "^0.562.0",
-        "next": "16.1.0",
+        "next": "16.1.1",
         "next-themes": "^0.4.6",
-        "nodemailer": "^7.0.11",
+        "nodemailer": "^7.0.12",
         "pg": "^8.16.3",
         "react": "19.2.3",
         "react-dom": "19.2.3",
         "tailwind-merge": "^3.4.0",
-        "zod": "^4.2.1"
-    },
-    "devDependencies": {
+        "zod": "^4.3.4"
+      },
+      "devDependencies": {
         "@tailwindcss/postcss": "^4",
         "@types/node": "^25",
         "@types/pg": "^8.16.0",
         "@types/react": "^19",
         "@types/react-dom": "^19",
         "eslint": "^9",
-        "eslint-config-next": "16.1.0",
+        "eslint-config-next": "16.1.1",
         "tailwindcss": "^4",
         "tw-animate-css": "^1.4.0",
         "typescript": "^5"
-    }
+      }
 
 ```
 
