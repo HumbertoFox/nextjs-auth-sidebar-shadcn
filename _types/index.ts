@@ -116,5 +116,5 @@ export type UserActionsProps = {
 
 export type AdminActionsProps = {
     admin: UsersActionsProps;
-    loggedAdmin: string;
+    readonly loggedAdmin: string;
 }
