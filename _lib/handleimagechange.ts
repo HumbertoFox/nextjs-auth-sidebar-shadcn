@@ -1,19 +1,31 @@
-export type HandleImageChangeResult = {
-    file: File | null;
-    preview: string | null;
-    error: string | null;
-};
+import { HandleImageChangeResult } from './definitions';
 
 export async function handleImageChange(e: React.ChangeEvent<HTMLInputElement>): Promise<HandleImageChangeResult> {
     const file = e.target.files?.[0];
-    if (!file) return { file: null, preview: null, error: null };
+    if (!file) return {
+        file: null,
+        preview: null,
+        error: null
+    };
 
-    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
-        return { file: null, preview: null, error: 'Only JPEG, PNG, or WebP images are allowed.' };
+    if (![
+        'image/jpeg',
+        'image/png',
+        'image/webp'
+    ].includes(file.type)) {
+        return {
+            file: null,
+            preview: null,
+            error: 'Only JPEG, PNG, or WebP images are allowed.'
+        };
     }
 
     if (file.size > 512 * 1024) {
-        return { file: null, preview: null, error: 'The image cannot exceed 512 KB.' };
+        return {
+            file: null,
+            preview: null,
+            error: 'The image cannot exceed 512 KB.'
+        };
     }
 
     try {
@@ -28,12 +40,16 @@ export async function handleImageChange(e: React.ChangeEvent<HTMLInputElement>):
             };
         }
     } catch {
-        return { file: null, preview: null, error: 'Failed to read image dimensions.' };
+        return {
+            file: null,
+            preview: null,
+            error: 'Failed to read image dimensions.'
+        };
     }
 
     return {
         file,
         preview: URL.createObjectURL(file),
-        error: null,
+        error: null
     };
 }

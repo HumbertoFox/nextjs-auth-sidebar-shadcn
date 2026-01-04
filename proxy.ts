@@ -7,7 +7,14 @@ export default async function proxy(req: NextRequest) {
 
   const isProtectedRoute = path.startsWith('/dashboard');
   const isAdminRoute = path.startsWith('/dashboard/admins');
-  const isPublicRoute = ['/login', '/', '/register', '/forgot-password', '/reset-password', '/verify-email'].includes(path);
+  const isPublicRoute = [
+    '/login',
+    '/',
+    '/register',
+    '/forgot-password',
+    '/reset-password',
+    '/verify-email']
+    .includes(path);
 
   const session = await updateSession();
 

@@ -4,7 +4,7 @@ export interface VerificationToken {
     identifier: string;
     token: string;
     expires: Date;
-};
+}
 
 export const VerificationTokenRepository = {
     async findByIdentifier(identifier: string) {

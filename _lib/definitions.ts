@@ -194,3 +194,9 @@ export type FormStateEmailVerification = {
     status?: string;
     success?: string;
 } | undefined;
+
+export type HandleImageChangeResult = {
+    file: File | null;
+    preview: string | null;
+    error: string | null;
+};

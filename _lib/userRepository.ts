@@ -12,7 +12,7 @@ export interface User {
     created_at: Date;
     updated_at: Date;
     [key: string]: unknown;
-};
+}
 
 export const UserRepository = {
     async findPublicById(id: string) {

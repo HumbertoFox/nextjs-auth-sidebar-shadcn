@@ -15,7 +15,11 @@ const RENEW_THRESHOLD = 5 * 60;
 export async function decrypt(session: string | undefined = '') {
     if (!session) return null;
     try {
-        const { payload } = await jwtVerify(session, encodedKey, { algorithms: ['HS256'] });
+        const { payload } = await jwtVerify(
+            session,
+            encodedKey,
+            { algorithms: ['HS256'] }
+        );
         return payload;
     } catch (err) {
         console.log('failed to verify session', err);
@@ -28,7 +32,11 @@ export async function createSession(userId: string, role: UserRole): Promise<voi
     const expTimestamp = now + TOKEN_LIFETIME;
     const expDate = new Date(expTimestamp * 1000);
 
-    const session = await new SignJWT({ userId, role, iat: now })
+    const session = await new SignJWT({
+        userId,
+        role,
+        iat: now
+    })
         .setProtectedHeader({ alg: 'HS256' })
         .setIssuedAt(now)
         .setExpirationTime(expTimestamp)
@@ -54,6 +62,7 @@ export async function verifySession(): Promise<{ isAuth: boolean; userId: string
 export async function getSession() {
     const session = (await cookies()).get('sessionAuth')?.value;
     if (!session) return null;
+
     return await decrypt(session);
 }
 
@@ -79,7 +88,11 @@ export async function updateSession() {
         const newExp = now + TOKEN_LIFETIME;
         const newExpDate = new Date(newExp * 1000);
 
-        const newToken = await new SignJWT({ userId: payload.userId, role: payload.role, iat: payload.iat })
+        const newToken = await new SignJWT({
+            userId: payload.userId,
+            role: payload.role,
+            iat: payload.iat
+        })
             .setProtectedHeader({ alg: 'HS256' })
             .setIssuedAt(payload.iat)
             .setExpirationTime(newExp)
@@ -93,5 +106,8 @@ export async function updateSession() {
             path: '/'
         });
     };
-    return { userId: payload.userId, role: payload.role };
+    return {
+        userId: payload.userId,
+        role: payload.role
+    };
 }
