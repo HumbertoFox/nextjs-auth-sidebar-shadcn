@@ -1,18 +1,51 @@
-### 🚀 Executando o Projeto Localmente
+## NextJS Auth Sidebar ShadCN – Documentação
 
-### 📌 Pré-requisitos
+### 📋 Sumário
+
+- [Introdução](#introdu&#231;&#227;o)
+
+- [Requisitos](#requisitos)
+
+- [Variáveis de Ambiente](#vari&#225;veis-de-ambiente)
+
+- [Rodando o Projeto](#rodando-o-projeto)
+
+- [Banco de Dados](#banco-de-dados)
+
+  - [Inicializar Banco](#inicializar-banco)
+
+  - [Resetar Banco](#resetar-banco-admin)
+
+  - [Modelo de Dados](#modelo-de-dados)
+
+- [Usuários e Autenticação](#usu&#225;rios-e-autentica&#231;&#227;o)
+
+- [Fluxo de Desenvolvimento](#fluxo-de-desenvolvimento)
+
+- [Dependências](#depend&#234;ncias)
+
+---
+
+### Introdução
+
+Aplicação Next.js com autenticação, controle de papéis (`ADMIN`, `USER`) e backend PostgreSQL.
+Suporta login com senha, login mágico e verificação de e-mail.
+
+---
+
+### Requisitos
 
 - Node.js 20+
 
 - PostgreSQL
 
-### ⚙️ Variáveis de Ambiente
+---
 
+### Variáveis de Ambiente
 
-Crie um arquivo `.env`:
+Crie um arquivo `.env` na raiz do projeto:
 
 ```env
-
     DATABASE_URL=
     AUTH_SECRET=
     SMTP_HOST=
@@ -20,135 +53,130 @@ Crie um arquivo `.env`:
     SMTP_USER=
     SMTP_PASS=
     NEXT_URL=
-
 ```
 
 ---
 
-### ▶️ Executar o projeto
+### Rodando o Projeto
 
 ```bash
-
     npm install
     npm run dev
-
 ```
 
-<strong>A aplicação estará disponível em:</strong>
+A aplicação estará disponível em:
 
-```text
-
+```bash
     http://localhost:3000
-
 ```
 
 ---
 
-### 🗄️ Inicialização do Banco de Dados
+## Banco de Dados
 
-Este projeto utiliza rotas da API para criar e resetar o banco de dados automaticamente.
+O projeto possui rotas da API para inicialização e reset do banco de dados automaticamente.
 
-### 🔧 Inicializar / Criar Banco
+### Inicializar Banco
 
-
-```text
-
+```http
     GET /api/init-db
-
 ```
 
-```text
-
+```bash
     http://localhost:3000/api/init-db
-
 ```
-
-### ✅ Resposta esperada
-
-```json
-
-    {
-      "ok": true,
-      "message": "Banco verificado e configurado."
-    }
-
-```
-
-<strong>ℹ️ Esta rota pode ser executada várias vezes sem causar erros.</strong>
 
 ---
 
-### ♻️ Reset do Banco de Dados (`ADMIN`)
+### O que faz:
 
-### ⚠️ Apenas usuários com role `ADMIN`
+- Cria extensões (`pgcrypto`, `citext`)
 
-- Remove todas as estruturas do banco
+- Cria ENUM `user_role`
 
-- Apaga todos os dados
+- Cria tabelas `users` e `verification_tokens`
 
-- Encerra a sessão atual
+- Cria trigger para atualizar `updated_at`
 
-```text
+### Resposta esperada:
 
+```json
+    { "ok": true, "message": "Banco verificado e configurado." }
+```
+
+Esta rota pode ser executada várias vezes sem erros.
+
+---
+
+### Resetar Banco (`ADMIN`)
+
+```http
     GET /api/reset-db
-
 ```
 
-```text
-
+```bash
     http://localhost:3000/api/reset-db
-
 ```
 
-### 🚫 Se não for `ADMIN`
+⚠️ Apenas `ADMIN`. Remove todas estruturas e dados, encerra sessão atual.
+
+### Respostas:
+
+- Não-ADMIN:
 
 ```json
-
-    {
-      "error": "Acesso negado. Apenas administradores podem resetar o banco."
-    }
-
+    { "error": "Acesso negado. Apenas administradores podem resetar o banco." }
 ```
 
-### ✅ Se for `ADMIN`
+- ADMIN:
 
 ```json
-
-    {
-        "ok": true,
-        "message": "Banco resetado com sucesso."
-    }
-
+    { "ok": true, "message": "Banco resetado com sucesso." }
 ```
 
 ---
 
-### 📌 Fluxo recomendado para desenvolvimento
+### Modelo de Dados
 
-```text
+<strong>Tabelas principais:</strong> `users`, `verification_tokens`
 
-    1. Criar o banco      → /api/init-db
-    2. Criar o primeiro usuário (ADMIN)
-    3. Desenvolver normalmente
-    4. Resetar se preciso → /api/reset-db
-    5. Criar novamente    → /api/init-db
+<strong>ENUM:</strong> `user_role` → `ADMIN`, `USER`
 
-```
+<strong>Relação lógica:</strong> `users.email` ↔ `verification_tokens.identifier`
+
+<strong>Trigger:</strong> Atualiza `updated_at` em users automaticamente.
 
 ---
 
-### 👤 Primeiro Usuário
+### Usuários e Autenticação
 
-- O primeiro usuário registrado será automaticamente ADMIN
+- Primeiro usuário registrado → ADMIN
 
-- Após isso, apenas administradores podem registrar novos usuários
+- Apenas ADMINs podem criar novos usuários
 
-### 🔐 Autenticação e Controle de Acesso
-
-- Login com e-mail e senha
-
-- Suporte a verificação de e-mail / login mágico
+- Login: e-mail + senha ou login mágico
 
 - Controle de acesso por papéis (`ADMIN`, `USER`)
 
 - Soft delete de usuários
+
+---
+
+### Fluxo de Desenvolvimento
+
+```text
+    1. Inicializar banco → /api/init-db
+    2. Criar primeiro usuário (ADMIN)
+    3. Desenvolver normalmente
+    4. Resetar se necessário → /api/reset-db
+    5. Inicializar banco novamente → /api/init-db
+```
+---
+
+### Dependências
+
+- Next.js, React, TailwindCSS
+
+- Radix UI, Nodemailer, jose, bcrypt-ts, pg, Zod, gsap
+
+---
