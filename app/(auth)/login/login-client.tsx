@@ -11,7 +11,7 @@ import { loginUser } from '@/app/api/actions/loginuser';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { LoginFormProps } from '@/_types';
 
-export function LoginClient() {
+export function LoginClient({ csrfToken }: { csrfToken?: string; }) {
     const searchParams = useSearchParams();
     const emailFromParams = searchParams.get('email') ?? '';
     const statusFromParams = searchParams.get('status');
@@ -33,6 +33,7 @@ export function LoginClient() {
     const submit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
+        if (csrfToken) formData.append('csrfToken', csrfToken);
         startTransition(() => action(formData));
     };
     useEffect(() => {

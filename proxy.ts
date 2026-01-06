@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { updateSession } from '@/_lib/session';
+import { randomUUID } from 'crypto';
+
+const CSRF_COOKIE_NAME = 'csrfToken';
 
 export default async function proxy(req: NextRequest) {
   const path = req.nextUrl.pathname;
@@ -18,19 +21,35 @@ export default async function proxy(req: NextRequest) {
 
   const session = await updateSession();
 
+  let response: NextResponse;
+
   if (isProtectedRoute && !session?.userId) {
-    return NextResponse.redirect(new URL(`/login?redirect=${encodeURIComponent(path)}`, req.nextUrl));
+    response = NextResponse.redirect(
+      new URL(`/login?redirect=${encodeURIComponent(path)}`, req.nextUrl)
+    );
+  } else if (isPublicRoute && session?.userId && path !== '/' && !path.startsWith('/dashboard')) {
+    response = NextResponse.redirect(new URL('/dashboard', req.nextUrl));
+  } else if (isAdminRoute && session?.role !== 'ADMIN') {
+    response = NextResponse.redirect(new URL('/dashboard', req.nextUrl));
+  } else {
+    response = NextResponse.next();
   }
 
-  if (isPublicRoute && session?.userId && path !== '/' && !path.startsWith('/dashboard')) {
-    return NextResponse.redirect(new URL('/dashboard', req.nextUrl));
+  const existingCsrfToken = req.cookies.get(CSRF_COOKIE_NAME)?.value;
+
+  if (!existingCsrfToken) {
+    const newCsrfToken = randomUUID();
+
+    response.cookies.set(CSRF_COOKIE_NAME, newCsrfToken, {
+      httpOnly: false,
+      secure: true,
+      sameSite: 'lax',
+      path: '/',
+      maxAge: 60 * 60 * 24
+    });
   }
 
-  if (isAdminRoute && session?.role !== 'ADMIN') {
-    return NextResponse.redirect(new URL('/dashboard', req.nextUrl));
-  }
-
-  return NextResponse.next();
+  return response;
 }
 
 export const config = {
