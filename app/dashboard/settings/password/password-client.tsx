@@ -9,7 +9,7 @@ import { Label } from '@/_components/ui/label';
 import { Eye, EyeClosed } from 'lucide-react';
 import { updatePassword } from '@/app/api/actions/updatepassword';
 
-export default function PasswordPageClient() {
+export default function PasswordPageClient({ csrfToken }: { csrfToken: string; }) {
     const passwordInput = useRef<HTMLInputElement>(null);
     const currentPasswordInput = useRef<HTMLInputElement>(null);
     const [state, action, pending] = useActionState(updatePassword, undefined);
@@ -33,6 +33,7 @@ export default function PasswordPageClient() {
     const submit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
+        if (csrfToken) formData.append('csrfToken', csrfToken);
         startTransition(() => action(formData));
     };
 

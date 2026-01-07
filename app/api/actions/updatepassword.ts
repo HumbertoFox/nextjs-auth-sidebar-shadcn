@@ -7,8 +7,14 @@ import { redirect } from 'next/navigation';
 import z from 'zod';
 import { UserRepository } from '@/_lib/userrepository';
 import { revalidatePath } from 'next/cache';
+import { regenerateCsrfToken, validateCsrfToken } from '@/_lib/csrf';
 
 export async function updatePassword(state: FormStatePasswordUpdate, formData: FormData): Promise<FormStatePasswordUpdate> {
+    const csrfToken = formData.get('csrfToken') as string;
+    const isValidCsrf = await validateCsrfToken(csrfToken);
+
+    if (!isValidCsrf) return { message: false };
+
     const validatedFields = passwordUpdateSchema.safeParse({
         current_password: formData.get('current_password') as string,
         password: formData.get('password') as string,
@@ -35,8 +41,10 @@ export async function updatePassword(state: FormStatePasswordUpdate, formData: F
     const hashedPassword = await hash(password, 12);
 
     await UserRepository.updatePassword(sessionUser.id, hashedPassword);
-    
+
     revalidatePath('/dashboard/settings/password');
+
+    await regenerateCsrfToken();
 
     return { message: true };
 }

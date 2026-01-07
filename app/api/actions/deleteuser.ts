@@ -5,8 +5,14 @@ import { deleteUserSchema, FormStateUserDelete } from '@/_lib/definitions';
 import * as bcrypt from 'bcrypt-ts';
 import z from 'zod';
 import { UserRepository } from '@/_lib/userrepository';
+import { regenerateCsrfToken, validateCsrfToken } from '@/_lib/csrf';
 
 export async function deleteUser(state: FormStateUserDelete, formData: FormData): Promise<FormStateUserDelete> {
+    const csrfToken = formData.get('csrfToken') as string;
+    const isValidCsrf = await validateCsrfToken(csrfToken);
+
+    if (!isValidCsrf) return { message: false };
+
     const validatedFields = deleteUserSchema.safeParse({ password: formData.get('password') as string });
 
     if (!validatedFields.success) return { errors: z.flattenError(validatedFields.error).fieldErrors };
@@ -25,6 +31,8 @@ export async function deleteUser(state: FormStateUserDelete, formData: FormData)
     if (!isPasswordCorrect) return { errors: { password: ['Incorrect password'] } };
 
     await UserRepository.softDeleteById(sessionUser.id);
+
+    await regenerateCsrfToken();
 
     return { message: true };
 }

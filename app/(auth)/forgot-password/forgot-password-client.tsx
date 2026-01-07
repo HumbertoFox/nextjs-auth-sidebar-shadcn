@@ -9,7 +9,7 @@ import { Input } from '@/_components/ui/input';
 import { Label } from '@/_components/ui/label';
 import { forgotPassword } from '@/app/api/actions/forgotpassword';
 
-export default function ForgotPasswordClient() {
+export default function ForgotPasswordClient({ csrfToken }: { csrfToken?: string; }) {
     const [state, action, pending] = useActionState(forgotPassword, undefined);
     const [data, setData] = useState<Required<{ email: string }>>({ email: '' });
 
@@ -20,6 +20,7 @@ export default function ForgotPasswordClient() {
     const submit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
+        if (csrfToken) formData.append('csrfToken', csrfToken);
         startTransition(() => action(formData));
     };
     return (

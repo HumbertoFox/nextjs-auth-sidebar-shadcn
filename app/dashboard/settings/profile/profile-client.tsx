@@ -19,6 +19,7 @@ export function ProfilePageClient({
     email,
     avatar,
     mustVerifyEmail,
+    csrfToken,
 }: ProfileFormClientProps) {
     const router = useRouter();
     const [state, action, pending] = useActionState(updateUser, undefined);
@@ -53,6 +54,7 @@ export function ProfilePageClient({
         if (imageError) return;
         const formData = new FormData(e.currentTarget);
         if (imageFile) formData.append('file', imageFile);
+        if (csrfToken) formData.append('csrfToken', csrfToken);
         startTransition(() => action(formData));
     };
     const handleVerifildEmail = async () => {
@@ -66,7 +68,7 @@ export function ProfilePageClient({
         if (!state?.success) return;
 
         startTransition(() => setRecentlySuccessful(true));
-        
+
         const timeout = setTimeout(() => {
             setRecentlySuccessful(false);
         }, 1000);
@@ -199,7 +201,9 @@ export function ProfilePageClient({
                 </form>
             </div>
 
-            <DeleteUser />
+            <DeleteUser
+                csrfToken={csrfToken}
+            />
         </>
     );
 }

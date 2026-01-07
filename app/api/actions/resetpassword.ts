@@ -1,5 +1,6 @@
 'use server';
 
+import { regenerateCsrfToken, validateCsrfToken } from '@/_lib/csrf';
 import { FormStatePasswordReset, passwordResetSchema } from '@/_lib/definitions';
 import { UserRepository } from '@/_lib/userrepository';
 import { VerificationTokenRepository } from '@/_lib/verificationtokenrepository';
@@ -7,6 +8,11 @@ import { hash } from 'bcrypt-ts';
 import z from 'zod';
 
 export async function resetPassword(state: FormStatePasswordReset, formData: FormData): Promise<FormStatePasswordReset> {
+    const csrfToken = formData.get('csrfToken') as string;
+    const isValidCsrf = await validateCsrfToken(csrfToken);
+
+    if (!isValidCsrf) return { warning: 'Invalid security token. Please refresh the page and try again.' };
+
     const validatedFields = passwordResetSchema.safeParse({
         email: formData.get('email') as string,
         token: formData.get('token') as string,
@@ -27,6 +33,8 @@ export async function resetPassword(state: FormStatePasswordReset, formData: For
     await UserRepository.updatePasswordByEmail(email, hashedPassword);
 
     await VerificationTokenRepository.delete(email, token);
+
+    await regenerateCsrfToken();
 
     return { message: 'Password reset successfully!' };
 }

@@ -18,6 +18,7 @@ export default function RegisterUpdateUserForm({
     isEdit,
     titleForm,
     valueButton,
+    csrfToken,
 }: RegisterFormUserProps) {
     const router = useRouter();
     const emailRef = useRef<HTMLInputElement>(null);
@@ -54,6 +55,7 @@ export default function RegisterUpdateUserForm({
         if (imageError) return;
         const formData = new FormData(e.currentTarget);
         if (imageFile) formData.append('file', imageFile);
+        if (csrfToken) formData.append('csrfToken', csrfToken);
         startTransition(() => action(formData));
     };
     useEffect(() => {

@@ -1,5 +1,6 @@
 'use server';
 
+import { regenerateCsrfToken, validateCsrfToken } from '@/_lib/csrf';
 import { FormStateEmailVerification } from '@/_lib/definitions';
 import { sendEmailVerification } from '@/_lib/mail';
 import { UserRepository } from '@/_lib/userrepository';
@@ -7,6 +8,11 @@ import { VerificationTokenRepository } from '@/_lib/verificationtokenrepository'
 import crypto from 'crypto';
 
 export async function handleEmailVerification(state: FormStateEmailVerification | undefined, formData: FormData) {
+    const csrfToken = formData.get('csrfToken') as string;
+    const isValidCsrf = await validateCsrfToken(csrfToken);
+
+    if (!isValidCsrf) return { error: 'Invalid security token. Please refresh the page and try again.' };
+
     const email = formData.get('email') as string;
     const token = formData.get('token') as string;
 
@@ -17,7 +23,7 @@ export async function handleEmailVerification(state: FormStateEmailVerification 
     if (isCheckedUserEmail?.emailVerified) return { error: 'Email already verified!' };
 
     const tokenExisting = await VerificationTokenRepository.findValidToken(email, token);
-    
+
     if (!tokenExisting) return { error: 'Invalid or expired token' };
 
     if (tokenExisting && new Date() > tokenExisting.expires) {
@@ -46,6 +52,8 @@ export async function handleEmailVerification(state: FormStateEmailVerification 
     await UserRepository.updateEmailVerified(isCheckedUserEmail.id, new Date());
 
     await VerificationTokenRepository.delete(email, token);
+
+    await regenerateCsrfToken();
 
     return { success: 'Success, email verified.' };
 }

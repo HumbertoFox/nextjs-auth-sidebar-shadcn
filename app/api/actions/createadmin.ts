@@ -7,12 +7,18 @@ import * as bcrypt from 'bcrypt-ts';
 import z from 'zod';
 import sharp from 'sharp';
 import { UserRepository } from '@/_lib/userrepository';
+import { regenerateCsrfToken, validateCsrfToken } from '@/_lib/csrf';
 
 const MAX_FILE_SIZE = 512 * 1024;
 const MAX_DIMENSION = 512;
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 
 export async function createAdmin(state: FormStateCreateAdmin, formData: FormData): Promise<FormStateCreateAdmin> {
+    const csrfToken = formData.get('csrfToken') as string;
+    const isValidCsrf = await validateCsrfToken(csrfToken);
+
+    if (!isValidCsrf) return { warning: 'Invalid security token. Please refresh the page and try again.' };
+
     const validatedFields = createAdminSchema.safeParse({
         name: formData.get('name') as string,
         email: (formData.get('email') as string),
@@ -72,6 +78,8 @@ export async function createAdmin(state: FormStateCreateAdmin, formData: FormDat
         });
 
         await createSession(user.id, user.role);
+
+        await regenerateCsrfToken();
 
         return { message: true };
     } catch (error) {

@@ -6,8 +6,14 @@ import crypto from 'crypto';
 import { UserRepository } from '@/_lib/userrepository';
 import { VerificationTokenRepository } from '@/_lib/verificationtokenrepository';
 import z from 'zod';
+import { regenerateCsrfToken, validateCsrfToken } from '@/_lib/csrf';
 
 export async function forgotPassword(state: FormStatePasswordForgot, formData: FormData): Promise<FormStatePasswordForgot> {
+    const csrfToken = formData.get('csrfToken') as string;
+    const isValidCsrf = await validateCsrfToken(csrfToken);
+
+    if (!isValidCsrf) return { error: 'Invalid security token. Please refresh the page and try again.' };
+
     const validatedFields = passwordForgotSchema.safeParse({ email: formData.get('email') as string });
 
     if (!validatedFields.success) return { errors: z.flattenError(validatedFields.error).fieldErrors };
@@ -35,12 +41,16 @@ export async function forgotPassword(state: FormStatePasswordForgot, formData: F
             console.error("Error sending verification email:", response.error);
             return { error: 'email-send-error' };
         }
-        
+
         await VerificationTokenRepository.deleteByIdentifier(email);
         await VerificationTokenRepository.create({ identifier: email, token, expires });
 
+        await regenerateCsrfToken();
+
         return genericMessage;
     }
+
+    await regenerateCsrfToken();
 
     return genericMessage;
 }

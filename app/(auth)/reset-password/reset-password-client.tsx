@@ -10,7 +10,7 @@ import { useSearchParams } from 'next/navigation';
 import { resetPassword } from '@/app/api/actions/resetpassword';
 import { ResetPasswordForm } from '@/_types';
 
-export default function ResetPasswordClient() {
+export default function ResetPasswordClient({ csrfToken }: { csrfToken?: string; }) {
     const searchParams = useSearchParams();
     const [state, action, pending] = useActionState(resetPassword, undefined);
     const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -31,6 +31,7 @@ export default function ResetPasswordClient() {
     const submit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
+        if (csrfToken) formData.append('csrfToken', csrfToken);
         startTransition(() => action(formData));
     };
     useEffect(() => {

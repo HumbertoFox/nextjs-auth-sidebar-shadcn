@@ -10,7 +10,7 @@ import { deleteUser } from '@/app/api/actions/deleteuser';
 import { useRouter } from 'next/navigation';
 import { InputError } from '@/_components/input-error';
 
-export default function DeleteUser() {
+export default function DeleteUser({ csrfToken }: { csrfToken?: string; }) {
     const router = useRouter();
     const passwordInput = useRef<HTMLInputElement>(null);
     const [state, action, pending] = useActionState(deleteUser, undefined);
@@ -27,6 +27,7 @@ export default function DeleteUser() {
         e.preventDefault();
         const formData = new FormData();
         formData.append('password', data.password);
+        if (csrfToken) formData.append('csrfToken', csrfToken);
         startTransition(() => action(formData));
     };
     const handleClose = () => setData({ password: '' });

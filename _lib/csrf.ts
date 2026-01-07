@@ -30,9 +30,8 @@ export async function clearCsrfToken(): Promise<void> {
 
 export async function regenerateCsrfToken(): Promise<string> {
     const newToken = randomUUID();
-    const cookieStore = await cookies();
 
-    cookieStore.set(CSRF_COOKIE_NAME, newToken, {
+    (await cookies()).set(CSRF_COOKIE_NAME, newToken, {
         httpOnly: false,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax',

@@ -15,7 +15,8 @@ import { useRouter } from 'next/navigation';
 
 export default function RegisterAdmin({
     TitleIntl,
-}: { TitleIntl: string }) {
+    csrfToken,
+}: { TitleIntl: string; csrfToken?: string; }) {
     const emailRef = useRef<HTMLInputElement>(null);
     const router = useRouter();
     const [state, action, pending] = useActionState(createAdmin, undefined);
@@ -49,6 +50,7 @@ export default function RegisterAdmin({
         if (imageError) return;
         const formData = new FormData(e.currentTarget);
         if (imageFile) formData.append('file', imageFile);
+        if (csrfToken) formData.append('csrfToken', csrfToken);
         startTransition(() => action(formData));
     };
     useEffect(() => {

@@ -8,12 +8,18 @@ import sharp from 'sharp';
 import { revalidatePath } from 'next/cache';
 import { UserRepository } from '@/_lib/userrepository';
 import { getUser } from '@/_lib/dal';
+import { regenerateCsrfToken, validateCsrfToken } from '@/_lib/csrf';
 
 const MAX_FILE_SIZE = 512 * 1024;
 const MAX_DIMENSION = 512;
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 
 export async function createUpdateAdminUser(state: FormStateCreateUpdateAdminUser, formData: FormData): Promise<FormStateCreateUpdateAdminUser> {
+    const csrfToken = formData.get('csrfToken') as string;
+    const isValidCsrf = await validateCsrfToken(csrfToken);
+
+    if (!isValidCsrf) return { message: false };
+
     const schema = getSignUpUpdateSchema(formData);
 
     const validatedFields = schema.safeParse({
@@ -29,11 +35,11 @@ export async function createUpdateAdminUser(state: FormStateCreateUpdateAdminUse
 
     function revalidatePaths(role: string) {
         if (role === 'ADMIN') {
-            revalidatePath('/dashboard/admins')
+            revalidatePath('/dashboard/admins');
         } else {
             revalidatePath('/dashboard/admins/users');
-        }
-    };
+        };
+    }
 
     if (!validatedFields.success) return { errors: z.flattenError(validatedFields.error).fieldErrors };
 
@@ -102,6 +108,8 @@ export async function createUpdateAdminUser(state: FormStateCreateUpdateAdminUse
             if (!updateUser) return { message: false };
             revalidatePaths(updateUser.role);
 
+            await regenerateCsrfToken();
+
             return { message: true };
         } else {
             const existingUser = await UserRepository.findByEmail(email);
@@ -117,6 +125,8 @@ export async function createUpdateAdminUser(state: FormStateCreateUpdateAdminUse
             });
 
             revalidatePaths(newUser.role);
+
+            await regenerateCsrfToken();
 
             return { message: true };
         }

@@ -2,6 +2,7 @@ import { DashboardSidebarHeader } from '@/_components/dashboard-sidebar-header';
 import { Button } from '@/_components/ui/button';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogTitle, DialogTrigger } from '@/_components/ui/dialog';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/_components/ui/table';
+import { getCsrfToken } from '@/_lib/csrf';
 import { getUser } from '@/_lib/dal';
 import { UserRepository } from '@/_lib/userrepository';
 import { UserDetailsProps } from '@/_types';
@@ -21,6 +22,7 @@ export default async function AdminsPage() {
     const user = await getUser() as UserDetailsProps;
     const loggedAdmin = user.id;
     const admins = await UserRepository.findAllAdmins();
+    const csrfToken = await getCsrfToken();
     const breadcrumbItems = [
         { text: 'Dashboard', href: '/dashboard' },
         { text: 'Admins' },
@@ -95,6 +97,11 @@ export default async function AdminsPage() {
                                                             <form action={deleteUserById}>
                                                                 <input
                                                                     type="hidden"
+                                                                    name="csrfToken"
+                                                                    value={csrfToken}
+                                                                />
+                                                                <input
+                                                                    type="hidden"
                                                                     name="userId"
                                                                     value={admin.id}
                                                                 />
@@ -140,6 +147,11 @@ export default async function AdminsPage() {
                                                             </Button>
                                                         </DialogClose>
                                                         <form action={reactivateAdminUserById}>
+                                                            <input
+                                                                type="hidden"
+                                                                name="csrfToken"
+                                                                value={csrfToken}
+                                                            />
                                                             <input
                                                                 type="hidden"
                                                                 name="userId"

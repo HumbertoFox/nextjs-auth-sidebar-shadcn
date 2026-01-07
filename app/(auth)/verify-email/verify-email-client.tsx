@@ -7,7 +7,7 @@ import { Button } from '@/_components/ui/button';
 import { useSearchParams } from 'next/navigation';
 import { handleEmailVerification } from '@/app/api/actions/handleemailverification';
 
-export default function VerifyEmailClient() {
+export default function VerifyEmailClient({ csrfToken }: { csrfToken?: string; }) {
     const searchParams = useSearchParams();
     const email = searchParams.get('email');
     const token = searchParams.get('token');
@@ -15,6 +15,7 @@ export default function VerifyEmailClient() {
     const submit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
+        if (csrfToken) formData.append('csrfToken', csrfToken);
         startTransition(() => action(formData));
     };
     useEffect(() => {

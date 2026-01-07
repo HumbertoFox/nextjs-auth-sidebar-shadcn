@@ -8,11 +8,17 @@ import { put, del } from '@vercel/blob';
 import crypto from 'crypto';
 import { UserRepository } from '@/_lib/userrepository';
 import { revalidatePath } from 'next/cache';
+import { regenerateCsrfToken, validateCsrfToken } from '@/_lib/csrf';
 
 const MAX_FILE_SIZE = 512 * 1024;
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 
 export async function updateUser(state: FormStateUserUpdate, formData: FormData): Promise<FormStateUserUpdate> {
+    const csrfToken = formData.get('csrfToken') as string;
+    const isValidCsrf = await validateCsrfToken(csrfToken);
+
+    if (!isValidCsrf) return { success: false };
+
     const validatedFields = updateUserSchema.safeParse({
         name: formData.get('name') as string,
         email: formData.get('email') as string,
@@ -23,7 +29,7 @@ export async function updateUser(state: FormStateUserUpdate, formData: FormData)
     if (!validatedFields.success) return { errors: z.flattenError(validatedFields.error).fieldErrors };
 
     const { name, email } = validatedFields.data;
-    
+
     const sessionUser = await getUser();
     if (!sessionUser || !sessionUser?.id) return redirect('/');
 
@@ -68,6 +74,8 @@ export async function updateUser(state: FormStateUserUpdate, formData: FormData)
     await UserRepository.updateByIdUserActive(sessionUser.id, dataToUpdate);
 
     revalidatePath('/dasboard/settings/profile');
+
+    await regenerateCsrfToken();
 
     return { success: true };
 }

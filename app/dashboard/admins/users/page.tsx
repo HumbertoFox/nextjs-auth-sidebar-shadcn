@@ -3,6 +3,7 @@ import { Button } from '@/_components/ui/button';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogTitle, DialogTrigger } from '@/_components/ui/dialog';
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/_components/ui/pagination';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/_components/ui/table';
+import { getCsrfToken } from '@/_lib/csrf';
 import getVisiblePagination from '@/_lib/getvisiblepagination';
 import { UserRepository } from '@/_lib/userrepository';
 import { deleteUserById } from '@/app/api/actions/deleteadminuser';
@@ -25,6 +26,7 @@ export default async function UsersPage(props: { searchParams?: Promise<{ page?:
     const currentPage = Number.isNaN(rawPage) ? 1 : Math.max(1, rawPage);
     const [users, total] = await UserRepository.findUsersPaginated(currentPage, pageSize);
     const totalPages = Math.ceil(total / pageSize);
+    const csrfToken = await getCsrfToken();
     const breadcrumbItems = [
         { text: 'Dashboard', href: '/dashboard' },
         { text: 'Admins', href: '/dashboard/admins' },
@@ -101,6 +103,11 @@ export default async function UsersPage(props: { searchParams?: Promise<{ page?:
                                                             <form action={deleteUserById}>
                                                                 <input
                                                                     type="hidden"
+                                                                    name="csrfToken"
+                                                                    value={csrfToken}
+                                                                />
+                                                                <input
+                                                                    type="hidden"
                                                                     name="userId"
                                                                     value={user.id}
                                                                 />
@@ -146,6 +153,11 @@ export default async function UsersPage(props: { searchParams?: Promise<{ page?:
                                                             </Button>
                                                         </DialogClose>
                                                         <form action={reactivateAdminUserById}>
+                                                            <input
+                                                                type="hidden"
+                                                                name="csrfToken"
+                                                                value={csrfToken}
+                                                            />
                                                             <input
                                                                 type="hidden"
                                                                 name="userId"

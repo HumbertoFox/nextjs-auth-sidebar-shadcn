@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import PasswordPageClient from './password-client';
 import LoadingPassword from '@/_components/loadings/loading-password';
 import { Suspense } from 'react';
+import { getCsrfToken } from '@/_lib/csrf';
 
 export const generateMetadata = async (): Promise<Metadata> => {
     return {
@@ -9,10 +10,13 @@ export const generateMetadata = async (): Promise<Metadata> => {
     };
 }
 
-export default function PasswordPage() {
+export default async function PasswordPage() {
+    const csrfToken = await getCsrfToken();
     return (
         <Suspense fallback={<LoadingPassword />}>
-            <PasswordPageClient />
+            <PasswordPageClient
+                csrfToken={csrfToken}
+            />
         </Suspense>
     );
 }
