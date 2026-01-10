@@ -114,7 +114,7 @@ export function LoginClient({
                             />
                             <button
                                 type="button"
-                                title={isVisibledPassword ? "Ocultar senha" : "Mostrar senha"}
+                                title={isVisibledPassword ? "Hide password" : "Show password"}
                                 onClick={togglePasswordVisibility}
                                 className="btn-icon-toggle"
                             >

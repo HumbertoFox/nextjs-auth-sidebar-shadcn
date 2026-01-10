@@ -42,7 +42,7 @@ export default function SettingsPageClient({
                         {user.email_verified ? <BadgeCheck className="text-green-500" /> : <BadgeAlert className="text-orange-500" />}
                     </span>
                     <div>
-                        <strong>Tipo de Conta : </strong>
+                        <strong>Account Type : </strong>
                         <span className={`font-pirata ${user.role === 'ADMIN' ? 'text-blue-800' : 'text-green-800'}`}>
                             {user.role}
                         </span>
