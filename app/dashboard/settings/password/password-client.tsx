@@ -8,8 +8,11 @@ import { Input } from '@/_components/ui/input';
 import { Label } from '@/_components/ui/label';
 import { Eye, EyeClosed } from 'lucide-react';
 import { updatePassword } from '@/app/api/actions/updatepassword';
+import { csrfTokenProps } from '@/_types';
 
-export default function PasswordPageClient({ csrfToken }: { csrfToken: string; }) {
+export default function PasswordPageClient({
+    csrfToken
+}: csrfTokenProps) {
     const passwordInput = useRef<HTMLInputElement>(null);
     const currentPasswordInput = useRef<HTMLInputElement>(null);
     const [state, action, pending] = useActionState(updatePassword, undefined);

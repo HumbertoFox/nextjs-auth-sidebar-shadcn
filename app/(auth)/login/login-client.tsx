@@ -9,9 +9,11 @@ import { Input } from '@/_components/ui/input';
 import { Label } from '@/_components/ui/label';
 import { loginUser } from '@/app/api/actions/loginuser';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { LoginFormProps } from '@/_types';
+import { csrfTokenProps, LoginFormProps } from '@/_types';
 
-export function LoginClient({ csrfToken }: { csrfToken?: string; }) {
+export function LoginClient({
+    csrfToken
+}: csrfTokenProps) {
     const searchParams = useSearchParams();
     const emailFromParams = searchParams.get('email') ?? '';
     const statusFromParams = searchParams.get('status');

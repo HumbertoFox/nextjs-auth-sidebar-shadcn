@@ -6,8 +6,11 @@ import { TextLink } from '@/_components/text-link';
 import { Button } from '@/_components/ui/button';
 import { useSearchParams } from 'next/navigation';
 import { handleEmailVerification } from '@/app/api/actions/handleemailverification';
+import { csrfTokenProps } from '@/_types';
 
-export default function VerifyEmailClient({ csrfToken }: { csrfToken?: string; }) {
+export default function VerifyEmailClient({
+    csrfToken
+}: csrfTokenProps) {
     const searchParams = useSearchParams();
     const email = searchParams.get('email');
     const token = searchParams.get('token');

@@ -28,7 +28,11 @@ export default function DashboardSidebar({
         { title: 'Dashboard', href: '/dashboard', icon: LayoutGrid, },
     ];
     return (
-        <Sidebar collapsible="icon" variant="floating" {...props}>
+        <Sidebar
+            collapsible="icon"
+            variant="floating"
+            {...props}
+        >
             <SidebarHeader>
                 <SidebarMenu>
                     <SidebarMenuItem>

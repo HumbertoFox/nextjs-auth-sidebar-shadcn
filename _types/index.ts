@@ -31,9 +31,12 @@ export type ProfileForm = {
     readonly avatar?: string | null;
 }
 
-export type ProfileFormClientProps = ProfileForm & {
-    readonly mustVerifyEmail: boolean;
+export type csrfTokenProps = {
     readonly csrfToken?: string;
+}
+
+export type ProfileFormClientProps = ProfileForm & csrfTokenProps & {
+    readonly mustVerifyEmail: boolean;
 }
 
 export type UserComponentProps = {
@@ -88,12 +91,11 @@ export type UserFormProps = ProfileForm & {
     readonly password_confirmation?: string;
 }
 
-export type RegisterFormUserProps = {
+export type RegisterFormUserProps = csrfTokenProps & {
     user?: UserFormProps;
     readonly isEdit?: boolean;
     readonly titleForm: string;
     readonly valueButton?: string;
-    readonly csrfToken?: string;
 }
 
 export type ResetPasswordForm = LoginFormProps & {

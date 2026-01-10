@@ -8,9 +8,11 @@ import { Input } from '@/_components/ui/input';
 import { Label } from '@/_components/ui/label';
 import { useSearchParams } from 'next/navigation';
 import { resetPassword } from '@/app/api/actions/resetpassword';
-import { ResetPasswordForm } from '@/_types';
+import { csrfTokenProps, ResetPasswordForm } from '@/_types';
 
-export default function ResetPasswordClient({ csrfToken }: { csrfToken?: string; }) {
+export default function ResetPasswordClient({
+    csrfToken
+}: csrfTokenProps) {
     const searchParams = useSearchParams();
     const [state, action, pending] = useActionState(resetPassword, undefined);
     const [showPassword, setShowPassword] = useState<boolean>(false);
