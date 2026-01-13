@@ -4,7 +4,7 @@ import { Plus } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 
-export default async function Home() {
+export default async function HomePage() {
   const session = await getSession();
   return (
     <div className="flex flex-col min-h-screen items-center bg-zinc-50 font-sans dark:bg-black">

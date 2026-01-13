@@ -10,7 +10,7 @@ import { SidebarNavItemProps } from '@/_types';
 export default function SettingsLayoutComponents() {
     const currentPath = usePathname();
     const sidebarNavItems: SidebarNavItemProps[] = [
-        { text: 'settings', href: '/dashboard/settings', },
+        { text: 'Settings', href: '/dashboard/settings', },
         { text: 'Profile', href: '/dashboard/settings/profile', },
         { text: 'Password', href: '/dashboard/settings/password', },
         { text: 'Appearance', href: '/dashboard/settings/appearance', },

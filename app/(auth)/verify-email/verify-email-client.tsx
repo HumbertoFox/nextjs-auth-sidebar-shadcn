@@ -60,6 +60,7 @@ export default function VerifyEmailClient({
                     value={token ?? ''}
                 />
                 <Button
+                    type="submit"
                     variant="secondary"
                     disabled={pending || state?.status === 'verification-email-sent' || Boolean(state?.error)}
                     className="cursor-pointer"

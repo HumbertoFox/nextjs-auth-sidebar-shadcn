@@ -57,6 +57,7 @@ export default function ForgotPasswordClient({
 
                     <div className="my-6 flex items-center justify-start">
                         <Button
+                            type="submit"
                             disabled={pending}
                             className="w-full"
                         >

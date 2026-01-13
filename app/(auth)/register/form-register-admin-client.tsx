@@ -13,7 +13,7 @@ import Image from 'next/image';
 import { RegisterFormProps } from '@/_types';
 import { useRouter } from 'next/navigation';
 
-export default function RegisterAdmin({
+export default function RegisterAdminClient({
     TitleIntl,
     csrfToken,
 }: { TitleIntl: string; csrfToken?: string; }) {

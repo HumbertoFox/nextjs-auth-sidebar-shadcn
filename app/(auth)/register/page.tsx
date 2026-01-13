@@ -1,5 +1,5 @@
 import { getIsAdmin } from '@/_lib/getisadmin';
-import RegisterAdmin from './form-register-admin';
+import RegisterAdminClient from './form-register-admin-client';
 import { Metadata } from 'next';
 import { Suspense } from 'react';
 import { LoadingRegister } from '@/_components/loadings/loading-register';
@@ -18,7 +18,7 @@ export default async function RegisterPage() {
   const csrfToken = await getCsrfToken();
   return (
     <Suspense fallback={<LoadingRegister />}>
-      <RegisterAdmin
+      <RegisterAdminClient
         TitleIntl={Title}
         csrfToken={csrfToken}
       />

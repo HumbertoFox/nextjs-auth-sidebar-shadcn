@@ -95,7 +95,7 @@ export function ProfilePageClient({
                                     onChange={handleChange}
                                     required
                                     autoComplete="name"
-                                    placeholder="Nome completo"
+                                    placeholder="Full name"
                                 />
                                 {state?.errors?.name?.[0] && <InputError message={state.errors.name[0]} />}
                             </div>
