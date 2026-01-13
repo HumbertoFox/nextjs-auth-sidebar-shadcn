@@ -7,7 +7,7 @@ import { cn } from '@/_lib/utils';
 import { SidebarNavItemProps } from '@/_types';
 
 
-export default function SettingsLayoutComponents() {
+export default function SettingsLayoutClient() {
     const currentPath = usePathname();
     const sidebarNavItems: SidebarNavItemProps[] = [
         { text: 'Settings', href: '/dashboard/settings', },

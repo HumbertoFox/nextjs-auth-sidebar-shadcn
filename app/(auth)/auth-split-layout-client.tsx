@@ -4,10 +4,10 @@ import Link from 'next/link';
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import AppLogoIconSvg from '@/_components/app-logo-icon-svg';
-import AppLogoIconSvgVercel from './app-logo-icon-svg-vercel';
 import { Plus } from 'lucide-react';
+import AppLogoIconSvgVercel from '@/_components/app-logo-icon-svg-vercel';
 
-export default function AuthSplitLayout() {
+export default function AuthSplitLayoutClient() {
     const logoRef = useRef<HTMLDivElement>(null);
     const logoPlusRef = useRef<HTMLDivElement>(null);
     const logoVercelRef = useRef<HTMLDivElement>(null);
