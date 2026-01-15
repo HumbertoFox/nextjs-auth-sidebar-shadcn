@@ -88,7 +88,7 @@ export default function RegisterUpdateUserForm({
             <div className="flex flex-col items-center gap-2 text-center mx-auto">
                 <h1 className="text-xl font-medium">{titleForm}</h1>
                 <p className="text-muted-foreground text-sm text-balance">
-                    {`Enter ${isEdit ? 'user' : 'your'} details below to ${isEdit ? 'update' : 'create your'} account.`}
+                    {`Enter ${isEdit ? 'user' : 'the'} details below to ${isEdit ? 'update' : 'create an'} account.`}
                 </p>
             </div>
             <form

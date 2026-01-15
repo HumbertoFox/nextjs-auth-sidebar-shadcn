@@ -127,11 +127,11 @@ export default async function UsersPage(props: { searchParams?: Promise<{ page?:
                                                 <DialogTrigger asChild>
                                                     <button
                                                         type="submit"
-                                                        title={`Ativar ${user.name}`}
+                                                        title={`Activate ${user.name}`}
                                                         className="cursor-pointer"
                                                     >
                                                         <UserLock
-                                                            aria-label={`Arivar ${user.name}`}
+                                                            aria-label={`Activate ${user.name}`}
                                                             className="size-6 text-red-600 hover:text-green-500 duration-300"
                                                         />
                                                     </button>

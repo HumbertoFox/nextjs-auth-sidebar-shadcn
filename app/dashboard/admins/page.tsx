@@ -59,7 +59,7 @@ export default async function AdminsPage() {
                                             <>
                                                 <Link
                                                     href={admin.id === loggedAdmin ? '/dashboard/settings/profile' : `/dashboard/admins/${admin.id}/update`}
-                                                    title={`Atualizar ${admin.name}`}
+                                                    title={`To update ${admin.name}`}
                                                 >
                                                     <UserRoundPen
                                                         aria-label={`To update ${admin.name}`}
