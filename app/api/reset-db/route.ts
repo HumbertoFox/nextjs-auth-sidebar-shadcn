@@ -1,6 +1,6 @@
 import { getUser } from '@/_lib/dal';
 import pool from '@/_lib/db';
-import { deleteSession } from '../actions/logoutuser';
+import { deleteSession } from '@/app/api/actions/logoutuser';
 
 export async function GET() {
     try {
@@ -8,7 +8,7 @@ export async function GET() {
 
         if (!user || user.role !== 'ADMIN') {
             return Response.json(
-                { error: 'Acesso negado. Apenas administradores podem resetar o banco.' },
+                { error: 'Access denied. Only administrators can reset the database.' },
                 { status: 403 }
             );
         }
@@ -21,7 +21,7 @@ export async function GET() {
 
         await deleteSession();
 
-        return Response.json({ ok: true, message: 'Banco resetado com sucesso.' });
+        return Response.json({ ok: true, message: 'Bank reset successfully.' });
 
     } catch (err) {
         return Response.json({

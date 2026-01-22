@@ -2,13 +2,13 @@ import pool from '@/_lib/db';
 
 export async function GET() {
     try {
-        /* 0. Extensão necessária para UUID e email */
+        /* 0. Required extension for UUID e email */
         await pool.query(`
             CREATE EXTENSION IF NOT EXISTS "pgcrypto";
             CREATE EXTENSION IF NOT EXISTS "citext";
         `);
 
-        /* 1. Criar ENUM user_role */
+        /* 1. Create ENUM user_role */
         await pool.query(`
             DO $$
             BEGIN
@@ -20,7 +20,7 @@ export async function GET() {
             END$$;
         `);
 
-        /* 2. Criar tabela users */
+        /* 2. Create table users */
         await pool.query(`
             CREATE TABLE IF NOT EXISTS users (
                 id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -36,7 +36,7 @@ export async function GET() {
             );
         `);
 
-        /* 3. Função update_updated_at */
+        /* 3. Function update_updated_at */
         await pool.query(`
             CREATE OR REPLACE FUNCTION update_updated_at()
             RETURNS TRIGGER AS $$
@@ -47,7 +47,7 @@ export async function GET() {
             $$ LANGUAGE plpgsql;
         `);
 
-        /* 4. Trigger para atualizar updated_at */
+        /* 4. Trigger to update updated_at */
         await pool.query(`
             DO $$
             BEGIN
@@ -64,7 +64,7 @@ export async function GET() {
             END$$;
         `);
 
-        /* 5. Tabela verification_tokens */
+        /* 5. Table verification_tokens */
         await pool.query(`
             CREATE TABLE IF NOT EXISTS verification_tokens (
                 identifier CITEXT NOT NULL,
@@ -76,7 +76,7 @@ export async function GET() {
 
         return Response.json({
             ok: true,
-            message: 'Banco verificado e configurado.'
+            message: 'Verified and configured bank.'
         });
 
     } catch (err) {
