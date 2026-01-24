@@ -39,7 +39,7 @@ export function UserMenuContent({
                     href="/logout"
                     onClick={cleanup}
                 >
-                    <LogOut className="mr-2" />
+                    <LogOut className="mr-2 rotate-180" />
                     Exit
                 </Link>
             </DropdownMenuItem>

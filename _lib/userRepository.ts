@@ -18,17 +18,8 @@ export const UserRepository = {
     async findPublicById(id: string) {
         const result = await pool.query(
             `
-            SELECT 
-              id,
-              name,
-              email,
-              role,
-              email_verified,
-              avatar,
-              deleted_at,
-              created_at,
-              updated_at
-            FROM users
+            SELECT *
+            FROM users_public
             WHERE id = $1
             LIMIT 1
             `,
@@ -40,16 +31,10 @@ export const UserRepository = {
 
     async findActiveById(id: string) {
         const result = await pool.query<User>(
-            `SELECT
-                id,
-                name,
-                email,
-                role,
-                password,
-                avatar,
-                deleted_at
-            FROM users
-            WHERE id = $1 AND deleted_at IS NULL
+            `
+            SELECT *
+            FROM users_active
+            WHERE id = $1
             LIMIT 1
             `,
             [id]
@@ -60,7 +45,12 @@ export const UserRepository = {
 
     async findByEmailActive(email: string) {
         const result = await pool.query<User>(
-            `SELECT * FROM users WHERE email = $1 AND deleted_at IS NULL LIMIT 1`,
+            `
+            SELECT *
+            FROM users_active
+            WHERE email = $1
+            LIMIT 1
+            `,
             [email]
         );
         return result.rows[0] ?? null;
@@ -68,7 +58,12 @@ export const UserRepository = {
 
     async findByEmail(email: string) {
         const result = await pool.query<User>(
-            `SELECT * FROM users WHERE email = $1 LIMIT 1`,
+            `
+            SELECT *
+            FROM users_public_active
+            WHERE email = $1
+            LIMIT 1
+            `,
             [email]
         );
         return result.rows[0] ?? null;
@@ -76,33 +71,44 @@ export const UserRepository = {
 
     async findAdmin() {
         const result = await pool.query<User>(
-            `SELECT * FROM users WHERE role = 'ADMIN' LIMIT 1`
+            `
+            SELECT *
+            FROM users_admin_public
+            LIMIT 1
+            `
         );
         return result.rows[0] ?? null;
     },
 
     async findAdminOnly() {
         const result = await pool.query(
-            `SELECT id FROM users WHERE role = 'ADMIN' LIMIT 1`
+            `
+            SELECT id
+            FROM users_admin_public
+            LIMIT 1
+            `
         );
         return result.rows[0] ?? null;
     },
 
     async findAllAdmins() {
         const result = await pool.query<User>(
-            `SELECT
-                id,
-                name,
-                email,
-                deleted_at
-            FROM users WHERE role = 'ADMIN'`
+            `
+            SELECT *
+            FROM users_admin_public
+            `
         );
         return result.rows;
     },
 
     async findById(id: string) {
         const result = await pool.query<User>(
-            `SELECT * FROM users WHERE id = $1 LIMIT 1`,
+            `
+            SELECT *
+            FROM users
+            WHERE id = $1
+            LIMIT 1
+            `,
             [id]
         );
         return result.rows[0] ?? null;
@@ -112,17 +118,27 @@ export const UserRepository = {
         const offset = (page - 1) * pageSize;
 
         const usersResult = await pool.query<User>(
-            `SELECT id, name, email, deleted_at
+            `
+            SELECT
+                id,
+                name,
+                email,
+                deleted_at
             FROM users
             WHERE role = 'USER'
             ORDER BY created_at
-            LIMIT $1 OFFSET $2
+            LIMIT $1
+            OFFSET $2
             `,
             [pageSize, offset]
         );
 
         const countResult = await pool.query<{ count: string }>(
-            `SELECT COUNT(*) FROM users WHERE role = 'USER'`
+            `
+            SELECT COUNT(*)
+            FROM users
+            WHERE role = 'USER'
+            `
         );
 
         return [usersResult.rows, parseInt(countResult.rows[0].count, 10)] as const;
@@ -226,11 +242,11 @@ export const UserRepository = {
     async reactivateById(id: string) {
         const result = await pool.query<User>(
             `
-        UPDATE users
-        SET deleted_at = NULL
-        WHERE id = $1
-        RETURNING *
-        `,
+            UPDATE users
+            SET deleted_at = NULL
+            WHERE id = $1
+            RETURNING *
+            `,
             [id]
         );
         return result.rows[0] ?? null;
