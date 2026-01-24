@@ -1,10 +1,11 @@
 import pool from '@/_lib/db';
+import { UserRole } from '@/_types';
 
 export interface User {
     id: string;
     name: string;
     email: string;
-    role: 'ADMIN' | 'USER';
+    role: UserRole;
     password: string;
     avatar?: string | null;
     email_verified?: Date | null;
