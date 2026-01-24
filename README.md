@@ -76,6 +76,8 @@ A aplicação estará disponível em:
 
 O projeto possui rotas da API para inicialização e reset do banco de dados automaticamente.
 
+Além disso, **se o banco de dados não existir**, ele será criado automaticamente na inicialização. Isso garante que você nunca precise criar o banco manualmente antes de rodar o projeto.
+
 ### Inicializar Banco
 
 ```http
@@ -88,17 +90,23 @@ O projeto possui rotas da API para inicialização e reset do banco de dados aut
 
 ---
 
-### O que faz:
+**O que faz:**
 
-- Cria extensões (`pgcrypto`, `citext`)
+- Verifica se o banco existe; se não, cria automaticamente.
 
-- Cria ENUM `user_role`
+- Cria extensões PostgreSQL necessárias (`pgcrypto`, `citext`).
 
-- Cria tabelas `users` e `verification_tokens`
+- Cria ENUM `user_role` (`ADMIN`, `USER`).
 
-- Cria trigger para atualizar `updated_at`
+- Cria tabelas `users` e `verification_tokens`.
 
-### Resposta esperada:
+- Cria views públicas e ativas para acesso seguro.
+
+- Cria função `update_updated_at` e trigger para atualizar timestamps automaticamente.
+
+- Protege a tabela `users`, liberando acesso somente às views.
+
+**Resposta esperada:**
 
 ```json
     { "ok": true, "message": "Banco verificado e configurado." }
@@ -110,7 +118,7 @@ Esta rota pode ser executada várias vezes sem erros.
 
 ### Resetar Banco (`ADMIN`)
 
-```http
+```pgsql
     GET /api/reset-db
 ```
 
@@ -118,9 +126,9 @@ Esta rota pode ser executada várias vezes sem erros.
     http://localhost:3000/api/reset-db
 ```
 
-⚠️ Apenas `ADMIN`. Remove todas estruturas e dados, encerra sessão atual.
+⚠️ Apenas `ADMIN` pode executar. Remove todas estruturas e dados, encerra sessão atual.
 
-### Respostas:
+**Respostas:**
 
 - Não-ADMIN:
 
@@ -138,21 +146,23 @@ Esta rota pode ser executada várias vezes sem erros.
 
 ### Modelo de Dados
 
-<strong>Tabelas principais:</strong> `users`, `verification_tokens`
+**Tabelas principais:** `users`, `verification_tokens`
 
-<strong>ENUM:</strong> `user_role` → `ADMIN`, `USER`
+**ENUM:** `user_role` → `ADMIN`, `USER`
 
-<strong>Relação lógica:</strong> `users.email` ↔ `verification_tokens.identifier`
+**Relação lógica:** `users.email` ↔ `verification_tokens.identifier`
 
-<strong>Trigger:</strong> Atualiza `updated_at` em users automaticamente.
+**Trigger:** Atualiza `updated_at` em users automaticamente.
+
+Para detalhes de criação de tabelas, views e triggers, consulte o código em `@/_lib/db.ts`.
 
 ---
 
 ### Usuários e Autenticação
 
-- Primeiro usuário registrado → ADMIN
+- Primeiro usuário registrado → `ADMIN`
 
-- Apenas ADMINs podem criar novos usuários
+- Apenas `ADMINs` podem criar novos usuários
 
 - Login: e-mail + senha ou login mágico
 
