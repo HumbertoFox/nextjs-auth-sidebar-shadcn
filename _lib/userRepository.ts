@@ -16,8 +16,7 @@ export interface User {
 
 export const UserRepository = {
     async findPublicById(id: string) {
-        const result = await pool.query(
-            `
+        const result = await pool.query(`
             SELECT *
             FROM users_public
             WHERE id = $1
@@ -30,8 +29,7 @@ export const UserRepository = {
     },
 
     async findActiveById(id: string) {
-        const result = await pool.query<User>(
-            `
+        const result = await pool.query<User>(`
             SELECT *
             FROM users_active
             WHERE id = $1
@@ -44,8 +42,7 @@ export const UserRepository = {
     },
 
     async findByEmailActive(email: string) {
-        const result = await pool.query<User>(
-            `
+        const result = await pool.query<User>(`
             SELECT *
             FROM users_active
             WHERE email = $1
@@ -57,8 +54,7 @@ export const UserRepository = {
     },
 
     async findByEmail(email: string) {
-        const result = await pool.query<User>(
-            `
+        const result = await pool.query<User>(`
             SELECT *
             FROM users_public_active
             WHERE email = $1
@@ -70,55 +66,47 @@ export const UserRepository = {
     },
 
     async findAdmin() {
-        const result = await pool.query<User>(
-            `
+        const result = await pool.query<User>(`
             SELECT *
             FROM users_admin_public
             LIMIT 1
-            `
-        );
+        `);
         return result.rows[0] ?? null;
     },
 
     async findAdminOnly() {
-        const result = await pool.query(
-            `
+        const result = await pool.query(`
             SELECT id
             FROM users_admin_public
             LIMIT 1
-            `
-        );
+        `);
         return result.rows[0] ?? null;
     },
 
     async findAllAdmins() {
-        const result = await pool.query<User>(
-            `
+        const result = await pool.query<User>(`
             SELECT *
             FROM users_admin_public
-            `
-        );
+        `);
         return result.rows;
     },
 
     async findById(id: string) {
-        const result = await pool.query<User>(
-            `
+        const result = await pool.query<User>(`
             SELECT *
             FROM users
             WHERE id = $1
             LIMIT 1
             `,
             [id]
-        );
+    );
         return result.rows[0] ?? null;
     },
 
     async findUsersPaginated(page: number, pageSize: number) {
         const offset = (page - 1) * pageSize;
 
-        const usersResult = await pool.query<User>(
-            `
+        const usersResult = await pool.query<User>(`
             SELECT
                 id,
                 name,
@@ -131,15 +119,13 @@ export const UserRepository = {
             OFFSET $2
             `,
             [pageSize, offset]
-        );
+    );
 
-        const countResult = await pool.query<{ count: string }>(
-            `
+        const countResult = await pool.query<{ count: string }>(`
             SELECT COUNT(*)
             FROM users
             WHERE role = 'USER'
-            `
-        );
+        `);
 
         return [usersResult.rows, parseInt(countResult.rows[0].count, 10)] as const;
     },
@@ -151,8 +137,7 @@ export const UserRepository = {
         role: 'ADMIN' | 'USER';
         avatar?: string | null;
     }) {
-        const result = await pool.query<User>(
-            `
+        const result = await pool.query<User>(`
             INSERT INTO users (name, email, password, role, avatar)
             VALUES ($1, $2, $3, $4, $5)
             RETURNING *
@@ -177,8 +162,7 @@ export const UserRepository = {
         const keys = Object.keys(data);
         const values = Object.values(data);
         const setClause = keys.map((key, i) => `"${key}" = $${i + 2}`).join(', ');
-        const result = await pool.query<User>(
-            `
+        const result = await pool.query<User>(`
             UPDATE users
             SET ${setClause}
             WHERE id = $1 AND deleted_at IS NULL
@@ -198,8 +182,7 @@ export const UserRepository = {
 
         const setClause = keys.map((key, i) => `"${key}" = $${i + 2}`).join(', ');
 
-        const result = await pool.query<User>(
-            `
+        const result = await pool.query<User>(`
             UPDATE users
             SET ${setClause}
             WHERE id = $1
@@ -212,8 +195,7 @@ export const UserRepository = {
     },
 
     async updatePassword(id: string, password: string) {
-        const result = await pool.query<User>(
-            `
+        const result = await pool.query<User>(`
             UPDATE users
             SET password = $1
             WHERE id = $2
@@ -226,8 +208,7 @@ export const UserRepository = {
     },
 
     async softDeleteById(id: string) {
-        const result = await pool.query<User>(
-            `
+        const result = await pool.query<User>(`
             UPDATE users
             SET deleted_at = NOW()
             WHERE id = $1
@@ -240,8 +221,7 @@ export const UserRepository = {
     },
 
     async reactivateById(id: string) {
-        const result = await pool.query<User>(
-            `
+        const result = await pool.query<User>(`
             UPDATE users
             SET deleted_at = NULL
             WHERE id = $1
@@ -253,8 +233,7 @@ export const UserRepository = {
     },
 
     async updateEmailVerified(id: string, date: Date) {
-        const result = await pool.query<User>(
-            `
+        const result = await pool.query<User>(`
             UPDATE users
             SET email_verified = $1
             WHERE id = $2
@@ -267,8 +246,7 @@ export const UserRepository = {
     },
 
     async updatePasswordByEmail(email: string, hashedPassword: string) {
-        const result = await pool.query(
-            `
+        const result = await pool.query(`
             UPDATE users
             SET password = $2
             WHERE email = $1

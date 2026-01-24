@@ -8,8 +8,7 @@ export interface VerificationToken {
 
 export const VerificationTokenRepository = {
     async findByIdentifier(identifier: string) {
-        const result = await pool.query<VerificationToken>(
-            `
+        const result = await pool.query<VerificationToken>(`
             SELECT *
             FROM verification_tokens
             WHERE identifier = $1
@@ -24,8 +23,7 @@ export const VerificationTokenRepository = {
     },
 
     async findValidToken(identifier: string, token: string) {
-        const result = await pool.query<VerificationToken>(
-            `
+        const result = await pool.query<VerificationToken>(`
             SELECT *
             FROM verification_tokens
             WHERE identifier = $1
@@ -44,8 +42,7 @@ export const VerificationTokenRepository = {
         token: string;
         expires: Date;
     }) {
-        const result = await pool.query<VerificationToken>(
-            `
+        const result = await pool.query<VerificationToken>(`
             INSERT INTO verification_tokens (identifier, token, expires)
             VALUES ($1, $2, $3)
             RETURNING *
@@ -57,8 +54,7 @@ export const VerificationTokenRepository = {
     },
 
     async deleteByIdentifier(identifier: string) {
-        await pool.query(
-            `
+        await pool.query(`
             DELETE FROM verification_tokens
             WHERE identifier = $1
             `,
@@ -67,8 +63,7 @@ export const VerificationTokenRepository = {
     },
 
     async delete(identifier: string, token: string) {
-        await pool.query(
-            `
+        await pool.query(`
             DELETE FROM verification_tokens
             WHERE identifier = $1
               AND token = $2
