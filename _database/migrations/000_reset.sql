@@ -16,3 +16,10 @@ DROP TABLE IF EXISTS users;
 
 -- 5. Enum
 DROP TYPE IF EXISTS user_role;
+
+-- 6. Tabela de migrations
+DROP TABLE IF EXISTS schema_migrations;
+
+-- 7. Extensões
+DROP EXTENSION IF EXISTS pgcrypto CASCADE;
+DROP EXTENSION IF EXISTS citext CASCADE;

@@ -6,22 +6,23 @@ async function migrate() {
     try {
         console.log('🚀 Running database migrations...');
 
-        const existingTables = await pool.query(`
-            SELECT tablename
-            FROM pg_tables
-            WHERE schemaname = 'public';
-        `);
-
-        if ((existingTables.rowCount ?? 0) > 0) {
-            console.log('⚠️  The database already has tables. No migration will be executed.');
-            process.exit(0);
-        }
-
         const migrationsDir = path.join(
             process.cwd(),
             '_database',
             'migrations'
         );
+
+        if (!fs.existsSync(migrationsDir)) {
+            console.error('❌ Migrations directory not found.');
+            process.exit(1);
+        }
+
+        await pool.query(`
+            CREATE TABLE IF NOT EXISTS schema_migrations (
+                filename TEXT PRIMARY KEY,
+                executed_at TIMESTAMPTZ NOT NULL DEFAULT now()
+            );
+        `);
 
         const files = fs
             .readdirSync(migrationsDir)
@@ -33,14 +34,41 @@ async function migrate() {
             process.exit(0);
         }
 
+        const { rows } = await pool.query(
+            'SELECT filename FROM schema_migrations'
+        );
+        const executed = new Set(rows.map(r => r.filename));
+
+        let executedCount = 0;
+
         for (const file of files) {
-            const filePath = path.join(migrationsDir, file);
+            if (executed.has(file)) {
+                console.log(`↷ Skipping: ${file}`);
+                continue;
+            }
+
             console.log(`→ Running: ${file}`);
-            const sql = fs.readFileSync(filePath, 'utf8');
+            const sql = fs.readFileSync(
+                path.join(migrationsDir, file),
+                'utf8'
+            );
+
             await pool.query(sql);
+
+            await pool.query(
+                'INSERT INTO schema_migrations (filename) VALUES ($1)',
+                [file]
+            );
+
+            executedCount++;
         }
 
-        console.log('✅ All migrations executed successfully.');
+        if (executedCount === 0) {
+            console.log('ℹ️  Database is already up to date.');
+        } else {
+            console.log(`✅ ${executedCount} migration(s) executed successfully.`);
+        }
+
         process.exit(0);
 
     } catch (err) {

@@ -1,0 +1,4 @@
+REVOKE ALL ON users FROM PUBLIC;
+GRANT SELECT ON users_public TO PUBLIC;
+GRANT SELECT ON users_admin_public TO PUBLIC;
+GRANT SELECT ON users_public_active TO PUBLIC;
