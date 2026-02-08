@@ -82,9 +82,11 @@ O projeto possui scripts Node.js para gerenciar o banco de dados:
 
 `migrate.ts` → aplica migrations
 
+`make-migration` → cria novos arquivos de migration com número sequencial e timestamp automático
+
 Além disso, **se o banco não existir**, ele será criado automaticamente pelo `_lib/db.ts`.
 
-Para mais detalhes sobre cada migration, consulte o [README das Migrations](database/README.md).
+Para mais detalhes sobre cada migration, consulte o [README das Migrations](_database/README.md).
 
 ### Inicializar Banco
 
@@ -112,15 +114,53 @@ Para criar ou aplicar as migrations manualmente:
 
 ---
 
-### Resetar Banco (`DEV`/`ADMIN`)
+### Criar uma nova Migration
 
-Para resetar completamente o banco (apaga tabelas, views, triggers, enums):
+```bash
+    npm run make:migration "Descrição da migration"
+```
+
+- Cria arquivo `.sql` na pasta `_database/migrations` com:
+
+Número sequencial automático
+
+`**Timestamp automático**
+
+**Descrição opcional**, convertida para **snake_case e sem aspas**
+
+Exemplo de uso:
+
+```bash
+    npm run make:migration "Add new Profiles Table"
+```
+
+- Arquivo gerado:
+
+```pgsql
+    007_20260208124500_add_new_profiles_table.sql
+```
+
+**Observações:**
+
+- Não inclua aspas no nome do arquivo; apenas no argumento do comando
+
+- Todos os caracteres especiais serão removidos
+
+- Espaços são convertidos em `_`
+
+---
+
+### Resetar Banco (`DEV`/`ADMIN`)
 
 ```bash
     npm run db:reset
 ```
 
-**⚠️ Aviso: Apaga todos os dados. Não usar em produção.**
+- Aplica 000_reset.sql e limpa todas as tabelas
+
+- **⚠️ Aviso: apaga todos os dados. Não usar em produção**
+
+- Após reset, rode novamente:
 
 **Após reset, rode novamente:**
 
@@ -141,11 +181,11 @@ Para resetar completamente o banco (apaga tabelas, views, triggers, enums):
 
 **Isso equivale a:**
 
-1. npm run db:reset → limpa o banco
+1. `npm run db:reset` → limpa o banco
 
-2. npm run db:migrate → recria tudo
+2. `npm run db:migrate` → recria tudo
 
-3. npm run dev → inicia o servidor Next.js
+3. `npm run dev` → inicia o servidor Next.js
 
 ---
 
