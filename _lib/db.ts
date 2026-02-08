@@ -8,30 +8,28 @@ const dbUrl = new URL(DATABASE_URL);
 const DB_NAME = dbUrl.pathname.replace(/^\//, '');
 
 async function createDatabaseIfNotExists() {
+    if (isProduction) return;
+
     const tmpUrl = new URL(DATABASE_URL);
     tmpUrl.pathname = '/postgres';
     const client = new Client({
         connectionString: tmpUrl.toString(),
-        ssl: isProduction ? { rejectUnauthorized: false } : false,
+        ssl: false,
     });
 
     await client.connect();
 
     const res = await client.query(
-        `
-        SELECT 1
+        `SELECT 1
         FROM pg_database
-        WHERE datname = $1
-        `,
+        WHERE datname = $1`,
         [DB_NAME]
     );
 
     if (res.rowCount === 0) {
-        await client.query(
-            `
+        await client.query(`
             CREATE DATABASE "${DB_NAME}"
-            `
-        );
+        `);
         console.log(`Database "${DB_NAME}" created.`);
     } else {
         console.log(`Database "${DB_NAME}" It already exists.`);

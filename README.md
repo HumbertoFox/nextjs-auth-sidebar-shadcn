@@ -14,7 +14,9 @@
 
   - [Inicializar Banco](#inicializar-banco)
 
-  - [Resetar Banco](#resetar-banco-admin)
+  - [Resetar Banco](#resetar-banco-devadmin)
+
+  - [Setup Completo Dev](#setup-completo-dev)
 
   - [Modelo de Dados](#modelo-de-dados)
 
@@ -74,25 +76,27 @@ A aplicação estará disponível em:
 
 ## Banco de Dados
 
-O projeto possui rotas da API para inicialização e reset do banco de dados automaticamente.
+O projeto possui scripts Node.js para gerenciar o banco de dados:
 
-Além disso, **se o banco de dados não existir**, ele será criado automaticamente na inicialização. Isso garante que você nunca precise criar o banco manualmente antes de rodar o projeto.
+`reset.ts` → reseta o banco
+
+`migrate.ts` → aplica migrations
+
+Além disso, **se o banco não existir**, ele será criado automaticamente pelo `_lib/db.ts`.
+
+Para mais detalhes sobre cada migration, consulte o [README das Migrations](database/README.md).
 
 ### Inicializar Banco
 
-```http
-    GET /api/init-db
-```
+Para criar ou aplicar as migrations manualmente:
 
 ```bash
-    http://localhost:3000/api/init-db
+    npm run db:migrate
 ```
 
 ---
 
 **O que faz:**
-
-- Verifica se o banco existe; se não, cria automaticamente.
 
 - Cria extensões PostgreSQL necessárias (`pgcrypto`, `citext`).
 
@@ -102,45 +106,46 @@ Além disso, **se o banco de dados não existir**, ele será criado automaticame
 
 - Cria views públicas e ativas para acesso seguro.
 
-- Cria função `update_updated_at` e trigger para atualizar timestamps automaticamente.
+- Cria função `update_updated_at` e `trigger_update_users_updated_at` para atualizar timestamps automaticamente.
 
 - Protege a tabela `users`, liberando acesso somente às views.
 
-**Resposta esperada:**
+---
 
-```json
-    { "ok": true, "message": "Banco verificado e configurado." }
+### Resetar Banco (`DEV`/`ADMIN`)
+
+Para resetar completamente o banco (apaga tabelas, views, triggers, enums):
+
+```bash
+    npm run db:reset
 ```
 
-Esta rota pode ser executada várias vezes sem erros.
+**⚠️ Aviso: Apaga todos os dados. Não usar em produção.**
+
+**Após reset, rode novamente:**
+
+```bash
+    npm run db:migrate
+```
 
 ---
 
-### Resetar Banco (`ADMIN`)
+### Setup Completo Dev
 
-```pgsql
-    GET /api/reset-db
-```
+**Para resetar, recriar o banco e rodar o servidor de dev:**
 
 ```bash
-    http://localhost:3000/api/reset-db
+    npm run db:setup
+    npm run dev
 ```
 
-⚠️ Apenas `ADMIN` pode executar. Remove todas estruturas e dados, encerra sessão atual.
+**Isso equivale a:**
 
-**Respostas:**
+1. npm run db:reset → limpa o banco
 
-- Não-ADMIN:
+2. npm run db:migrate → recria tudo
 
-```json
-    { "error": "Acesso negado. Apenas administradores podem resetar o banco." }
-```
-
-- ADMIN:
-
-```json
-    { "ok": true, "message": "Banco resetado com sucesso." }
-```
+3. npm run dev → inicia o servidor Next.js
 
 ---
 
@@ -154,7 +159,7 @@ Esta rota pode ser executada várias vezes sem erros.
 
 **Trigger:** Atualiza `updated_at` em users automaticamente.
 
-Para detalhes de criação de tabelas, views e triggers, consulte o código em `@/_lib/db.ts`.
+Para detalhes de criação de tabelas, views e triggers, consulte os scripts em `database/migrations` e `_lib/db.ts`.
 
 ---
 
@@ -175,11 +180,12 @@ Para detalhes de criação de tabelas, views e triggers, consulte o código em `
 ### Fluxo de Desenvolvimento
 
 ```text
-    1. Inicializar banco → /api/init-db
-    2. Criar primeiro usuário (ADMIN)
-    3. Desenvolver normalmente
-    4. Resetar se necessário → /api/reset-db
-    5. Inicializar banco novamente → /api/init-db
+    1. Resetar banco (opcional) → npm run db:reset
+    2. Inicializar banco → npm run db:migrate
+    3. Criar primeiro usuário (ADMIN)
+    4. Desenvolver normalmente
+    5. Resetar se necessário → npm run db:reset
+    6. Inicializar banco novamente → npm run db:migrate
 ```
 ---
 

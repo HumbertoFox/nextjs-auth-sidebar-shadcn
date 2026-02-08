@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "db:reset": "node database/reset.ts",
+    "db:migrate": "node database/migrate.ts",
+    "db:setup": "npm run db:reset && npm run db:migrate"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.9",
