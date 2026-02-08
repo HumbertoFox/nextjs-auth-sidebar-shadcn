@@ -28,7 +28,9 @@ const lastNumber = files
     .filter(n => !isNaN(n))
     .sort((a, b) => b - a)[0] || 0;
 
-const nextNumber = (lastNumber + 1).toString().padStart(3, '0');
+const nextNumber = (lastNumber + 1)
+    .toString()
+    .padStart(3, '0');
 
 const timestamp = new Date()
     .toISOString()
