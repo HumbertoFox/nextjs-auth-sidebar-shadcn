@@ -1,8 +1,10 @@
 import pkg from 'pg';
+import 'dotenv/config';
 const { Pool, Client } = pkg;
 
 const isProduction = process.env.NODE_ENV === 'production';
-const DATABASE_URL = process.env.DATABASE_URL!;
+const DATABASE_URL = process.env.DATABASE_URL;
+if (!DATABASE_URL) throw new Error('❌ DATABASE_URL not defined in .env');
 
 const dbUrl = new URL(DATABASE_URL);
 const DB_NAME = dbUrl.pathname.replace(/^\//, '');
@@ -10,6 +12,7 @@ const DB_NAME = dbUrl.pathname.replace(/^\//, '');
 async function createDatabaseIfNotExists() {
     if (isProduction) return;
 
+    if (!DATABASE_URL) throw new Error('❌ DATABASE_URL not defined in .env');
     const tmpUrl = new URL(DATABASE_URL);
     tmpUrl.pathname = '/postgres';
     const client = new Client({

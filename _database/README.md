@@ -13,8 +13,6 @@ O objetivo é organizar, versionar e aplicar alterações no banco de dados de f
 
 `XXX_*.sql` → Futuras migrations devem ser numeradas sequencialmente (`002_`, `003_`, etc).
 
-`README.md` → Documentação da pasta.
-
 **Ordem das migrations:**
 
 Os arquivos são executados em ordem alfabética/numerada, garantindo consistência.
@@ -27,7 +25,7 @@ Além dos arquivos `.sql`, o projeto possui scripts para executar migrations via
 
 `database/reset.ts` → Aplica `000_reset.sql` e limpa o banco.
 
-`database/migrate.ts` → Aplica todas as migrations `.sql` na pasta em ordem.
+`database/migrate.ts` → Aplica todas as migrations `.sql` na pasta em ordem, **mas não executa se houver tabelas existentes**, evitando reset acidental.
 
 ---
 
@@ -83,6 +81,16 @@ Cada alteração significativa do banco deve ser uma migration própria.
 ```bash
     npm run db:setup
 ```
+
+---
+
+### Mensagens exibidas pelo migrate
+
+- ⚠️ Banco já possui tabelas → nenhuma migration será executada
+
+- → Running: `<arquivo.sql>` → migration aplicada com sucesso
+
+- ✅ All migrations executed successfully → todas as migrations aplicadas
 
 ---
 

@@ -1,20 +1,31 @@
 import fs from 'fs';
 import path from 'path';
-import pool from '@/_lib/db';
+import pool from '../_lib/db.ts';
 
 async function migrate() {
     try {
         console.log('🚀 Running database migrations...');
 
+        const existingTables = await pool.query(`
+            SELECT tablename
+            FROM pg_tables
+            WHERE schemaname = 'public';
+        `);
+
+        if ((existingTables.rowCount ?? 0) > 0) {
+            console.log('⚠️  The database already has tables. No migration will be executed.');
+            process.exit(0);
+        }
+
         const migrationsDir = path.join(
             process.cwd(),
-            'database',
+            '_database',
             'migrations'
         );
 
         const files = fs
             .readdirSync(migrationsDir)
-            .filter(file => file.endsWith('.sql'))
+            .filter(file => file.endsWith('.sql') && !file.includes('reset'))
             .sort();
 
         if (files.length === 0) {
@@ -39,6 +50,4 @@ async function migrate() {
     }
 }
 
-if (require.main === module) {
-    migrate();
-}
+await migrate();

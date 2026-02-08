@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import pool from '@/_lib/db';
+import pool from '../_lib/db.ts';
 
 async function resetDatabase() {
     try {
@@ -8,7 +8,7 @@ async function resetDatabase() {
 
         const resetFile = path.join(
             process.cwd(),
-            'database',
+            '_database',
             'migrations',
             '000_reset.sql'
         );
@@ -30,6 +30,4 @@ async function resetDatabase() {
     }
 }
 
-if (require.main === module) {
-    resetDatabase();
-}
+await resetDatabase();
