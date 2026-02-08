@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 
-let description = process.argv[2];
+let description: string | undefined = process.argv[2];
 
 function sanitizeDescription(desc: string) {
     return desc
@@ -30,10 +30,14 @@ const lastNumber = files
 
 const nextNumber = (lastNumber + 1).toString().padStart(3, '0');
 
-const timestamp = new Date().toISOString().replace(/[-:]/g, '').slice(0, 15);
+const timestamp = new Date()
+    .toISOString()
+    .replace(/[-:]/g, '')
+    .slice(0, 15);
 
 if (description) {
     description = sanitizeDescription(description);
+    if (!description) description = undefined;
 }
 
 const filename = description
