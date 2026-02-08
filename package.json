@@ -9,7 +9,8 @@
     "lint": "eslint",
     "db:reset": "npx ts-node _database/reset.ts",
     "db:migrate": "npx ts-node _database/migrate.ts",
-    "db:setup": "npm run db:reset && npm run db:migrate"
+    "db:setup": "npm run db:reset && npm run db:migrate",
+    "make:migration": "npx ts-node _database/make-migration.ts"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.9",

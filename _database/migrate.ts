@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import crypto from 'crypto';
 import pool from '../_lib/db.ts';
 
 async function migrate() {
@@ -20,7 +21,8 @@ async function migrate() {
         await pool.query(`
             CREATE TABLE IF NOT EXISTS schema_migrations (
                 filename TEXT PRIMARY KEY,
-                executed_at TIMESTAMPTZ NOT NULL DEFAULT now()
+                executed_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+                hash TEXT NOT NULL
             );
         `);
 
@@ -35,29 +37,33 @@ async function migrate() {
         }
 
         const { rows } = await pool.query(
-            'SELECT filename FROM schema_migrations'
+            'SELECT filename, hash FROM schema_migrations'
         );
-        const executed = new Set(rows.map(r => r.filename));
+        const executed = new Map(rows.map(r => [r.filename, r.hash]));
 
         let executedCount = 0;
 
         for (const file of files) {
+            const filepath = path.join(migrationsDir, file);
+            const sql = fs.readFileSync(filepath, 'utf8');
+
+            const hash = crypto.createHash('sha256').update(sql).digest('hex');
+
             if (executed.has(file)) {
-                console.log(`↷ Skipping: ${file}`);
+                if (executed.get(file) !== hash) {
+                    console.warn(`⚠️  Migration "${file}" It was modified after it was applied!`);
+                } else {
+                    console.log(`↷ Skipping: ${file}`);
+                }
                 continue;
             }
 
             console.log(`→ Running: ${file}`);
-            const sql = fs.readFileSync(
-                path.join(migrationsDir, file),
-                'utf8'
-            );
-
             await pool.query(sql);
 
             await pool.query(
-                'INSERT INTO schema_migrations (filename) VALUES ($1)',
-                [file]
+                'INSERT INTO schema_migrations (filename, hash) VALUES ($1, $2)',
+                [file, hash]
             );
 
             executedCount++;
