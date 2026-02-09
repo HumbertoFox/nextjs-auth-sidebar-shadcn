@@ -11,15 +11,15 @@ O objetivo é organizar, versionar e aplicar alterações no banco de dados de f
 
 001_init_extensions.sql → Cria extensões necessárias no PostgreSQL (pgcrypto, citext).
 
-002_users.sql → Cria tabela users e enums relacionados (user_role).
+002_create_users.sql → Cria tabela users e enums relacionados (user_role).
 
-003_users_views.sql → Cria views públicas e administrativas para usuários.
+003_create_users_views.sql → Cria views públicas e administrativas para usuários.
 
-004_users_triggers.sql → Cria triggers e funções auxiliares (ex.: update_updated_at).
+004_create_users_triggers.sql → Cria triggers e funções auxiliares (ex.: update_updated_at).
 
-005_verification_tokens.sql → Cria tabela verification_tokens.
+005_create_verification_tokens.sql → Cria tabela verification_tokens.
 
-006_permissions.sql → Cria tabela permissions e relacionamentos.
+006_create_permissions.sql → Cria tabela permissions e relacionamentos.
 
 **Ordem das migrations:**
 

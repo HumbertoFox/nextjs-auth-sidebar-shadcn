@@ -1,7 +1,9 @@
 DO $$
 BEGIN
     IF NOT EXISTS (
-        SELECT 1 FROM pg_type WHERE typname = 'user_role'
+        SELECT 1
+        FROM pg_type
+        WHERE typname = 'user_role'
     ) THEN
         CREATE TYPE user_role AS ENUM (
             'ADMIN',
@@ -24,4 +26,4 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 CREATE INDEX IF NOT EXISTS idx_users_deleted_at
-ON users (deleted_at);
+    ON users(deleted_at);
