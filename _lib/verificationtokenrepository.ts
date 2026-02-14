@@ -3,7 +3,7 @@ import pool from '@/_lib/db';
 export interface VerificationToken {
     identifier: string;
     token: string;
-    expires: Date;
+    expires_at: Date;
 }
 
 export const VerificationTokenRepository = {
@@ -12,8 +12,8 @@ export const VerificationTokenRepository = {
             SELECT *
             FROM verification_tokens
             WHERE identifier = $1
-                AND expires > NOW()
-            ORDER BY expires DESC
+                AND expires_at > NOW()
+            ORDER BY expires_at DESC
             LIMIT 1
             `,
             [identifier]
@@ -28,7 +28,7 @@ export const VerificationTokenRepository = {
             FROM verification_tokens
             WHERE identifier = $1
               AND token = $2
-              AND expires > NOW()
+              AND expires_at > NOW()
             LIMIT 1
             `,
             [identifier, token]
@@ -40,14 +40,14 @@ export const VerificationTokenRepository = {
     async create(data: {
         identifier: string;
         token: string;
-        expires: Date;
+        expires_at: Date;
     }) {
         const result = await pool.query<VerificationToken>(`
-            INSERT INTO verification_tokens (identifier, token, expires)
+            INSERT INTO verification_tokens (identifier, token, expires_at)
             VALUES ($1, $2, $3)
             RETURNING *
             `,
-            [data.identifier, data.token, data.expires]
+            [data.identifier, data.token, data.expires_at]
         );
 
         return result.rows[0];

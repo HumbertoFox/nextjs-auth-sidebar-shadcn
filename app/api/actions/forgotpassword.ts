@@ -32,7 +32,7 @@ export async function forgotPassword(state: FormStatePasswordForgot, formData: F
 
     if (!tokenExisting) {
         const token = crypto.randomBytes(32).toString('hex');
-        const expires = new Date(Date.now() + 60 * 60 * 1000);
+        const expires_at = new Date(Date.now() + 60 * 60 * 1000);
 
         const resetLink = `${process.env.NEXT_URL}/reset-password?token=${token}&email=${email}`;
         const response = await sendPasswordResetEmail(email, resetLink);
@@ -43,7 +43,7 @@ export async function forgotPassword(state: FormStatePasswordForgot, formData: F
         }
 
         await VerificationTokenRepository.deleteByIdentifier(email);
-        await VerificationTokenRepository.create({ identifier: email, token, expires });
+        await VerificationTokenRepository.create({ identifier: email, token, expires_at });
 
         await regenerateCsrfToken();
 

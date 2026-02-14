@@ -66,7 +66,7 @@ export const UserRepository = {
         return result.rows[0] ?? null;
     },
 
-    async findAdmin() {
+    async findFirstAdmin() {
         const result = await pool.query<User>(`
             SELECT *
             FROM users_admin_public

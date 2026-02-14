@@ -26,6 +26,7 @@ export default function VerifyEmailClient({
             const formData = new FormData();
             formData.append('email', email);
             formData.append('token', token);
+            if (csrfToken) formData.append('csrfToken', csrfToken);
             startTransition(() => action(formData));
         }
     }, [email, token, action]);

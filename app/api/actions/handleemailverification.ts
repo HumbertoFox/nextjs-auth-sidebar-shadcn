@@ -26,11 +26,11 @@ export async function handleEmailVerification(state: FormStateEmailVerification 
 
     if (!tokenExisting) return { error: 'Invalid or expired token' };
 
-    if (tokenExisting && new Date() > tokenExisting.expires) {
+    if (tokenExisting && new Date() > tokenExisting.expires_at) {
         await VerificationTokenRepository.delete(email, tokenExisting.token);
 
         const token = crypto.randomBytes(32).toString('hex');
-        const expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+        const expires_at = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
 
         const verifyLink = `${process.env.NEXT_URL}/verify-email?token=${token}&email=${email}`;
         const response = await sendEmailVerification(email, verifyLink);
@@ -43,7 +43,7 @@ export async function handleEmailVerification(state: FormStateEmailVerification 
         await VerificationTokenRepository.create({
             identifier: email,
             token,
-            expires
+            expires_at
         });
 
         return { status: 'verification-link-sent' };
