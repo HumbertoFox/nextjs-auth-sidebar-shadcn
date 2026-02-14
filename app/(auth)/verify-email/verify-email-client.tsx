@@ -29,7 +29,7 @@ export default function VerifyEmailClient({
             if (csrfToken) formData.append('csrfToken', csrfToken);
             startTransition(() => action(formData));
         }
-    }, [email, token, action]);
+    }, [email, token, csrfToken, action]);
     return (
         <div className="space-y-6">
             <div className="flex flex-col items-center gap-2 text-center mx-auto">
