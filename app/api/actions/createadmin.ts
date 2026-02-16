@@ -40,7 +40,7 @@ export async function createAdmin(state: FormStateCreateAdmin, formData: FormDat
         const existingUser = await UserRepository.findByEmail(email);
         if (existingUser) return { warning: 'Data already registered.' };
 
-        const adminExists = await UserRepository.findFirstAdmin();
+        const adminExists = await UserRepository.adminExists();
         const role = adminExists ? 'USER' : 'ADMIN';
 
         const hashedPassword = await bcrypt.hash(password, 12);

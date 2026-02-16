@@ -66,13 +66,15 @@ export const UserRepository = {
         return result.rows[0] ?? null;
     },
 
-    async findFirstAdmin() {
-        const result = await pool.query<User>(`
-            SELECT *
-            FROM users_admin_public
-            LIMIT 1
-        `);
-        return result.rows[0] ?? null;
+    async adminExists(): Promise<boolean> {
+        const result = await pool.query<{ exists: boolean }>(`
+        SELECT EXISTS (
+            SELECT 1
+            FROM users
+            WHERE role = 'ADMIN'
+        ) AS exists
+    `);
+        return result.rows[0].exists;
     },
 
     async findAdminOnly() {
@@ -100,7 +102,7 @@ export const UserRepository = {
             LIMIT 1
             `,
             [id]
-    );
+        );
         return result.rows[0] ?? null;
     },
 
@@ -120,7 +122,7 @@ export const UserRepository = {
             OFFSET $2
             `,
             [pageSize, offset]
-    );
+        );
 
         const countResult = await pool.query<{ count: string }>(`
             SELECT COUNT(*)
