@@ -8,7 +8,7 @@ export default function SettingsLayout({
         <>
             <div className="flex flex-col lg:flex-row lg:space-y-0">
                 <AuthSplitLayoutClient />
-                <section className="w-full flex justify-center items-center h-screen">
+                <section className="w-full flex justify-end items-center min-h-screen">
                     {children}
                 </section>
             </div>

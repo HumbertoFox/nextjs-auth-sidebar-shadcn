@@ -41,7 +41,7 @@ export default function AuthSplitLayoutClient() {
             );
     }, []);
     return (
-        <div className="min-w-1/2 h-dvh hidden flex-col items-center justify-center px-8 sm:px-0 lg:max-w-none lg:px-0 lg:block">
+        <div className="min-w-1/2 h-dvh fixed hidden flex-col items-center justify-center px-8 sm:px-0 lg:max-w-none lg:px-0 lg:block">
             <div className="bg-muted relative hidden h-full flex-col p-10 text-white lg:flex dark:border-r">
                 <div className="absolute inset-0 bg-zinc-900" />
                 <div className="flex">

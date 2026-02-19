@@ -4,7 +4,7 @@ import { Skeleton } from '@/_components/ui/skeleton';
 
 export function LoadingLogin() {
     return (
-        <div className="w-full lg:p-8">
+        <div className="w-full lg:w-2/4 lg:p-8">
             <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-72">
                 <div className="grid gap-2">
                     <Skeleton className="h-5 w-44 mx-auto" />
