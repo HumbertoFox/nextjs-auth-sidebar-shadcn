@@ -234,8 +234,8 @@ export default function RegisterAdminClient({
                 </div>
             </form>
 
-            {state?.warning && <div className="mb-4 text-center text-sm font-medium text-orange-400">{state.warning}</div>}
-            {state?.message && <div className="mb-4 text-center text-sm font-medium text-blue-400">Account created successfully! Redirecting to the Dashboard, please wait...</div>}
+            {state?.warning && <p className="mb-4 text-center text-sm font-medium text-orange-400">{state.warning}</p>}
+            {state?.message && <p className="mb-4 text-center text-sm font-medium text-blue-400">Account created successfully! Redirecting to the Dashboard, please wait...</p>}
         </div>
     );
 }
