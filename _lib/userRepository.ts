@@ -15,6 +15,18 @@ export interface User {
     [key: string]: unknown;
 }
 
+const USER_PUBLIC_COLUMNS = `
+    id,
+    name,
+    email,
+    role,
+    avatar,
+    email_verified,
+    deleted_at,
+    created_at,
+    updated_at
+`;
+
 export const UserRepository = {
     async findPublicById(id: string) {
         const result = await pool.query(`
@@ -25,7 +37,6 @@ export const UserRepository = {
             `,
             [id]
         );
-
         return result.rows[0] ?? null;
     },
 
@@ -38,7 +49,6 @@ export const UserRepository = {
             `,
             [id]
         );
-
         return result.rows[0] ?? null;
     },
 
@@ -70,8 +80,7 @@ export const UserRepository = {
         const result = await pool.query<{ exists: boolean }>(`
         SELECT EXISTS (
             SELECT 1
-            FROM users
-            WHERE role = 'ADMIN'
+            FROM users_admin_public
         ) AS exists
     `);
         return result.rows[0].exists;
@@ -97,7 +106,7 @@ export const UserRepository = {
     async findById(id: string) {
         const result = await pool.query<User>(`
             SELECT *
-            FROM users
+            FROM users_public
             WHERE id = $1
             LIMIT 1
             `,
@@ -129,7 +138,6 @@ export const UserRepository = {
             FROM users
             WHERE role = 'USER'
         `);
-
         return [usersResult.rows, parseInt(countResult.rows[0].count, 10)] as const;
     },
 
@@ -143,7 +151,7 @@ export const UserRepository = {
         const result = await pool.query<User>(`
             INSERT INTO users (name, email, password, role, avatar)
             VALUES ($1, $2, $3, $4, $5)
-            RETURNING *
+            RETURNING ${USER_PUBLIC_COLUMNS}
             `,
             [
                 data.name,
@@ -153,7 +161,6 @@ export const UserRepository = {
                 data.avatar ?? null,
             ]
         );
-
         return result.rows[0];
     },
 
@@ -168,8 +175,9 @@ export const UserRepository = {
         const result = await pool.query<User>(`
             UPDATE users
             SET ${setClause}
-            WHERE id = $1 AND deleted_at IS NULL
-            RETURNING *
+            WHERE id = $1
+            AND deleted_at IS NULL
+            RETURNING ${USER_PUBLIC_COLUMNS}
             `,
             [id, ...values]
         );
@@ -189,11 +197,10 @@ export const UserRepository = {
             UPDATE users
             SET ${setClause}
             WHERE id = $1
-            RETURNING *
+            RETURNING ${USER_PUBLIC_COLUMNS}
             `,
             [id, ...values]
         );
-
         return result.rows[0] ?? null;
     },
 
@@ -202,11 +209,10 @@ export const UserRepository = {
             UPDATE users
             SET password = $1
             WHERE id = $2
-            RETURNING *
+            RETURNING ${USER_PUBLIC_COLUMNS}
             `,
             [password, id]
         );
-
         return result.rows[0] ?? null;
     },
 
@@ -215,11 +221,10 @@ export const UserRepository = {
             UPDATE users
             SET deleted_at = NOW()
             WHERE id = $1
-            RETURNING *
+            RETURNING ${USER_PUBLIC_COLUMNS}
             `,
             [id]
         );
-
         return result.rows[0] ?? null;
     },
 
@@ -228,7 +233,7 @@ export const UserRepository = {
             UPDATE users
             SET deleted_at = NULL
             WHERE id = $1
-            RETURNING *
+            RETURNING ${USER_PUBLIC_COLUMNS}
             `,
             [id]
         );
@@ -240,11 +245,10 @@ export const UserRepository = {
             UPDATE users
             SET email_verified = $1
             WHERE id = $2
-            RETURNING *
+            RETURNING ${USER_PUBLIC_COLUMNS}
             `,
             [date, id]
         );
-
         return result.rows[0] ?? null;
     },
 
@@ -253,11 +257,10 @@ export const UserRepository = {
             UPDATE users
             SET password = $2
             WHERE email = $1
-            RETURNING *
+            RETURNING ${USER_PUBLIC_COLUMNS}
             `,
             [email, hashedPassword]
         );
-
         return result.rows[0] ?? null;
     },
 }
