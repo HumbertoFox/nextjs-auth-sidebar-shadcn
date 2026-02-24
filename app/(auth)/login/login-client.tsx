@@ -146,9 +146,9 @@ export function LoginClient({
                 </div>
             </form>
 
-            {statusFromParams && <div className="mb-4 text-center text-sm font-medium text-blue-600">{statusFromParams}</div>}
-            {state?.message && <div className="mb-4 text-center text-sm font-medium text-blue-600">{state.message}</div>}
-            {state?.warning && <div className="mb-4 text-center text-sm font-medium text-red-400">{state.warning}</div>}
+            {statusFromParams && <p className="mb-4 text-center text-sm font-medium text-blue-600">{statusFromParams}</p>}
+            {state?.message && <p className="mb-4 text-center text-sm font-medium text-blue-600">{state.message}</p>}
+            {state?.warning && <p className="mb-4 text-center text-sm font-medium text-red-400">{state.warning}</p>}
         </div>
     );
 }

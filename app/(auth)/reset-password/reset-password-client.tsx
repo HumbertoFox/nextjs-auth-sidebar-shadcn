@@ -145,8 +145,8 @@ export default function ResetPasswordClient({
                 </div>
             </form>
 
-            {state?.message && <div className="mb-4 text-center text-sm font-medium text-blue-600">{state.message}</div>}
-            {state?.warning && <div className="mb-4 text-center text-sm font-medium text-red-600">{state.warning}</div>}
+            {state?.message && <p className="mb-4 text-center text-sm font-medium text-blue-600">{state.message}</p>}
+            {state?.warning && <p className="mb-4 text-center text-sm font-medium text-red-600">{state.warning}</p>}
         </div>
     );
 }
