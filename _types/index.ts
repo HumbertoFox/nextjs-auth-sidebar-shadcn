@@ -2,6 +2,11 @@ import { LucideIcon } from 'lucide-react';
 
 export type UserRole = 'USER' | 'ADMIN';
 
+export const roleLabels: Record<UserRole, string> = {
+    ADMIN: 'Admin',
+    USER: 'User',
+}
+
 export type UserDetailsProps = {
     readonly id: string;
     readonly name: string;

@@ -9,7 +9,7 @@ import { Label } from '@/_components/ui/label';
 import { handleImageChange } from '@/_lib/handleimagechange';
 import Image from 'next/image';
 import { createUpdateAdminUser } from '@/app/api/actions/createupdateadminuser';
-import { RegisterFormUserProps, UserFormProps, UserRole } from '@/_types';
+import { RegisterFormUserProps, roleLabels, UserFormProps, UserRole } from '@/_types';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { useRouter } from 'next/navigation';
 
@@ -265,12 +265,11 @@ export default function RegisterUpdateUserForm({
                                 <SelectValue placeholder="Account type" />
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem value="USER">
-                                    User
-                                </SelectItem>
-                                <SelectItem value="ADMIN">
-                                    Admin
-                                </SelectItem>
+                                {Object.entries(roleLabels).map(([value, label]) => (
+                                    <SelectItem key={value} value={value}>
+                                        {label}
+                                    </SelectItem>
+                                ))}
                             </SelectContent>
                         </Select>
                         {state?.errors?.role?.[0] && <InputError message={state.errors.role[0]} />}
