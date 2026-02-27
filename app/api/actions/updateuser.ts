@@ -47,9 +47,9 @@ export async function updateUser(state: FormStateUserUpdate, formData: FormData)
         if (file.size > MAX_FILE_SIZE) return { errors: { avatar: ['The image cannot exceed 512 KB.'] } };
 
         try {
-            if (sessionUser.image) {
+            if (sessionUser.avatar) {
                 try {
-                    await del(sessionUser.image);
+                    await del(sessionUser.avatar);
                 } catch (deleteErr) {
                     console.warn('It was not possible to delete the previous image:', deleteErr);
                 }
