@@ -7,9 +7,7 @@ export async function getIsAdmin() {
             FROM users_admin_public
             WHERE deleted_at IS NULL
             LIMIT 1
-        `, [
-            'ADMIN'
-        ]);
+        `,);
         return result.rows.length > 0;
     } catch (error) {
         console.error('Error accessing the database:', error);
