@@ -10,7 +10,7 @@ export async function deleteUserById(formData: FormData) {
     const isValidCsrf = await validateCsrfToken(csrfToken);
 
     if (!isValidCsrf) return;
-    
+
     const userId = formData.get('userId') as string;
 
     const sessionUser = await getUser();
@@ -27,9 +27,9 @@ export async function deleteUserById(formData: FormData) {
 
         await regenerateCsrfToken();
 
-        if (user?.role === 'ADMIN') {
+        if (user.role === 'ADMIN') {
             revalidatePath('/dashboard/admins');
-        } else if (user?.role === 'USER') {
+        } else if (user.role === 'USER') {
             revalidatePath('/dashboard/users');
         }
     } catch (error) {
