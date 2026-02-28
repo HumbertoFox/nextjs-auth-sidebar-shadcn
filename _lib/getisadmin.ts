@@ -2,11 +2,14 @@ import pool from '@/_lib/db';
 
 export async function getIsAdmin() {
     try {
-        const result = await pool.query(
-            'SELECT 1 FROM users WHERE role = $1 LIMIT 1',
-            ['ADMIN']
-        );
-
+        const result = await pool.query(`
+            SELECT 1
+            FROM users_admin_public
+            WHERE deleted_at IS NULL
+            LIMIT 1
+        `, [
+            'ADMIN'
+        ]);
         return result.rows.length > 0;
     } catch (error) {
         console.error('Error accessing the database:', error);
