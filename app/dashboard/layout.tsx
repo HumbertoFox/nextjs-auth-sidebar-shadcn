@@ -1,7 +1,7 @@
 import DashboardSidebar from '@/_components/dashboard-sidebar';
 import { SidebarInset, SidebarProvider, } from '@/_components/ui/sidebar';
 import { getUser } from '@/_lib/dal';
-import { UserDetailsProps } from '@/_types';
+import { ProfileForm, UserDetailsProps } from '@/_types';
 
 export default async function DashboardLayout({
     children,
@@ -11,7 +11,7 @@ export default async function DashboardLayout({
     return (
         <SidebarProvider>
             <DashboardSidebar
-                user={user}
+                user={user as ProfileForm}
                 isAdmin={isAdmin}
             />
             <SidebarInset>
