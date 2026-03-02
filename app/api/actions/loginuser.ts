@@ -7,7 +7,10 @@ import z from 'zod';
 import { UserRepository } from '@/_lib/userrepository';
 import { regenerateCsrfToken, validateCsrfToken } from '@/_lib/csrf';
 
-export async function loginUser(state: FormStateLoginUser, formData: FormData): Promise<FormStateLoginUser> {
+export async function loginUser(
+    _: FormStateLoginUser,
+    formData: FormData
+): Promise<FormStateLoginUser> {
     const csrfToken = formData.get('csrfToken') as string;
     const isValidCsrf = await validateCsrfToken(csrfToken);
 

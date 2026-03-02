@@ -13,7 +13,10 @@ const MAX_FILE_SIZE = 512 * 1024;
 const MAX_DIMENSION = 512;
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 
-export async function createAdmin(state: FormStateCreateAdmin, formData: FormData): Promise<FormStateCreateAdmin> {
+export async function createAdmin(
+    _: FormStateCreateAdmin,
+    formData: FormData
+): Promise<FormStateCreateAdmin> {
     const csrfToken = formData.get('csrfToken') as string;
     const isValidCsrf = await validateCsrfToken(csrfToken);
 

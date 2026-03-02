@@ -5,7 +5,9 @@ import { getUser } from '@/_lib/dal';
 import { UserRepository } from '@/_lib/userrepository';
 import { revalidatePath } from 'next/cache';
 
-export async function deleteUserById(formData: FormData) {
+export async function deleteUserById(
+    formData: FormData
+) {
     const csrfToken = formData.get('csrfToken') as string;
     const isValidCsrf = await validateCsrfToken(csrfToken);
 

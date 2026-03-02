@@ -13,7 +13,10 @@ import { regenerateCsrfToken, validateCsrfToken } from '@/_lib/csrf';
 const MAX_FILE_SIZE = 512 * 1024;
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 
-export async function updateUser(state: FormStateUserUpdate, formData: FormData): Promise<FormStateUserUpdate> {
+export async function updateUser(
+    _: FormStateUserUpdate,
+    formData: FormData
+): Promise<FormStateUserUpdate> {
     const csrfToken = formData.get('csrfToken') as string;
     const isValidCsrf = await validateCsrfToken(csrfToken);
 

@@ -7,7 +7,10 @@ import { VerificationTokenRepository } from '@/_lib/verificationtokenrepository'
 import { hash } from 'bcrypt-ts';
 import z from 'zod';
 
-export async function resetPassword(state: FormStatePasswordReset, formData: FormData): Promise<FormStatePasswordReset> {
+export async function resetPassword(
+    _: FormStatePasswordReset,
+    formData: FormData
+): Promise<FormStatePasswordReset> {
     const csrfToken = formData.get('csrfToken') as string;
     const isValidCsrf = await validateCsrfToken(csrfToken);
 

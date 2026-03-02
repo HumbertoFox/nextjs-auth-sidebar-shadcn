@@ -8,7 +8,10 @@ import { VerificationTokenRepository } from '@/_lib/verificationtokenrepository'
 import z from 'zod';
 import { regenerateCsrfToken, validateCsrfToken } from '@/_lib/csrf';
 
-export async function forgotPassword(state: FormStatePasswordForgot, formData: FormData): Promise<FormStatePasswordForgot> {
+export async function forgotPassword(
+    _: FormStatePasswordForgot,
+    formData: FormData
+): Promise<FormStatePasswordForgot> {
     const csrfToken = formData.get('csrfToken') as string;
     const isValidCsrf = await validateCsrfToken(csrfToken);
 

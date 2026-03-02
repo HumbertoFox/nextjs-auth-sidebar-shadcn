@@ -9,7 +9,10 @@ import { UserRepository } from '@/_lib/userrepository';
 import { revalidatePath } from 'next/cache';
 import { regenerateCsrfToken, validateCsrfToken } from '@/_lib/csrf';
 
-export async function updatePassword(state: FormStatePasswordUpdate, formData: FormData): Promise<FormStatePasswordUpdate> {
+export async function updatePassword(
+    _: FormStatePasswordUpdate,
+    formData: FormData
+): Promise<FormStatePasswordUpdate> {
     const csrfToken = formData.get('csrfToken') as string;
     const isValidCsrf = await validateCsrfToken(csrfToken);
 
