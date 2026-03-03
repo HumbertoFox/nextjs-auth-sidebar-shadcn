@@ -17,9 +17,17 @@ export default async function Update({
     params,
 }: { params: Promise<{ id: string }> }) {
     const breadcrumbItems = [
-        { text: 'Dashboard', href: '/dashboard' },
-        { text: 'Admins', href: '/dashboard/admins' },
-        { text: 'Update User', },
+        {
+            text: 'Dashboard',
+            href: '/dashboard'
+        },
+        {
+            text: 'Admins',
+            href: '/dashboard/admins'
+        },
+        {
+            text: 'Update User'
+        },
     ];
     const { id } = await params;
     const user = await UserRepository.findById(id);

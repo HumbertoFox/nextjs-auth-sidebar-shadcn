@@ -10,10 +10,22 @@ import { SidebarNavItemProps } from '@/_types';
 export default function SettingsLayoutClient() {
     const currentPath = usePathname();
     const sidebarNavItems: SidebarNavItemProps[] = [
-        { text: 'Settings', href: '/dashboard/settings', },
-        { text: 'Profile', href: '/dashboard/settings/profile', },
-        { text: 'Password', href: '/dashboard/settings/password', },
-        { text: 'Appearance', href: '/dashboard/settings/appearance', },
+        {
+            text: 'Settings',
+            href: '/dashboard/settings'
+        },
+        {
+            text: 'Profile',
+            href: '/dashboard/settings/profile'
+        },
+        {
+            text: 'Password',
+            href: '/dashboard/settings/password'
+        },
+        {
+            text: 'Appearance',
+            href: '/dashboard/settings/appearance'
+        },
     ];
     return (
         <aside className="w-full max-w-xl lg:w-48">

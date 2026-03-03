@@ -23,10 +23,15 @@ export function NavMainUsers({
                 {items.map((item) => (
                     <SidebarMenuItem key={item.title}>
                         <SidebarMenuButton
-                            asChild isActive={item.href === pathname}
+                            asChild
+                            isActive={item.href === pathname}
                             tooltip={{ children: item.title }}
                         >
-                            <Link href={item.href} prefetch onClick={handleLinkClick}>
+                            <Link
+                                href={item.href}
+                                prefetch
+                                onClick={handleLinkClick}
+                            >
                                 {item.icon && <item.icon />}
                                 <span>{item.title}</span>
                             </Link>

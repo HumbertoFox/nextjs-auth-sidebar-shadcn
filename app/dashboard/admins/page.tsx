@@ -24,8 +24,13 @@ export default async function AdminsPage() {
     const admins = await UserRepository.findAllAdmins();
     const csrfToken = await getCsrfToken();
     const breadcrumbItems = [
-        { text: 'Dashboard', href: '/dashboard' },
-        { text: 'Admins' },
+        {
+            text: 'Dashboard',
+            href: '/dashboard'
+        },
+        {
+            text: 'Admins'
+        },
     ];
     return (
         <>

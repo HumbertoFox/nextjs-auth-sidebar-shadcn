@@ -7,25 +7,41 @@ import { NavMainAdmins } from '@/_components/nav-main-admins';
 import { LayoutGrid, UserRoundCog, UserRoundPlus, UsersRound } from 'lucide-react';
 import { NavMainUsers } from '@/_components/nav-main-users';
 import { NavUser } from '@/_components/nav-user';
-import { NavMainItemProps, ProfileForm } from '@/_types';
+import { NavMainItemProps, ProfileForm, UserRole } from '@/_types';
 
 type DashboardSidebarProps = React.ComponentProps<typeof Sidebar> & {
     user: ProfileForm;
-    isAdmin: boolean;
+    userType: UserRole;
 }
 
 export default function DashboardSidebar({
     user,
-    isAdmin,
+    userType,
     ...props
 }: DashboardSidebarProps) {
     const adminNavItems: NavMainItemProps[] = [
-        { title: 'Admins', href: '/dashboard/admins', icon: UserRoundCog },
-        { title: 'Users', href: '/dashboard/admins/users', icon: UsersRound },
-        { title: 'Register User', href: '/dashboard/admins/register', icon: UserRoundPlus },
+        {
+            title: 'Admins',
+            href: '/dashboard/admins',
+            icon: UserRoundCog
+        },
+        {
+            title: 'Users',
+            href: '/dashboard/admins/users',
+            icon: UsersRound
+        },
+        {
+            title: 'Register User',
+            href: '/dashboard/admins/register',
+            icon: UserRoundPlus
+        },
     ];
     const userNavItems: NavMainItemProps[] = [
-        { title: 'Dashboard', href: '/dashboard', icon: LayoutGrid, },
+        {
+            title: 'Dashboard',
+            href: '/dashboard',
+            icon: LayoutGrid
+        },
     ];
     return (
         <Sidebar
@@ -44,12 +60,15 @@ export default function DashboardSidebar({
                     </SidebarMenuItem>
                 </SidebarMenu>
             </SidebarHeader>
-            {isAdmin && (
-                <SidebarContent>
+            {userType === 'ADMIN' && (
+                <SidebarContent
+                    key="admin"
+                    className="flex-none"
+                >
                     <NavMainAdmins items={adminNavItems} />
                 </SidebarContent>
             )}
-            <SidebarContent>
+            <SidebarContent key="user">
                 <NavMainUsers items={userNavItems} />
             </SidebarContent>
             <SidebarFooter>

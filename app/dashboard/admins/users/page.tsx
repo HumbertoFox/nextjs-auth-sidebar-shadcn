@@ -28,9 +28,17 @@ export default async function UsersPage(props: { searchParams?: Promise<{ page?:
     const totalPages = Math.ceil(total / pageSize);
     const csrfToken = await getCsrfToken();
     const breadcrumbItems = [
-        { text: 'Dashboard', href: '/dashboard' },
-        { text: 'Admins', href: '/dashboard/admins' },
-        { text: 'Users', },
+        {
+            text: 'Dashboard',
+            href: '/dashboard'
+        },
+        {
+            text: 'Admins',
+            href: '/dashboard/admins'
+        },
+        {
+            text: 'Users'
+        },
     ];
     return (
         <>

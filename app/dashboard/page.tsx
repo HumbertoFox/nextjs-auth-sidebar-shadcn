@@ -8,7 +8,11 @@ export const generateMetadata = async (): Promise<Metadata> => {
 }
 
 export default function DashboardPage() {
-    const breadcrumbItems = [{ text: 'Dashboard' },];
+    const breadcrumbItems = [
+        {
+            text: 'Dashboard'
+        }
+    ];
     return (
         <>
             <DashboardSidebarHeader items={breadcrumbItems} />

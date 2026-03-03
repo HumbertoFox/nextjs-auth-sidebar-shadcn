@@ -11,23 +11,52 @@ export default function Heading({
     const currentPath = usePathname();
     const breadcrumbMap: Record<string, BreadcrumbItemProps[]> = {
         '/dashboard/settings': [
-            { text: 'Dashboard', href: '/dashboard' },
-            { text: 'Settings' },
+            {
+                text: 'Dashboard',
+                href: '/dashboard'
+            },
+            {
+                text: 'Settings'
+            },
         ],
         '/dashboard/settings/profile': [
-            { text: 'Dashboard', href: '/dashboard' },
-            { text: 'Settings', href: '/dashboard/settings' },
-            { text: 'Profile' },
+            {
+                text: 'Dashboard',
+                href: '/dashboard'
+            },
+            {
+                text: 'Settings',
+                href: '/dashboard/settings'
+            },
+            {
+                text: 'Profile'
+            },
         ],
         '/dashboard/settings/password': [
-            { text: 'Dashboard', href: '/dashboard' },
-            { text: 'Settings', href: '/dashboard/settings' },
-            { text: 'Password' },
+            {
+                text: 'Dashboard',
+                href: '/dashboard'
+            },
+            {
+                text: 'Settings',
+                href: '/dashboard/settings'
+            },
+            {
+                text: 'Password'
+            },
         ],
         '/dashboard/settings/appearance': [
-            { text: 'Dashboard', href: '/dashboard' },
-            { text: 'Settings', href: '/dashboard/settings' },
-            { text: 'Appearance' },
+            {
+                text: 'Dashboard',
+                href: '/dashboard'
+            },
+            {
+                text: 'Settings',
+                href: '/dashboard/settings'
+            },
+            {
+                text: 'Appearance'
+            },
         ],
     };
     const breadcrumbItems = breadcrumbMap[currentPath] || [];

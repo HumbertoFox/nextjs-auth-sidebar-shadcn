@@ -13,9 +13,17 @@ export const generateMetadata = async (): Promise<Metadata> => {
 
 export default async function RegisterUsersPage() {
     const breadcrumbItems = [
-        { text: 'Dashboard', href: '/dashboard' },
-        { text: 'Admins', href: '/dashboard/admins' },
-        { text: 'Register', },
+        {
+            text: 'Dashboard',
+            href: '/dashboard'
+        },
+        {
+            text: 'Admins',
+            href: '/dashboard/admins'
+        },
+        {
+            text: 'Register'
+        },
     ];
     const csrfToken = await getCsrfToken();
     return (
