@@ -54,7 +54,7 @@ export default async function AdminsPage() {
                                 </TableRow>
                             )}
                             {admins.map((admin, index) => (
-                                <TableRow key={index} className="cursor-default">
+                                <TableRow key={admin.id} className="cursor-default">
                                     <TableCell>{index + 1}</TableCell>
                                     <TableCell className="max-lg:hidden">{admin.id}</TableCell>
                                     <TableCell className="max-lg:hidden">{admin.name}</TableCell>
