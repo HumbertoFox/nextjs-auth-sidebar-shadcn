@@ -8,6 +8,7 @@ import { LayoutGrid, UserRoundCog, UserRoundPlus, UsersRound } from 'lucide-reac
 import { NavMainUsers } from '@/_components/nav-main-users';
 import { NavUser } from '@/_components/nav-user';
 import { NavMainItemProps, ProfileForm, UserRole } from '@/_types';
+import { NavMainUsersDashboard } from './nav-main-users-dashboard';
 
 type DashboardSidebarProps = React.ComponentProps<typeof Sidebar> & {
     user: ProfileForm;
@@ -37,6 +38,13 @@ export default function DashboardSidebar({
         },
     ];
     const userNavItems: NavMainItemProps[] = [
+        {
+            title: 'User',
+            href: '/dashboard/user',
+            icon: UsersRound
+        },
+    ];
+    const usersNavItems: NavMainItemProps[] = [
         {
             title: 'Dashboard',
             href: '/dashboard',
@@ -68,8 +76,16 @@ export default function DashboardSidebar({
                     <NavMainAdmins items={adminNavItems} />
                 </SidebarContent>
             )}
-            <SidebarContent key="user">
-                <NavMainUsers items={userNavItems} />
+            {(userType === 'ADMIN' || userType === 'USER') && (
+                <SidebarContent
+                    key="user"
+                    className="flex-none"
+                >
+                    <NavMainUsers items={userNavItems} />
+                </SidebarContent>
+            )}
+            <SidebarContent key="dashboard">
+                <NavMainUsersDashboard items={usersNavItems} />
             </SidebarContent>
             <SidebarFooter>
                 <NavUser user={user} />
