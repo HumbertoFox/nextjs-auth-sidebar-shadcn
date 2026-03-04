@@ -44,7 +44,7 @@ export default function DashboardSidebar({
             icon: UsersRound
         },
     ];
-    const usersNavItems: NavMainItemProps[] = [
+    const usersDashboardNavItems: NavMainItemProps[] = [
         {
             title: 'Dashboard',
             href: '/dashboard',
@@ -85,7 +85,7 @@ export default function DashboardSidebar({
                 </SidebarContent>
             )}
             <SidebarContent key="dashboard">
-                <NavMainUsersDashboard items={usersNavItems} />
+                <NavMainUsersDashboard items={usersDashboardNavItems} />
             </SidebarContent>
             <SidebarFooter>
                 <NavUser user={user} />
