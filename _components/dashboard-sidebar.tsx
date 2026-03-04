@@ -4,11 +4,11 @@ import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, Sid
 import AppLogoSvg from '@/_components/app-logo-svg';
 import Link from 'next/link';
 import { NavMainAdmins } from '@/_components/nav-main-admins';
-import { LayoutGrid, UserRoundCog, UserRoundPlus, UsersRound } from 'lucide-react';
+import { LayoutGrid, UserRound, UserRoundCog, UserRoundPlus, UsersRound } from 'lucide-react';
 import { NavMainUsers } from '@/_components/nav-main-users';
 import { NavUser } from '@/_components/nav-user';
 import { NavMainItemProps, ProfileForm, UserRole } from '@/_types';
-import { NavMainUsersDashboard } from './nav-main-users-dashboard';
+import { NavMainUsersDashboard } from '@/_components/nav-main-users-dashboard';
 
 type DashboardSidebarProps = React.ComponentProps<typeof Sidebar> & {
     user: ProfileForm;
@@ -41,7 +41,7 @@ export default function DashboardSidebar({
         {
             title: 'User',
             href: '/dashboard/user',
-            icon: UsersRound
+            icon: UserRound
         },
     ];
     const usersDashboardNavItems: NavMainItemProps[] = [
