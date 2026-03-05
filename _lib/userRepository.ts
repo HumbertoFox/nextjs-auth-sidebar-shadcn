@@ -124,18 +124,21 @@ export const UserRepository = {
                 name,
                 email,
                 deleted_at
-            FROM users
+            FROM users_public
             WHERE role = 'USER'
             ORDER BY created_at
             LIMIT $1
             OFFSET $2
             `,
-            [pageSize, offset]
+            [
+                pageSize,
+                offset
+            ]
         );
 
         const countResult = await pool.query<{ count: string }>(`
             SELECT COUNT(*)
-            FROM users
+            FROM users_public
             WHERE role = 'USER'
         `);
         return [usersResult.rows, parseInt(countResult.rows[0].count, 10)] as const;
@@ -145,12 +148,24 @@ export const UserRepository = {
         name: string;
         email: string;
         password: string;
-        role: 'ADMIN' | 'USER';
+        role: UserRole;
         avatar?: string | null;
     }) {
         const result = await pool.query<User>(`
-            INSERT INTO users (name, email, password, role, avatar)
-            VALUES ($1, $2, $3, $4, $5)
+            INSERT INTO users (
+                name,
+                email,
+                password,
+                role,
+                avatar
+            )
+            VALUES (
+                $1,
+                $2,
+                $3,
+                $4,
+                $5
+            )
             RETURNING ${USER_PUBLIC_COLUMNS}
             `,
             [
@@ -179,7 +194,10 @@ export const UserRepository = {
             AND deleted_at IS NULL
             RETURNING ${USER_PUBLIC_COLUMNS}
             `,
-            [id, ...values]
+            [
+                id,
+                ...values
+            ]
         );
         return result.rows[0] ?? null;
     },
@@ -199,7 +217,10 @@ export const UserRepository = {
             WHERE id = $1
             RETURNING ${USER_PUBLIC_COLUMNS}
             `,
-            [id, ...values]
+            [
+                id,
+                ...values
+            ]
         );
         return result.rows[0] ?? null;
     },
@@ -211,7 +232,10 @@ export const UserRepository = {
             WHERE id = $2
             RETURNING ${USER_PUBLIC_COLUMNS}
             `,
-            [password, id]
+            [
+                password,
+                id
+            ]
         );
         return result.rows[0] ?? null;
     },
@@ -247,7 +271,10 @@ export const UserRepository = {
             WHERE id = $2
             RETURNING ${USER_PUBLIC_COLUMNS}
             `,
-            [date, id]
+            [
+                date,
+                id
+            ]
         );
         return result.rows[0] ?? null;
     },
@@ -259,7 +286,10 @@ export const UserRepository = {
             WHERE email = $1
             RETURNING ${USER_PUBLIC_COLUMNS}
             `,
-            [email, hashedPassword]
+            [
+                email,
+                hashedPassword
+            ]
         );
         return result.rows[0] ?? null;
     },

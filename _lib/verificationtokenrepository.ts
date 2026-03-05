@@ -31,7 +31,10 @@ export const VerificationTokenRepository = {
               AND expires_at > NOW()
             LIMIT 1
             `,
-            [identifier, token]
+            [
+                identifier,
+                token
+            ]
         );
 
         return result.rows[0] ?? null;
@@ -43,11 +46,23 @@ export const VerificationTokenRepository = {
         expires_at: Date;
     }) {
         const result = await pool.query<VerificationToken>(`
-            INSERT INTO verification_tokens (identifier, token, expires_at)
-            VALUES ($1, $2, $3)
+            INSERT INTO verification_tokens (
+                identifier,
+                token,
+                expires_at
+            )
+            VALUES (
+                $1,
+                $2,
+                $3
+            )
             RETURNING *
             `,
-            [data.identifier, data.token, data.expires_at]
+            [
+                data.identifier,
+                data.token,
+                data.expires_at
+            ]
         );
 
         return result.rows[0];
