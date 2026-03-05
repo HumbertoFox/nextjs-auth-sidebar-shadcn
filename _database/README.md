@@ -7,19 +7,21 @@ O objetivo é organizar, versionar e aplicar alterações no banco de dados de f
 
 ### Estrutura da Pasta
 
-000_reset.sql → Reseta o banco (drop tables, views, triggers, enums).
+000_reset.sql → Reseta o banco (drop triggers, functions, views, tables, enums, schema_migrations, extensões e role).
 
 001_init_extensions.sql → Cria extensões necessárias no PostgreSQL (pgcrypto, citext).
 
-002_create_users.sql → Cria tabela users e enums relacionados (user_role).
+002_create_enums.sql → Cria enums do sistema (user_role).
 
-003_create_users_views.sql → Cria views públicas e administrativas para usuários.
+003_create_users.sql → Cria tabela users com índices, comentários e suporte a soft delete.
 
-004_create_users_triggers.sql → Cria triggers e funções auxiliares (ex.: update_updated_at).
+004_create_views.sql → Cria views públicas e administrativas para usuários.
 
-005_create_verification_tokens.sql → Cria tabela verification_tokens.
+005_create_triggers.sql → Cria função e trigger de atualização automática de updated_at.
 
-006_create_permissions.sql → Cria tabela permissions e relacionamentos.
+006_create_verification_tokens.sql → Cria tabela verification_tokens com índices.
+
+007_create_permissions.sql → Cria role app_backend_role, permissões via GRANT/REVOKE e políticas RLS.
 
 **Ordem das migrations:**
 
@@ -99,7 +101,7 @@ Os arquivos são executados em ordem alfabética/numerada, garantindo consistên
 
 **1. Nomear sequencialmente:**
 
-Prefixo numérico (`007`, `008`) + timestamp + descrição (opcional).
+Prefixo numérico (`008`, `009`) + timestamp + descrição (opcional).
 
 **2. Idempotência:**
 
@@ -159,8 +161,16 @@ Cada alteração significativa deve ter uma migration própria.
 
 - Enum: `user_role` → `ADMIN`, `USER`
 
-- Tabelas principais: `users`, `verification_tokens`
+- Tabelas principais: `users`, `verification_tokens`, `schema_migrations`
 
-- Trigger: `update_updated_at` atualiza automaticamente `updated_at`
+- Índices: `idx_users_deleted_at`, `idx_verification_tokens_expires_at`, `idx_verification_tokens_identifier`
 
-- Views públicas: `users_public`, `users_admin_public`, `users_active`, `users_public_active`
+- Função: `update_updated_at` compara **NEW** com **OLD** e só atualiza se houver mudança real
+
+- Trigger: `trigger_update_users_updated_at` atualiza automaticamente `updated_at` na tabela `users`
+
+- Views públicas (sem password): `users_public`, `users_admin_public`, `users_public_active`
+
+- Role: `app_backend_role` — acesso exclusivo à tabela `users`, `users_active` e `verification_tokens`
+
+- RLS: Row Level Security habilitado na tabela users — PUBLIC só acessa via views
