@@ -23,3 +23,6 @@ DROP TABLE IF EXISTS schema_migrations;
 -- 7. Extensões
 DROP EXTENSION IF EXISTS pgcrypto CASCADE;
 DROP EXTENSION IF EXISTS citext CASCADE;
+
+-- 8. Role
+DROP ROLE IF EXISTS app_backend_role;

@@ -48,4 +48,19 @@ const pool = new Pool({
     ssl: isProduction ? { rejectUnauthorized: false } : false,
 });
 
+pool.on('connect', (client) => {
+    client
+        .query(`
+            SELECT 1 FROM pg_roles WHERE rolname = 'app_backend_role'
+        `)
+        .then((res) => {
+            if (res.rowCount && res.rowCount > 0) {
+                return client.query('SET ROLE app_backend_role');
+            }
+        })
+        .catch((err) => {
+            console.error('❌ Failed to SET ROLE app_backend_role:', err);
+        });
+});
+
 export default pool;

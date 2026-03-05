@@ -47,7 +47,7 @@ COMMENT ON VIEW users_public IS 'View pública de todos os usuários incluindo d
 -- Security: INCLUI password - usar apenas internamente/backend
 -- Use case: Autenticação e operações internas que requerem password
 -- ============================================================================
-CREATE OR REPLACE VIEW users_active AS
+CREATE OR REPLACE VIEW users_active WITH (security_barrier = true) AS
 SELECT
     id,
     name,
