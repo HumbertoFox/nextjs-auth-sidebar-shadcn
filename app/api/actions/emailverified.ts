@@ -16,7 +16,7 @@ export async function emailVerifiedChecked() {
 
     const user = await UserRepository.findByEmail(email);
 
-    if (user?.emailVerified) return null;
+    if (user?.email_verified) return null;
 
     if (tokenExisting && new Date() > tokenExisting.expires_at) return 'verification-link-sent';
 

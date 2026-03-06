@@ -1,19 +1,5 @@
 import pool from '@/_lib/db';
-import { UserRole } from '@/_types';
-
-export interface User {
-    id: string;
-    name: string;
-    email: string;
-    role: UserRole;
-    password: string;
-    avatar?: string | null;
-    email_verified?: Date | null;
-    deleted_at?: Date | null;
-    created_at: Date;
-    updated_at: Date;
-    [key: string]: unknown;
-}
+import { User, UserRole } from '@/_types';
 
 const USER_PUBLIC_COLUMNS = `
     id,
@@ -34,8 +20,10 @@ export const UserRepository = {
             FROM users_public
             WHERE id = $1
             LIMIT 1
-            `,
-            [id]
+        `,
+            [
+                id
+            ]
         );
         return result.rows[0] ?? null;
     },
@@ -46,8 +34,10 @@ export const UserRepository = {
             FROM users_active
             WHERE id = $1
             LIMIT 1
-            `,
-            [id]
+        `,
+            [
+                id
+            ]
         );
         return result.rows[0] ?? null;
     },
@@ -58,8 +48,10 @@ export const UserRepository = {
             FROM users_active
             WHERE email = $1
             LIMIT 1
-            `,
-            [email]
+        `,
+            [
+                email
+            ]
         );
         return result.rows[0] ?? null;
     },
@@ -70,8 +62,10 @@ export const UserRepository = {
             FROM users_public_active
             WHERE email = $1
             LIMIT 1
-            `,
-            [email]
+        `,
+            [
+                email
+            ]
         );
         return result.rows[0] ?? null;
     },
@@ -81,9 +75,10 @@ export const UserRepository = {
         SELECT EXISTS (
             SELECT 1
             FROM users_admin_public
+            WHERE deleted_at IS NULL
         ) AS exists
     `);
-        return result.rows[0].exists;
+        return result.rows[0].exists ?? false;
     },
 
     async findAdminOnly() {
@@ -103,14 +98,26 @@ export const UserRepository = {
         return result.rows;
     },
 
+    async countActiveAdmins(): Promise<number> {
+        const result = await pool.query<{ count: string }>(`
+        SELECT COUNT(*) 
+        FROM users_admin_public
+        WHERE deleted_at IS NULL
+    `);
+
+        return Number(result.rows[0].count);
+    },
+
     async findById(id: string) {
         const result = await pool.query<User>(`
             SELECT *
             FROM users_public
             WHERE id = $1
             LIMIT 1
-            `,
-            [id]
+        `,
+            [
+                id
+            ]
         );
         return result.rows[0] ?? null;
     },
@@ -246,8 +253,10 @@ export const UserRepository = {
             SET deleted_at = NOW()
             WHERE id = $1
             RETURNING ${USER_PUBLIC_COLUMNS}
-            `,
-            [id]
+        `,
+            [
+                id
+            ]
         );
         return result.rows[0] ?? null;
     },
@@ -258,8 +267,10 @@ export const UserRepository = {
             SET deleted_at = NULL
             WHERE id = $1
             RETURNING ${USER_PUBLIC_COLUMNS}
-            `,
-            [id]
+        `,
+            [
+                id
+            ]
         );
         return result.rows[0] ?? null;
     },
@@ -270,7 +281,7 @@ export const UserRepository = {
             SET email_verified = $1
             WHERE id = $2
             RETURNING ${USER_PUBLIC_COLUMNS}
-            `,
+        `,
             [
                 date,
                 id
@@ -285,7 +296,7 @@ export const UserRepository = {
             SET password = $2
             WHERE email = $1
             RETURNING ${USER_PUBLIC_COLUMNS}
-            `,
+        `,
             [
                 email,
                 hashedPassword

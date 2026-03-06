@@ -23,7 +23,7 @@ export async function handleEmailVerification(
 
     const isCheckedUserEmail = await UserRepository.findByEmail(email);
 
-    if (isCheckedUserEmail?.emailVerified) return { error: 'Email already verified!' };
+    if (isCheckedUserEmail?.deleted_at) return { error: 'Email already verified!' };
 
     const tokenExisting = await VerificationTokenRepository.findValidToken(email, token);
 

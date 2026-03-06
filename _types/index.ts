@@ -122,3 +122,20 @@ export type AdminActionsProps = {
     admin: UsersActionsProps;
     readonly loggedAdmin: string;
 }
+
+export type User = {
+    id: string;
+    name: string;
+    role: UserRole;
+    avatar?: string | null;
+    email_verified?: Date | null;
+    deleted_at?: Date | null;
+    created_at: Date;
+    updated_at: Date;
+} & LoginFormProps;
+
+export type VerificationToken = {
+    identifier: string;
+    token: string;
+    expires_at: Date;
+}

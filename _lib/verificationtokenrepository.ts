@@ -1,10 +1,5 @@
 import pool from '@/_lib/db';
-
-export interface VerificationToken {
-    identifier: string;
-    token: string;
-    expires_at: Date;
-}
+import { VerificationToken } from '@/_types';
 
 export const VerificationTokenRepository = {
     async findByIdentifier(identifier: string) {
@@ -15,8 +10,10 @@ export const VerificationTokenRepository = {
                 AND expires_at > NOW()
             ORDER BY expires_at DESC
             LIMIT 1
-            `,
-            [identifier]
+        `,
+            [
+                identifier
+            ]
         );
 
         return result.rows[0] ?? null;
@@ -30,7 +27,7 @@ export const VerificationTokenRepository = {
               AND token = $2
               AND expires_at > NOW()
             LIMIT 1
-            `,
+        `,
             [
                 identifier,
                 token
@@ -57,7 +54,7 @@ export const VerificationTokenRepository = {
                 $3
             )
             RETURNING *
-            `,
+        `,
             [
                 data.identifier,
                 data.token,
@@ -72,8 +69,10 @@ export const VerificationTokenRepository = {
         await pool.query(`
             DELETE FROM verification_tokens
             WHERE identifier = $1
-            `,
-            [identifier]
+        `,
+            [
+                identifier
+            ]
         );
     },
 
@@ -82,8 +81,11 @@ export const VerificationTokenRepository = {
             DELETE FROM verification_tokens
             WHERE identifier = $1
               AND token = $2
-            `,
-            [identifier, token]
+        `,
+            [
+                identifier,
+                token
+            ]
         );
     },
 }

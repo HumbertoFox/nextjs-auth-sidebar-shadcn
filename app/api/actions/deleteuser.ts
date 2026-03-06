@@ -33,6 +33,10 @@ export async function deleteUser(
 
     if (!isPasswordCorrect) return { errors: { password: ['Incorrect password'] } };
 
+    const activeAdmins = await UserRepository.countActiveAdmins();
+
+    if (activeAdmins <= 1) return { errors: { password: [`It's not possible to delete an ADMIN account when there's only one active account!`] } };
+
     await UserRepository.softDeleteById(sessionUser.id);
 
     await regenerateCsrfToken();

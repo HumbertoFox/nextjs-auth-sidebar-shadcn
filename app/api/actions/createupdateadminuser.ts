@@ -86,7 +86,7 @@ export async function createUpdateAdminUser(
         if (id) {
             const userInDb = await UserRepository.findActiveById(id);
 
-            if (!userInDb || userInDb.deletedAt) return { message: false };
+            if (!userInDb || userInDb.deleted_at) return { message: false };
 
             const existingUser = await UserRepository.findByEmail(email);
 
