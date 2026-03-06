@@ -22,11 +22,14 @@ async function createDatabaseIfNotExists() {
 
     await client.connect();
 
-    const res = await client.query(
-        `SELECT 1
+    const res = await client.query(`
+        SELECT 1
         FROM pg_database
-        WHERE datname = $1`,
-        [DB_NAME]
+        WHERE datname = $1
+        `,
+        [
+            DB_NAME
+        ]
     );
 
     if (res.rowCount === 0) {
@@ -51,7 +54,9 @@ const pool = new Pool({
 pool.on('connect', (client) => {
     client
         .query(`
-            SELECT 1 FROM pg_roles WHERE rolname = 'app_backend_role'
+            SELECT 1
+            FROM pg_roles
+            WHERE rolname = 'app_backend_role'
         `)
         .then((res) => {
             if (res.rowCount && res.rowCount > 0) {

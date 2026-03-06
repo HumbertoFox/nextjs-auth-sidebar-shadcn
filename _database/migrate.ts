@@ -36,9 +36,10 @@ async function migrate() {
             process.exit(0);
         }
 
-        const { rows } = await pool.query(
-            'SELECT filename, hash FROM schema_migrations'
-        );
+        const { rows } = await pool.query(`
+            SELECT filename, hash
+            FROM schema_migrations
+        `);
         const executed = new Map(rows.map(r => [r.filename, r.hash]));
 
         let executedCount = 0;
@@ -61,9 +62,19 @@ async function migrate() {
             console.log(`→ Running: ${file}`);
             await pool.query(sql);
 
-            await pool.query(
-                'INSERT INTO schema_migrations (filename, hash) VALUES ($1, $2)',
-                [file, hash]
+            await pool.query(`
+                INSERT INTO schema_migrations (
+                    filename,
+                    hash
+                )
+                VALUES (
+                    $1,
+                    $2
+                )`,
+                [
+                    file,
+                    hash
+                ]
             );
 
             executedCount++;
