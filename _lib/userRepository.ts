@@ -174,7 +174,7 @@ export const UserRepository = {
                 $5
             )
             RETURNING ${USER_PUBLIC_COLUMNS}
-            `,
+        `,
             [
                 data.name,
                 data.email,
@@ -184,6 +184,19 @@ export const UserRepository = {
             ]
         );
         return result.rows[0];
+    },
+
+    async updateAvatar(id: string, avatar: string) {
+        await pool.query(`
+            UPDATE users
+            SET avatar = $1
+            WHERE id = $2
+        `,
+            [
+                avatar,
+                id
+            ]
+        );
     },
 
     async updateByIdUserActive(
