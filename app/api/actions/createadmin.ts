@@ -54,7 +54,6 @@ export async function createAdmin(
 
         if (file && file.size > 0) {
             if (!(file.type in MIME_TO_EXT)) return { errors: { avatar: ['Only JPEG, PNG, or WebP formats are allowed.'] } };
-
             if (file.size > MAX_FILE_SIZE) return { errors: { avatar: ['The image cannot exceed 512 KB.'] } };
 
             try {

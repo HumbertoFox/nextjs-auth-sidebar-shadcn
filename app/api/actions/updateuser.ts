@@ -5,13 +5,16 @@ import { FormStateUserUpdate, updateUserSchema } from '@/_lib/definitions';
 import { redirect } from 'next/navigation';
 import z from 'zod';
 import { put, del } from '@vercel/blob';
-import crypto from 'crypto';
 import { UserRepository } from '@/_lib/userrepository';
 import { revalidatePath } from 'next/cache';
 import { regenerateCsrfToken, validateCsrfToken } from '@/_lib/csrf';
 
 const MAX_FILE_SIZE = 512 * 1024;
-const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
+const MIME_TO_EXT: Record<string, string> = {
+    'image/jpeg': 'jpg',
+    'image/png': 'png',
+    'image/webp': 'webp',
+};
 
 export async function updateUser(
     _: FormStateUserUpdate,
@@ -40,12 +43,12 @@ export async function updateUser(
 
     if (emailInUse && emailInUse.id !== sessionUser.id) return { errors: { email: ['This email address is already in use.'] } };
 
-    const dataToUpdate: { name?: string; email?: string, image?: string | null } = {};
+    const dataToUpdate: { name?: string; email?: string, avatar?: string | null } = {};
     if (sessionUser.name !== name) dataToUpdate.name = name;
     if (sessionUser.email !== email) dataToUpdate.email = email;
 
     if (file && file.size > 0) {
-        if (!ALLOWED_TYPES.includes(file.type)) return { errors: { avatar: ['Only JPEG, PNG, or WebP formats are allowed.'] } };
+        if (!(file.type in MIME_TO_EXT)) return { errors: { avatar: ['Only JPEG, PNG, or WebP formats are allowed.'] } };
 
         if (file.size > MAX_FILE_SIZE) return { errors: { avatar: ['The image cannot exceed 512 KB.'] } };
 
@@ -54,17 +57,15 @@ export async function updateUser(
                 try {
                     await del(sessionUser.avatar);
                 } catch (deleteErr) {
-                    console.warn('It was not possible to delete the previous image:', deleteErr);
+                    console.warn('It was not possible to delete the previous avatar:', deleteErr);
                 }
             }
 
-            const uniqueFileName = `${crypto.randomUUID()}-${file.name}`;
-            const blob = await put(`avatars/${uniqueFileName}`, file, {
-                access: 'public',
-            });
+            const ext = MIME_TO_EXT[file!.type];
+            const blob = await put(`avatars/${sessionUser.id}.${ext}`, file!, { access: 'public' });
 
             if (blob.url) {
-                dataToUpdate.image = blob.url;
+                dataToUpdate.avatar = blob.url;
             }
         } catch (error) {
             console.error('Error sending image:', error);
@@ -76,7 +77,7 @@ export async function updateUser(
 
     await UserRepository.updateByIdUserActive(sessionUser.id, dataToUpdate);
 
-    revalidatePath('/dasboard/settings/profile');
+    revalidatePath('/dashboard/settings/profile');
 
     await regenerateCsrfToken();
 
