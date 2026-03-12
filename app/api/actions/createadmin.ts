@@ -75,7 +75,7 @@ export async function createAdmin(
 
         if (file && file.size > 0) {
             const extension = MIME_TO_EXT[file.type];
-            const blob = await put(`avatars/${user.id}.${extension}`, file, {
+            const blob = await put(`avatars/${user.id}-${crypto.randomUUID()}.${extension}`, file, {
                 access: 'public',
             });
 

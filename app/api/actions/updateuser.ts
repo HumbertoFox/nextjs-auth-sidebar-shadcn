@@ -61,8 +61,8 @@ export async function updateUser(
                 }
             }
 
-            const ext = MIME_TO_EXT[file!.type];
-            const blob = await put(`avatars/${sessionUser.id}.${ext}`, file!, { access: 'public' });
+            const extension = MIME_TO_EXT[file!.type];
+            const blob = await put(`avatars/${sessionUser.id}-${crypto.randomUUID()}.${extension}`, file!, { access: 'public' });
 
             if (blob.url) {
                 dataToUpdate.avatar = blob.url;

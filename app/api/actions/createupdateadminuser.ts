@@ -85,8 +85,8 @@ export async function createUpdateAdminUser(
                     console.warn('It was not possible to delete the previous avatar:', deleteErr);
                 }
             }
-            const ext = MIME_TO_EXT[file!.type];
-            const blob = await put(`avatars/${userId}.${ext}`, file!, { access: 'public' });
+            const extension = MIME_TO_EXT[file!.type];
+            const blob = await put(`avatars/${userId}-${crypto.randomUUID()}.${extension}`, file!, { access: 'public' });
             return blob.url;
         }
 

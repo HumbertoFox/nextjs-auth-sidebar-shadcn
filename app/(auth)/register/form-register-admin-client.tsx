@@ -92,7 +92,7 @@ export default function RegisterAdminClient({
                                 {imagePreview ? (
                                     <Image
                                         src={imagePreview}
-                                        alt="Preview"
+                                        alt="Preview avatar"
                                         width={512}
                                         height={512}
                                         className="object-cover w-full h-full"

@@ -10,6 +10,8 @@
 
 - [Rodando o Projeto](#rodando-o-projeto)
 
+- [Armazenamento de arquivos](#armazenamento-de-arquivos-avatar-upload)
+
 - [Banco de Dados](#banco-de-dados)
 
   - [Inicializar Banco](#inicializar-banco)
@@ -48,6 +50,7 @@ Suporta login com senha, login mágico e verificação de e-mail.
 Crie um arquivo `.env` na raiz do projeto:
 
 ```env
+    BLOB_READ_WRITE_TOKEN=
     DATABASE_URL=
     AUTH_SECRET=
     SMTP_HOST=
@@ -59,20 +62,59 @@ Crie um arquivo `.env` na raiz do projeto:
 
 ---
 
+### Descrição
+
+| Variável              | Descrição                                    |
+|-----------------------|----------------------------------------------|
+| BLOB_READ_WRITE_TOKEN	| Token para upload de arquivos no Vercel Blob |
+| DATABASE_URL          | Conexão com PostgreSQL                       |
+| AUTH_SECRET           | Chave secreta para sessões                   |
+| SMTP_HOST             | Servidor SMTP                                |
+| SMTP_PORT             | Porta SMTP                                   |
+| SMTP_USER             | Usuário SMTP                                 |
+| SMTP_PASS             | Senha SMTP                                   |
+| NEXT_URL              | URL da aplicação                             |
+
+---
+
 ### Rodando o Projeto
 
 ```bash
-    npm install
-    npm run dev
+npm install
+npm run dev
 ```
 
 A aplicação estará disponível em:
 
 ```bash
-    http://localhost:3000
+http://localhost:3000
 ```
 
 ---
+
+### Armazenamento de arquivos (Avatar Upload)
+
+O projeto utiliza **Vercel Blob Storage** para armazenar avatares de usuários.
+
+O upload é realizado através de Server Actions, com validações de segurança antes do envio do arquivo.
+
+`upload-avatar.ts` → processa e valida a imagem enviada
+
+`sharp` → verifica dimensões e integridade da imagem
+
+`@vercel/blob` → realiza o upload do arquivo para o storage
+
+Além disso, as imagens passam por validações de:
+
+formato (`JPEG`, `PNG`, `WebP`)
+
+tamanho máximo (`512 KB`)
+
+dimensão máxima (`512x512px`)
+
+Após o upload, o **Blob retorna uma URL pública**, que é armazenada no banco de dados no campo `avatar` do usuário.
+
+Para mais detalhes sobre o fluxo de upload, validações e configuração do storage, consulte o [Detalhes do Armazenamento de arquivos](_docs/storage.md).
 
 ## Banco de Dados
 
@@ -86,14 +128,14 @@ O projeto possui scripts Node.js para gerenciar o banco de dados:
 
 Além disso, **se o banco não existir**, ele será criado automaticamente pelo `_lib/db.ts`.
 
-Para mais detalhes sobre cada migration, consulte o [README das Migrations](_database/README.md).
+Para mais detalhes sobre cada migration, consulte o [Detalhes das Migrations](_docs/database.md).
 
 ### Inicializar Banco
 
 Para criar ou aplicar as migrations manualmente:
 
 ```bash
-    npm run db:migrate
+npm run db:migrate
 ```
 
 ---
@@ -117,7 +159,7 @@ Para criar ou aplicar as migrations manualmente:
 ### Criar uma nova Migration
 
 ```bash
-    npm run make:migration "Descrição da migration"
+npm run make:migration "Descrição da migration"
 ```
 
 - Cria arquivo `.sql` na pasta `_database/migrations` com:
@@ -131,13 +173,13 @@ Número sequencial automático
 Exemplo de uso:
 
 ```bash
-    npm run make:migration "Add new Profiles Table"
+npm run make:migration "Add new Profiles Table"
 ```
 
 - Arquivo gerado:
 
 ```pgsql
-    007_20260208124500_add_new_profiles_table.sql
+007_20260208124500_add_new_profiles_table.sql
 ```
 
 **Observações:**
@@ -153,7 +195,7 @@ Exemplo de uso:
 ### Resetar Banco (`DEV`/`ADMIN`)
 
 ```bash
-    npm run db:reset
+npm run db:reset
 ```
 
 - Aplica 000_reset.sql e limpa todas as tabelas
@@ -165,7 +207,7 @@ Exemplo de uso:
 **Após reset, rode novamente:**
 
 ```bash
-    npm run db:migrate
+npm run db:migrate
 ```
 
 ---
@@ -175,8 +217,8 @@ Exemplo de uso:
 **Para resetar, recriar o banco e rodar o servidor de dev:**
 
 ```bash
-    npm run db:setup
-    npm run dev
+npm run db:setup
+npm run dev
 ```
 
 **Isso equivale a:**
@@ -231,8 +273,28 @@ Para detalhes de criação de tabelas, views e triggers, consulte os scripts em 
 
 ### Dependências
 
-- Next.js, React, TailwindCSS
+- Next.js
 
-- Radix UI, Nodemailer, jose, bcrypt-ts, pg, Zod, gsap
+- React
+
+- TailwindCSS
+
+- Radix UI
+
+- Nodemailer
+
+- jose
+
+- bcrypt-ts
+
+- pg
+
+- Zod
+
+- gsap
+
+- Sharp
+
+- Vercel Blob
 
 ---

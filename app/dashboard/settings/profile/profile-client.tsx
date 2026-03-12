@@ -150,9 +150,10 @@ export function ProfilePageClient({
                                     {imagePreview ? (
                                         <Image
                                             src={imagePreview}
-                                            alt="Preview"
+                                            alt="Preview avatar"
                                             width={512}
                                             height={512}
+                                            onError={() => setImagePreview(null)}
                                             className="object-cover w-full h-full"
                                         />
                                     ) : (
