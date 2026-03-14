@@ -5,11 +5,14 @@ export const createAdminSchema = z.object({
         .min(1, 'Name is required.'),
     email: z.email('Invalid email address')
         .trim()
-        .toLowerCase(),
+        .toLowerCase()
+        .max(254, 'Email must be at most 254 characters long.'),
     password: z.string()
-        .min(8, 'The password must be at least 8 characters long.'),
+        .min(8, 'The password must be at least 8 characters long.')
+        .max(72, 'The password must be at most 72 characters long.'),
     password_confirmation: z.string()
         .min(1, 'Please confirm your password.')
+        .max(72, 'The password must be at most 72 characters long.')
 })
     .refine((data) => data.password === data.password_confirmation, {
         message: "The passwords don't match.",
@@ -21,16 +24,18 @@ export function getSignUpUpdateSchema(formData: FormData) {
 
     return z.object({
         name: z.string()
-            .min(1, 'Name is required.'),
+            .min(1, 'Name is required.')
+            .max(100, 'Name must be at most 100 characters long.'),
         email: z.email('Invalid email address')
             .trim()
-            .toLowerCase(),
+            .toLowerCase()
+            .max(254, 'Email must be at most 254 characters long.'),
         password: isEdit
-            ? z.string().optional()
-            : z.string().min(8, 'The password must be at least 8 characters long.'),
+            ? z.string().max(72, 'The password must be at most 72 characters long.').optional()
+            : z.string().min(8, 'The password must be at least 8 characters long.').max(72, 'The password must be at most 72 characters long.'),
         password_confirmation: isEdit
-            ? z.string().optional()
-            : z.string().min(1, 'Please confirm your password.'),
+            ? z.string().max(72, 'The password must be at most 72 characters long.').optional()
+            : z.string().min(1, 'Please confirm your password.').max(72, 'The password must be at most 72 characters long.'),
         role: z.enum(['ADMIN', 'USER'], {
             error: 'The role must be USER or ADMINISTRATOR.'
         })
@@ -49,32 +54,39 @@ export function getSignUpUpdateSchema(formData: FormData) {
 export const signInSchema = z.object({
     email: z.email('Invalid email address')
         .trim()
-        .toLowerCase(),
+        .toLowerCase()
+        .max(254, 'Email must be at most 254 characters long.'),
     password: z.string()
         .min(8, 'The password must be longer than 8 characters.')
-        .max(32, 'The password must be less than 32 characters long.')
+        .max(72, 'The password must be less than 72 characters long.')
 })
 
 export const updateUserSchema = z.object({
     name: z.string()
-        .min(1, 'Name is required.'),
+        .min(1, 'Name is required.')
+        .max(100, 'Name must be at most 100 characters long.'),
     email: z.email('Invalid email address')
         .trim()
         .toLowerCase()
+        .max(254, 'Email must be at most 254 characters long.')
 })
 
 export const deleteUserSchema = z.object({
     password: z.string()
         .min(8, 'The password must be at least 8 characters long.')
+        .max(72, 'The password must be at most 72 characters long.')
 })
 
 export const passwordUpdateSchema = z.object({
     current_password: z.string()
-        .min(8, 'The password must be at least 8 characters long.'),
+        .min(8, 'The password must be at least 8 characters long.')
+        .max(72, 'The password must be at most 72 characters long.'),
     password: z.string()
-        .min(8, 'The password must be at least 8 characters long.'),
+        .min(8, 'The password must be at least 8 characters long.')
+        .max(72, 'The password must be at most 72 characters long.'),
     password_confirmation: z.string()
         .min(8, 'Please confirm your password.')
+        .max(72, 'The password must be at most 72 characters long.')
 })
     .refine((data) => data.password === data.password_confirmation, {
         message: "The passwords don't match.",
@@ -85,9 +97,11 @@ export const passwordResetSchema = z.object({
     token: z.string()
         .regex(/^[a-f0-9]{64}$/, 'Invalid or expired token.'),
     password: z.string()
-        .min(8, 'The password must be longer than 8 characters.'),
+        .min(8, 'The password must be longer than 8 characters.')
+        .max(72, 'The password must be at most 72 characters long.'),
     password_confirmation: z.string()
         .min(1, 'Please confirm your password.')
+        .max(72, 'The password must be at most 72 characters long.')
 })
     .refine((data) => data.password === data.password_confirmation, {
         message: "The passwords don't match.",
@@ -98,6 +112,7 @@ export const passwordForgotSchema = z.object({
     email: z.email('Invalid email address')
         .trim()
         .toLowerCase()
+        .max(254, 'Email must be at most 254 characters long.')
 });
 
 export type FormStateCreateAdmin =
