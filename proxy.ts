@@ -2,8 +2,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { updateSession } from '@/_lib/session';
 import { randomUUID } from 'crypto';
-
-const CSRF_COOKIE_NAME = 'csrfToken';
+import { CSRF_COOKIE_NAME } from './_types';
 
 export default async function proxy(req: NextRequest) {
   const path = req.nextUrl.pathname;

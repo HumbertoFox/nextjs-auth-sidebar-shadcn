@@ -7,6 +7,8 @@ export const roleLabels: Record<UserRole, string> = {
     USER: 'User',
 }
 
+export const CSRF_COOKIE_NAME = 'csrfToken';
+
 export type UserDetailsProps = {
     readonly id: string;
     readonly name: string;

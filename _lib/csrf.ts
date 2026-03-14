@@ -1,9 +1,8 @@
 'use server';
 
+import { CSRF_COOKIE_NAME } from '@/_types';
 import crypto, { randomUUID } from 'crypto';
 import { cookies } from 'next/headers';
-
-const CSRF_COOKIE_NAME = 'csrfToken';
 
 export async function validateCsrfToken(
     submittedToken: string | null
@@ -33,7 +32,7 @@ export async function regenerateCsrfToken(): Promise<string> {
 
     (await cookies()).set(CSRF_COOKIE_NAME, newToken, {
         httpOnly: false,
-        secure: process.env.NODE_ENV === 'production',
+        secure: true,
         sameSite: 'lax',
         path: '/',
         maxAge: 60 * 60 * 24
