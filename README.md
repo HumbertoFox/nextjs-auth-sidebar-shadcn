@@ -2,18 +2,17 @@
 
 ### 📋 Sumário
 
-- [Introdução](#introdu&#231;&#227;o)
+- [Introdução](#introdução)
 
 - [Requisitos](#requisitos)
 
-- [Variáveis de Ambiente](#vari&#225;veis-de-ambiente)
+- [Variáveis de Ambiente](#variáveis-de-ambiente)
 
 - [Rodando o Projeto](#rodando-o-projeto)
 
 - [Armazenamento de arquivos](#armazenamento-de-arquivos-avatar-upload)
 
 - [Banco de Dados](#banco-de-dados)
-
   - [Inicializar Banco](#inicializar-banco)
 
   - [Resetar Banco](#resetar-banco-devadmin)
@@ -22,11 +21,11 @@
 
   - [Modelo de Dados](#modelo-de-dados)
 
-- [Usuários e Autenticação](#usu&#225;rios-e-autentica&#231;&#227;o)
+- [Usuários e Autenticação](#usuários-e-autenticação)
 
 - [Fluxo de Desenvolvimento](#fluxo-de-desenvolvimento)
 
-- [Dependências](#depend&#234;ncias)
+- [Dependências](#dependências)
 
 ---
 
@@ -65,8 +64,8 @@ Crie um arquivo `.env` na raiz do projeto:
 ### Descrição
 
 | Variável              | Descrição                                    |
-|-----------------------|----------------------------------------------|
-| BLOB_READ_WRITE_TOKEN	| Token para upload de arquivos no Vercel Blob |
+| --------------------- | -------------------------------------------- |
+| BLOB_READ_WRITE_TOKEN | Token para upload de arquivos no Vercel Blob |
 | DATABASE_URL          | Conexão com PostgreSQL                       |
 | AUTH_SECRET           | Chave secreta para sessões                   |
 | SMTP_HOST             | Servidor SMTP                                |
@@ -269,6 +268,7 @@ Para detalhes de criação de tabelas, views e triggers, consulte os scripts em 
     5. Resetar se necessário → npm run db:reset
     6. Inicializar banco novamente → npm run db:migrate
 ```
+
 ---
 
 ### Dependências
