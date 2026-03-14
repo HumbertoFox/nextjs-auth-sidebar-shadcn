@@ -38,7 +38,6 @@ Os arquivos são executados em ordem alfabética/numerada, garantindo consistên
 ```
 
 - Cria um arquivo `.sql` na pasta `_database/migrations` com:
-
   - Número sequencial automático
 
   - **Timestamp automático**
@@ -70,7 +69,6 @@ Os arquivos são executados em ordem alfabética/numerada, garantindo consistên
 - Detecta alterações em migrations já aplicadas e emite aviso.
 
 - Mensagens detalhadas:
-
   - ↷ Skipping: <arquivo> → migration já aplicada e sem alterações.
 
   - ⚠️ Migration "<arquivo>" was modified after it was applied! → migration alterada após execução.

@@ -9,9 +9,11 @@ Documentação oficial: https://vercel.com/docs/storage/vercel-blob
 ### Configuração
 
 Adicione no `.env`:
+
 ```env
 BLOB_READ_WRITE_TOKEN=
 ```
+
 Esse token permite upload e leitura de arquivos no Vercel Blob.
 
 ### Configuração do Next.js
@@ -82,7 +84,7 @@ Se a imagem exceder esse limite, o upload é bloqueado.
 O projeto utiliza Sharp para ler os metadados da imagem antes do upload.
 
 ```ts
-const metadata = await sharp(buffer).metadata()
+const metadata = await sharp(buffer).metadata();
 ```
 
 Isso permite verificar:
@@ -100,9 +102,13 @@ Caso a leitura falhe, o upload é cancelado.
 Após as validações, o arquivo é enviado para o Blob Storage:
 
 ```ts
-const blob = await put(`avatars/${user.id}-${crypto.randomUUID()}.${extension}`, file, {
-  access: 'public',
-})
+const blob = await put(
+  `avatars/${user.id}-${crypto.randomUUID()}.${extension}`,
+  file,
+  {
+    access: "public",
+  },
+);
 ```
 
 Características:
@@ -132,12 +138,7 @@ O campo `avatar` na tabela `users` passa a armazenar a URL da imagem.
 O avatar é exibido usando o componente `next/image`.
 
 ```tsx
-<Image
-  src={avatar}
-  alt="User avatar"
-  width={512}
-  height={512}
-/>
+<Image src={avatar} alt="User avatar" width={512} height={512} />
 ```
 
 ### Benefícios do Fluxo
