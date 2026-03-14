@@ -1,6 +1,17 @@
 import pool from '@/_lib/db';
 import { User, UserRole } from '@/_types';
 
+const ALLOWED_UPDATE_COLUMNS_USER: ReadonlySet<string> = new Set(['name', 'email', 'avatar']);
+const ALLOWED_UPDATE_COLUMNS_ADMIN: ReadonlySet<string> = new Set(['name', 'email', 'role', 'password', 'avatar']);
+
+function buildSetClause(data: Record<string, unknown>, allowed: ReadonlySet<string>): { setClause: string; values: unknown[] } {
+    const keys = Object.keys(data).filter(k => allowed.has(k));
+    if (!keys.length) throw new Error('No valid fields to update.');
+    const values = keys.map(k => data[k]);
+    const setClause = keys.map((key, i) => `"${key}" = $${i + 2}`).join(', ');
+    return { setClause, values };
+}
+
 const USER_PUBLIC_COLUMNS = `
     id,
     name,
@@ -222,9 +233,7 @@ export const UserRepository = {
         data: Partial<Pick<User, 'name' | 'email' | 'avatar'>>
     ) {
         if (!Object.keys(data).length) return null;
-        const keys = Object.keys(data);
-        const values = Object.values(data);
-        const setClause = keys.map((key, i) => `"${key}" = $${i + 2}`).join(', ');
+        const { setClause, values } = buildSetClause(data as Record<string, unknown>, ALLOWED_UPDATE_COLUMNS_USER);
         const result = await pool.query<User>(`
             UPDATE users
             SET ${setClause}
@@ -244,10 +253,7 @@ export const UserRepository = {
         id: string,
         data: Partial<Pick<User, 'name' | 'email' | 'role' | 'password' | 'avatar'>>
     ) {
-        const keys = Object.keys(data);
-        const values = Object.values(data);
-
-        const setClause = keys.map((key, i) => `"${key}" = $${i + 2}`).join(', ');
+        const { setClause, values } = buildSetClause(data as Record<string, unknown>, ALLOWED_UPDATE_COLUMNS_ADMIN);
 
         const result = await pool.query<User>(`
             UPDATE users
