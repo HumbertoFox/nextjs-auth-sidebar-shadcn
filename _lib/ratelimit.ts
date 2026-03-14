@@ -1,6 +1,5 @@
 import { RateLimitEntry } from '@/_types';
 
-
 const ipStore = new Map<string, RateLimitEntry>();
 const emailStore = new Map<string, RateLimitEntry>();
 
@@ -53,6 +52,8 @@ export function checkLoginRateLimit(
     return { allowed: true, retryAfterSeconds: 0, reason: null };
 }
 
-export function resetLoginRateLimit(email: string) {
+export function resetLoginRateLimit(
+    email: string
+) {
     emailStore.delete(email.toLowerCase());
 }

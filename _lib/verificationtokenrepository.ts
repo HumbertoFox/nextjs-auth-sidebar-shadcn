@@ -2,7 +2,9 @@ import pool from '@/_lib/db';
 import { VerificationToken } from '@/_types';
 
 export const VerificationTokenRepository = {
-    async findByIdentifier(identifier: string) {
+    async findByIdentifier(
+        identifier: string
+    ) {
         const result = await pool.query<VerificationToken>(`
             SELECT *
             FROM verification_tokens
@@ -19,7 +21,10 @@ export const VerificationTokenRepository = {
         return result.rows[0] ?? null;
     },
 
-    async findValidToken(identifier: string, hashedToken: string) {
+    async findValidToken(
+        identifier: string,
+        hashedToken: string
+    ) {
         const result = await pool.query<VerificationToken>(`
             SELECT *
             FROM verification_tokens
@@ -37,7 +42,9 @@ export const VerificationTokenRepository = {
         return result.rows[0] ?? null;
     },
 
-    async findValidTokenOnly(hashedToken: string) {
+    async findValidTokenOnly(
+        hashedToken: string
+    ) {
         const result = await pool.query<VerificationToken>(`
             SELECT *
             FROM verification_tokens
@@ -53,11 +60,13 @@ export const VerificationTokenRepository = {
         return result.rows[0] ?? null;
     },
 
-    async create(data: {
-        identifier: string;
-        token: string;
-        expires_at: Date;
-    }) {
+    async create(
+        data: {
+            identifier: string;
+            token: string;
+            expires_at: Date;
+        }
+    ) {
         const result = await pool.query<VerificationToken>(`
             INSERT INTO verification_tokens (
                 identifier,
@@ -81,7 +90,9 @@ export const VerificationTokenRepository = {
         return result.rows[0];
     },
 
-    async deleteByIdentifier(identifier: string) {
+    async deleteByIdentifier(
+        identifier: string
+    ) {
         await pool.query(`
             DELETE FROM verification_tokens
             WHERE identifier = $1
@@ -92,7 +103,10 @@ export const VerificationTokenRepository = {
         );
     },
 
-    async delete(identifier: string, hashedToken: string) {
+    async delete(
+        identifier: string,
+        hashedToken: string
+    ) {
         await pool.query(`
             DELETE FROM verification_tokens
             WHERE identifier = $1

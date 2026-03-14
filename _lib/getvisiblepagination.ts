@@ -1,4 +1,7 @@
-export default function getVisiblePagination(current: number, total: number): (number | string)[] {
+export default function getVisiblePagination(
+  current: number,
+  total: number
+): (number | string)[] {
   const delta = 2;
   const range: (number | string)[] = [];
   const start = Math.max(2, current - delta);

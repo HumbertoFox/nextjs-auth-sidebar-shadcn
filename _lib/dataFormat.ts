@@ -1,4 +1,6 @@
-export function formatDate(date: string | Date): string {
+export function formatDate(
+    date: string | Date
+): string {
     if (!date) return 'N/A';
     const d = date instanceof Date ? date : new Date(date.replace(' ', 'T'));
 

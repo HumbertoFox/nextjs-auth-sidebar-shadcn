@@ -14,7 +14,9 @@ const USER_PUBLIC_COLUMNS = `
 `;
 
 export const UserRepository = {
-    async findPublicById(id: string) {
+    async findPublicById(
+        id: string
+    ) {
         const result = await pool.query(`
             SELECT *
             FROM users_public
@@ -28,7 +30,9 @@ export const UserRepository = {
         return result.rows[0] ?? null;
     },
 
-    async findActiveById(id: string) {
+    async findActiveById(
+        id: string
+    ) {
         const result = await pool.query<User>(`
             SELECT *
             FROM users_active
@@ -42,7 +46,9 @@ export const UserRepository = {
         return result.rows[0] ?? null;
     },
 
-    async findByEmailActive(email: string) {
+    async findByEmailActive(
+        email: string
+    ) {
         const result = await pool.query<User>(`
             SELECT *
             FROM users_active
@@ -56,7 +62,9 @@ export const UserRepository = {
         return result.rows[0] ?? null;
     },
 
-    async findByEmail(email: string) {
+    async findByEmail(
+        email: string
+    ) {
         const result = await pool.query<User>(`
             SELECT *
             FROM users_public_active
@@ -108,7 +116,9 @@ export const UserRepository = {
         return Number(result.rows[0].count);
     },
 
-    async findById(id: string) {
+    async findById(
+        id: string
+    ) {
         const result = await pool.query<User>(`
             SELECT *
             FROM users_public
@@ -122,7 +132,10 @@ export const UserRepository = {
         return result.rows[0] ?? null;
     },
 
-    async findUsersPaginated(page: number, pageSize: number) {
+    async findUsersPaginated(
+        page: number,
+        pageSize: number
+    ) {
         const offset = (page - 1) * pageSize;
 
         const usersResult = await pool.query<User>(`
@@ -151,13 +164,15 @@ export const UserRepository = {
         return [usersResult.rows, parseInt(countResult.rows[0].count, 10)] as const;
     },
 
-    async create(data: {
-        name: string;
-        email: string;
-        password: string;
-        role: UserRole;
-        avatar?: string | null;
-    }) {
+    async create(
+        data: {
+            name: string;
+            email: string;
+            password: string;
+            role: UserRole;
+            avatar?: string | null;
+        }
+    ) {
         const result = await pool.query<User>(`
             INSERT INTO users (
                 name,
@@ -186,7 +201,10 @@ export const UserRepository = {
         return result.rows[0];
     },
 
-    async updateAvatar(id: string, avatar: string) {
+    async updateAvatar(
+        id: string,
+        avatar: string
+    ) {
         await pool.query(`
             UPDATE users
             SET avatar = $1
@@ -245,7 +263,10 @@ export const UserRepository = {
         return result.rows[0] ?? null;
     },
 
-    async updatePassword(id: string, password: string) {
+    async updatePassword(
+        id: string,
+        password: string
+    ) {
         const result = await pool.query<User>(`
             UPDATE users
             SET password = $1
@@ -260,7 +281,9 @@ export const UserRepository = {
         return result.rows[0] ?? null;
     },
 
-    async softDeleteById(id: string) {
+    async softDeleteById(
+        id: string
+    ) {
         const result = await pool.query<User>(`
             UPDATE users
             SET deleted_at = NOW()
@@ -274,7 +297,9 @@ export const UserRepository = {
         return result.rows[0] ?? null;
     },
 
-    async reactivateById(id: string) {
+    async reactivateById(
+        id: string
+    ) {
         const result = await pool.query<User>(`
             UPDATE users
             SET deleted_at = NULL
@@ -288,7 +313,10 @@ export const UserRepository = {
         return result.rows[0] ?? null;
     },
 
-    async updateEmailVerified(id: string, date: Date) {
+    async updateEmailVerified(
+        id: string,
+        date: Date
+    ) {
         const result = await pool.query<User>(`
             UPDATE users
             SET email_verified = $1
@@ -303,7 +331,10 @@ export const UserRepository = {
         return result.rows[0] ?? null;
     },
 
-    async updatePasswordByEmail(email: string, hashedPassword: string) {
+    async updatePasswordByEmail(
+        email: string,
+        hashedPassword: string
+    ) {
         const result = await pool.query(`
             UPDATE users
             SET password = $2
