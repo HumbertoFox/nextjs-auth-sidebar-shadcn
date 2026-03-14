@@ -7,6 +7,7 @@ import { UserRepository } from '@/_lib/userrepository';
 import { VerificationTokenRepository } from '@/_lib/verificationtokenrepository';
 import z from 'zod';
 import { regenerateCsrfToken, validateCsrfToken } from '@/_lib/csrf';
+import { hashToken } from '@/_lib/tokenutils';
 
 export async function forgotPassword(
     _: FormStatePasswordForgot,
@@ -34,10 +35,10 @@ export async function forgotPassword(
     const tokenExisting = await VerificationTokenRepository.findByIdentifier(email);
 
     if (!tokenExisting) {
-        const token = crypto.randomBytes(32).toString('hex');
+        const rawToken = crypto.randomBytes(32).toString('hex');
         const expires_at = new Date(Date.now() + 60 * 60 * 1000);
 
-        const resetLink = `${process.env.NEXT_URL}/reset-password?token=${token}&email=${email}`;
+        const resetLink = `${process.env.NEXT_URL}/reset-password?token=${rawToken}`;
         const response = await sendPasswordResetEmail(email, resetLink);
 
         if (!response.ok) {
@@ -46,7 +47,11 @@ export async function forgotPassword(
         }
 
         await VerificationTokenRepository.deleteByIdentifier(email);
-        await VerificationTokenRepository.create({ identifier: email, token, expires_at });
+        await VerificationTokenRepository.create({
+            identifier: email,
+            token: hashToken(rawToken),
+            expires_at
+        });
 
         await regenerateCsrfToken();
 

@@ -3,6 +3,7 @@
 import { regenerateCsrfToken, validateCsrfToken } from '@/_lib/csrf';
 import { FormStateEmailVerification } from '@/_lib/definitions';
 import { sendEmailVerification } from '@/_lib/mail';
+import { hashToken } from '@/_lib/tokenutils';
 import { UserRepository } from '@/_lib/userrepository';
 import { VerificationTokenRepository } from '@/_lib/verificationtokenrepository';
 import crypto from 'crypto';
@@ -17,25 +18,26 @@ export async function handleEmailVerification(
     if (!isValidCsrf) return { error: 'Invalid security token. Please refresh the page and try again.' };
 
     const email = formData.get('email') as string;
-    const token = formData.get('token') as string;
+    const rawToken = formData.get('token') as string;
 
-    if (!email && !token) return { error: 'Not authenticated' };
+    if (!email && !rawToken) return { error: 'Not authenticated' };
 
     const isCheckedUserEmail = await UserRepository.findByEmail(email);
 
     if (isCheckedUserEmail?.deleted_at) return { error: 'Email already verified!' };
 
-    const tokenExisting = await VerificationTokenRepository.findValidToken(email, token);
+    const hashedToken = hashToken(rawToken);
+    const tokenExisting = await VerificationTokenRepository.findValidToken(email, hashedToken);
 
     if (!tokenExisting) return { error: 'Invalid or expired token' };
 
     if (tokenExisting && new Date() > tokenExisting.expires_at) {
-        await VerificationTokenRepository.delete(email, tokenExisting.token);
+        await VerificationTokenRepository.delete(email, hashedToken);
 
-        const token = crypto.randomBytes(32).toString('hex');
+        const newRawToken = crypto.randomBytes(32).toString('hex');
         const expires_at = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
 
-        const verifyLink = `${process.env.NEXT_URL}/verify-email?token=${token}&email=${email}`;
+        const verifyLink = `${process.env.NEXT_URL}/verify-email?token=${newRawToken}&email=${email}`;
         const response = await sendEmailVerification(email, verifyLink);
 
         if (!response.ok) {
@@ -45,7 +47,7 @@ export async function handleEmailVerification(
 
         await VerificationTokenRepository.create({
             identifier: email,
-            token,
+            token: hashToken(newRawToken),
             expires_at
         });
 
@@ -54,7 +56,7 @@ export async function handleEmailVerification(
 
     await UserRepository.updateEmailVerified(isCheckedUserEmail.id, new Date());
 
-    await VerificationTokenRepository.delete(email, token);
+    await VerificationTokenRepository.delete(email, hashedToken);
 
     await regenerateCsrfToken();
 

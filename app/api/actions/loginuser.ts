@@ -6,6 +6,8 @@ import { createSession } from '@/_lib/session';
 import z from 'zod';
 import { UserRepository } from '@/_lib/userrepository';
 import { regenerateCsrfToken, validateCsrfToken } from '@/_lib/csrf';
+import { headers } from 'next/headers';
+import { checkLoginRateLimit, resetLoginRateLimit } from '@/_lib/ratelimit';
 
 export async function loginUser(
     _: FormStateLoginUser,
@@ -25,6 +27,21 @@ export async function loginUser(
 
     const { email, password } = validatedFields.data;
 
+    const requestHeaders = await headers();
+    const forwarded = requestHeaders.get('x-forwarded-for');
+    const ip = forwarded
+        ? forwarded.split(',')[0].trim()
+        : (requestHeaders.get('x-real-ip') ?? 'unknown');
+ 
+    const rateLimit = checkLoginRateLimit(ip, email);
+ 
+    if (!rateLimit.allowed) {
+        const secs = rateLimit.retryAfterSeconds;
+        const timeLabel = secs < 60 ? `${secs} second${secs !== 1 ? 's' : ''}` : `${Math.ceil(secs / 60)} minute${Math.ceil(secs / 60) !== 1 ? 's' : ''}`;
+ 
+        return { warning: `Too many login attempts. Please try again in ${timeLabel}.` };
+    }
+
     try {
         const user = await UserRepository.findByEmailActive(email);
 
@@ -33,6 +50,8 @@ export async function loginUser(
         const isPasswordValid = await compare(password, user.password);
 
         if (!isPasswordValid) return { warning: 'Invalid email or password' };
+
+        resetLoginRateLimit(email);
 
         await createSession(user.id, user.role);
 

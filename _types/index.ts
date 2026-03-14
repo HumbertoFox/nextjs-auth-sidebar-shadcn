@@ -105,8 +105,9 @@ export type RegisterFormUserProps = csrfTokenProps & {
     readonly valueButton?: string;
 }
 
-export type ResetPasswordForm = LoginFormProps & {
+export type ResetPasswordForm = {
     readonly token: string;
+    readonly password: string;
     readonly password_confirmation: string;
 }
 
@@ -140,4 +141,9 @@ export type VerificationToken = {
     identifier: string;
     token: string;
     expires_at: Date;
+}
+
+export type RateLimitEntry = {
+    count: number;
+    resetAt: number;
 }

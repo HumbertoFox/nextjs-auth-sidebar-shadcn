@@ -38,7 +38,10 @@ export default function ForgotPasswordClient({
             {state?.error && <div className="mb-4 text-center text-sm font-medium text-red-600">{state.error}</div>}
 
             <div className="space-y-6">
-                <form onSubmit={submit}>
+                <form
+                    onSubmit={submit}
+                    className="w-full max-w-xs flex flex-col gap-6 mx-auto"
+                >
                     <div className="grid gap-2">
                         <Label htmlFor="email">Email address</Label>
                         <Input

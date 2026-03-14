@@ -82,11 +82,8 @@ export const passwordUpdateSchema = z.object({
     });
 
 export const passwordResetSchema = z.object({
-    email: z.email('Invalid email address')
-        .trim()
-        .toLowerCase(),
     token: z.string()
-        .min(1, 'A token is required.'),
+        .regex(/^[a-f0-9]{64}$/, 'Invalid or expired token.'),
     password: z.string()
         .min(8, 'The password must be longer than 8 characters.'),
     password_confirmation: z.string()
@@ -113,6 +110,7 @@ export type FormStateCreateAdmin =
             avatar?: string[];
         }
         message?: boolean;
+        info?: string;
         warning?: string;
     } | undefined;
 
@@ -180,7 +178,6 @@ export type FormStatePasswordForgot =
 export type FormStatePasswordReset =
     | {
         errors?: {
-            email?: string[];
             token?: string[];
             password?: string[];
             password_confirmation?: string[];

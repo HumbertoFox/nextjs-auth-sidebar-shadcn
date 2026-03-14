@@ -19,7 +19,7 @@ export const VerificationTokenRepository = {
         return result.rows[0] ?? null;
     },
 
-    async findValidToken(identifier: string, token: string) {
+    async findValidToken(identifier: string, hashedToken: string) {
         const result = await pool.query<VerificationToken>(`
             SELECT *
             FROM verification_tokens
@@ -30,10 +30,26 @@ export const VerificationTokenRepository = {
         `,
             [
                 identifier,
-                token
+                hashedToken
             ]
         );
 
+        return result.rows[0] ?? null;
+    },
+
+    async findValidTokenOnly(hashedToken: string) {
+        const result = await pool.query<VerificationToken>(`
+            SELECT *
+            FROM verification_tokens
+            WHERE token = $1
+              AND expires_at > NOW()
+            LIMIT 1
+        `,
+            [
+                hashedToken
+            ]
+        );
+ 
         return result.rows[0] ?? null;
     },
 
@@ -76,7 +92,7 @@ export const VerificationTokenRepository = {
         );
     },
 
-    async delete(identifier: string, token: string) {
+    async delete(identifier: string, hashedToken: string) {
         await pool.query(`
             DELETE FROM verification_tokens
             WHERE identifier = $1
@@ -84,7 +100,7 @@ export const VerificationTokenRepository = {
         `,
             [
                 identifier,
-                token
+                hashedToken
             ]
         );
     },

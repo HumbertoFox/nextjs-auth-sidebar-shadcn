@@ -86,7 +86,10 @@ export async function createAdmin(
 
         await regenerateCsrfToken();
 
-        return { message: true };
+        return {
+            message: true,
+            info: 'Account created successfully! Redirecting to the Dashboard, please wait...'
+        };
     } catch (error) {
         console.error(error);
         return { warning: 'Something went wrong. Please try again later.' };

@@ -9,6 +9,7 @@ import { Label } from '@/_components/ui/label';
 import { useSearchParams } from 'next/navigation';
 import { resetPassword } from '@/app/api/actions/resetpassword';
 import { csrfTokenProps, ResetPasswordForm } from '@/_types';
+import { TextLink } from '@/_components/text-link';
 
 export default function ResetPasswordClient({
     csrfToken
@@ -17,9 +18,8 @@ export default function ResetPasswordClient({
     const [state, action, pending] = useActionState(resetPassword, undefined);
     const [showPassword, setShowPassword] = useState<boolean>(false);
     const [showPasswordConfirm, setShowPasswordConfirm] = useState<boolean>(false);
-    const [data, setData] = useState<Required<ResetPasswordForm>>({
+    const [data, setData] = useState<ResetPasswordForm>({
         token: searchParams.get('token') ?? '',
-        email: searchParams.get('email') ?? '',
         password: '',
         password_confirmation: ''
     });
@@ -40,13 +40,13 @@ export default function ResetPasswordClient({
         if (!state?.message) return;
 
         startTransition(() => {
-            setData({
-                ...data,
+            setData(prev => ({
+                ...prev,
                 password: '',
                 password_confirmation: ''
-            });
+            }));
         });
-    }, [state, data]);
+    }, [state]);
     return (
         <div className="space-y-6 w-full lg:w-2/4">
             <div className="flex flex-col items-center gap-2 text-center mx-auto">
@@ -55,25 +55,25 @@ export default function ResetPasswordClient({
                     Please enter your new password below.
                 </p>
             </div>
-            <form onSubmit={submit}>
+            <form
+                onSubmit={submit}
+                className="w-full max-w-xs flex flex-col gap-6 mx-auto"
+            >
                 <div className="grid gap-6">
                     <div className="grid gap-2">
-                        <Label htmlFor="email">E-mail</Label>
+                        <Label htmlFor="token">Token</Label>
                         <Input
-                            id="email"
-                            type="email"
-                            name="email"
+                            id="token"
+                            type="text"
+                            name="token"
                             tabIndex={1}
-                            autoComplete="email"
-                            value={data.email}
+                            value={data.token}
                             readOnly
-                            onChange={handleChange}
                             required
                             className="block w-full cursor-default"
                         />
-                        {state?.errors?.email?.[0] && <InputError message={state.errors.email[0]} />}
+                        {state?.errors?.token?.[0] && <InputError message={state.errors.token[0]} />}
                     </div>
-
                     <div className="grid gap-2">
                         <Label htmlFor="password">Password</Label>
                         <div className="relative">
@@ -128,12 +128,6 @@ export default function ResetPasswordClient({
                         {state?.errors?.password_confirmation?.[0] && <InputError message={state.errors.password_confirmation[0]} />}
                     </div>
 
-                    <input
-                        type="hidden"
-                        name="token"
-                        value={data.token}
-                    />
-
                     <Button
                         type="submit"
                         disabled={pending}
@@ -147,6 +141,13 @@ export default function ResetPasswordClient({
 
             {state?.message && <p className="mb-4 text-center text-sm font-medium text-blue-600">{state.message}</p>}
             {state?.warning && <p className="mb-4 text-center text-sm font-medium text-red-600">{state.warning}</p>}
+
+            {state?.message && (
+                <div className="text-muted-foreground space-x-1 text-center text-sm">
+                    <span>go back to</span>
+                    <TextLink href="/login">Log in</TextLink>
+                </div>
+            )}
         </div>
     );
 }
