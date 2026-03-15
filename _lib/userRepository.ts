@@ -1,10 +1,28 @@
 import pool from '@/_lib/db';
 import { User, UserRole } from '@/_types';
 
-const ALLOWED_UPDATE_COLUMNS_USER: ReadonlySet<string> = new Set(['name', 'email', 'avatar']);
-const ALLOWED_UPDATE_COLUMNS_ADMIN: ReadonlySet<string> = new Set(['name', 'email', 'role', 'password', 'avatar']);
+const ALLOWED_UPDATE_COLUMNS_USER: ReadonlySet<string> = new Set([
+    'name',
+    'email',
+    'avatar'
+]);
 
-function buildSetClause(data: Record<string, unknown>, allowed: ReadonlySet<string>): { setClause: string; values: unknown[] } {
+const ALLOWED_UPDATE_COLUMNS_ADMIN: ReadonlySet<string> = new Set([
+    'name',
+    'email',
+    'role',
+    'password',
+    'avatar'
+]);
+
+function buildSetClause(
+    data: Record<string,
+    unknown>,
+    allowed: ReadonlySet<string>
+): {
+    setClause: string;
+    values: unknown[]
+} {
     const keys = Object.keys(data).filter(k => allowed.has(k));
     if (!keys.length) throw new Error('No valid fields to update.');
     const values = keys.map(k => data[k]);
