@@ -1,19 +1,24 @@
 import nodemailer from 'nodemailer';
 
+const SMTP_HOST = process.env.SMTP_HOST;
+const SMTP_PORT = Number(process.env.SMTP_PORT);
+const SMTP_USER = process.env.SMTP_USER;
+const SMTP_PASS = process.env.SMTP_PASS;
+
 export const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: Number(process.env.SMTP_PORT),
+    host: SMTP_HOST,
+    port: SMTP_PORT,
     secure: false,
     auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
+        user: SMTP_USER,
+        pass: SMTP_PASS,
     }
 })
 
 export const sendPasswordResetEmail = async (to: string, resetLink: string) => {
     try {
         const result = await transporter.sendMail({
-            from: `'nextjs-starter-kit' <${process.env.SMTP_USER}>`,
+            from: `'nextjs-starter-kit' <${SMTP_USER}>`,
             to,
             subject: 'Password reset',
             html: `
@@ -33,7 +38,7 @@ export const sendPasswordResetEmail = async (to: string, resetLink: string) => {
 export const sendEmailVerification = async (to: string, link: string) => {
     try {
         const result = await transporter.sendMail({
-            from: `'nextjs-starter-kit' <${process.env.SMTP_USER}>`,
+            from: `'nextjs-starter-kit' <${SMTP_USER}>`,
             to,
             subject: 'Check your email.',
             html: `
