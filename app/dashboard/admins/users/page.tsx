@@ -5,7 +5,7 @@ import { Pagination, PaginationContent, PaginationItem, PaginationLink, Paginati
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/_components/ui/table';
 import { getCsrfToken } from '@/_lib/csrf';
 import getVisiblePagination from '@/_lib/getvisiblepagination';
-import { UserRepository } from '@/_lib/userrepository';
+import { userRepository } from '@/_lib/userrepository';
 import { deleteUserById } from '@/app/api/actions/deleteadminuser';
 import { reactivateAdminUserById } from '@/app/api/actions/reactivateadminuser';
 import { UserLock, UserPen, UserX } from 'lucide-react';
@@ -24,7 +24,7 @@ export default async function UsersPage(props: { searchParams?: Promise<{ page?:
     const params = await props.searchParams;
     const rawPage = parseInt(String(params?.page ?? '1'), 10);
     const currentPage = Number.isNaN(rawPage) ? 1 : Math.max(1, rawPage);
-    const [users, total] = await UserRepository.findUsersPaginated(currentPage, pageSize);
+    const [users, total] = await userRepository.findUsersPaginated(currentPage, pageSize);
     const totalPages = Math.ceil(total / pageSize);
     const csrfToken = await getCsrfToken();
     const breadcrumbItems = [

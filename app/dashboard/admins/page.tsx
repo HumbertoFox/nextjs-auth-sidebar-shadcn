@@ -4,7 +4,7 @@ import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, Di
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/_components/ui/table';
 import { getCsrfToken } from '@/_lib/csrf';
 import { getUser } from '@/_lib/dal';
-import { UserRepository } from '@/_lib/userrepository';
+import { userRepository } from '@/_lib/userrepository';
 import { UserDetailsProps } from '@/_types';
 import { deleteUserById } from '@/app/api/actions/deleteadminuser';
 import { reactivateAdminUserById } from '@/app/api/actions/reactivateadminuser';
@@ -21,7 +21,7 @@ export const generateMetadata = async (): Promise<Metadata> => {
 export default async function AdminsPage() {
     const user = await getUser() as UserDetailsProps;
     const loggedAdmin = user.id;
-    const admins = await UserRepository.findAllAdmins();
+    const admins = await userRepository.findAllAdmins();
     const csrfToken = await getCsrfToken();
     const breadcrumbItems = [
         {

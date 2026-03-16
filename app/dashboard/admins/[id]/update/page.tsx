@@ -2,7 +2,7 @@ import { DashboardSidebarHeader } from '@/_components/dashboard-sidebar-header';
 import RegisterUpdateUserForm from '@/_components/form-register-user';
 import { LoadingRegister } from '@/_components/loadings/loading-register';
 import { getCsrfToken } from '@/_lib/csrf';
-import { UserRepository } from '@/_lib/userrepository';
+import { userRepository } from '@/_lib/userrepository';
 import { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
@@ -30,7 +30,7 @@ export default async function Update({
         },
     ];
     const { id } = await params;
-    const user = await UserRepository.findById(id);
+    const user = await userRepository.findById(id);
     if (!user) redirect('/dashboard');
     const csrfToken = await getCsrfToken();
     return (
