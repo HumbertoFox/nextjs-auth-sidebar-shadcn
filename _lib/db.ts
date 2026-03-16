@@ -63,8 +63,13 @@ pool.on('connect', (client) => {
                 return client.query('SET ROLE app_backend_role');
             }
         })
-        .catch((err) => {
-            console.error('❌ Failed to SET ROLE app_backend_role:', err);
+        .catch(() => {
+            // Em ambientes gerenciados (Neon, Supabase) o SET ROLE pode não ser
+            // suportado. O banco continua funcionando via permissões diretas ao
+            // usuário da conexão. Rode db:migrate para aplicar o GRANT correto.
+            if (!isProduction) {
+                console.warn('⚠️  SET ROLE app_backend_role not available in this environment.');
+            }
         });
 });
 

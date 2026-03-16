@@ -7,6 +7,17 @@ DO $$ BEGIN
     END IF;
 END $$;
 
+-- Garante que o usuário da conexão pode usar SET ROLE app_backend_role
+-- Necessário no Neon e em ambientes gerenciados onde o superuser não é o owner
+DO $$
+DECLARE
+    current_user_name TEXT := current_user;
+BEGIN
+    EXECUTE format('GRANT app_backend_role TO %I', current_user_name);
+EXCEPTION WHEN others THEN
+    RAISE NOTICE 'GRANT app_backend_role TO % skipped: %', current_user_name, SQLERRM;
+END $$;
+
 -- ============================================================================
 -- REVOKE: bloqueia acesso direto à tabela users para todos
 -- ============================================================================
@@ -43,13 +54,27 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON verification_tokens TO app_backend_role;
 ALTER TABLE users ENABLE ROW LEVEL SECURITY;
 
 -- Backend vê tudo
-CREATE POLICY policy_users_backend
-    ON users FOR ALL
-    TO app_backend_role
-    USING (true);
+DO $$ BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_policies
+        WHERE tablename = 'users' AND policyname = 'policy_users_backend'
+    ) THEN
+        CREATE POLICY policy_users_backend
+            ON users FOR ALL
+            TO app_backend_role
+            USING (true);
+    END IF;
+END $$;
 
 -- PUBLIC não acessa a tabela diretamente (só via views)
-CREATE POLICY policy_users_public
-    ON users FOR SELECT
-    TO PUBLIC
-    USING (false);
+DO $$ BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_policies
+        WHERE tablename = 'users' AND policyname = 'policy_users_public'
+    ) THEN
+        CREATE POLICY policy_users_public
+            ON users FOR SELECT
+            TO PUBLIC
+            USING (false);
+    END IF;
+END $$;
