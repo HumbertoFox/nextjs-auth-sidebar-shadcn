@@ -3,8 +3,8 @@
 import { sendPasswordResetEmail } from '@/_lib/mail';
 import { FormStatePasswordForgot, passwordForgotSchema } from '@/_lib/definitions';
 import crypto from 'crypto';
-import { userRepository } from '@/_lib/userrepository';
-import { verificationTokenRepository } from '@/_lib/verificationtokenrepository';
+import { userRepository } from '@/_lib/userrepositorys';
+import { verificationTokenRepository } from '@/_lib/verificationtokenrepositorys';
 import z from 'zod';
 import { regenerateCsrfToken, validateCsrfToken } from '@/_lib/csrf';
 import { hashToken } from '@/_lib/tokenutils';

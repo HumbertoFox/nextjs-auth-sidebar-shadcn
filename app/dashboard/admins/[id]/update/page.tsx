@@ -2,7 +2,7 @@ import { DashboardSidebarHeader } from '@/_components/dashboard-sidebar-header';
 import RegisterUpdateUserForm from '@/_components/form-register-user';
 import { LoadingRegister } from '@/_components/loadings/loading-register';
 import { getCsrfToken } from '@/_lib/csrf';
-import { userRepository } from '@/_lib/userrepository';
+import { userRepository } from '@/_lib/userrepositorys';
 import { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { Suspense } from 'react';

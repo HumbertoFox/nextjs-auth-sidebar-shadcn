@@ -4,7 +4,7 @@ import { getUser } from '@/_lib/dal';
 import { deleteUserSchema, FormStateUserDelete } from '@/_lib/definitions';
 import * as bcrypt from 'bcrypt-ts';
 import z from 'zod';
-import { userRepository } from '@/_lib/userrepository';
+import { userRepository } from '@/_lib/userrepositorys';
 import { regenerateCsrfToken, validateCsrfToken } from '@/_lib/csrf';
 
 export async function deleteUser(

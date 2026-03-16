@@ -6,7 +6,7 @@ import * as bcrypt from 'bcrypt-ts';
 import z from 'zod';
 import sharp from 'sharp';
 import { revalidatePath } from 'next/cache';
-import { userRepository } from '@/_lib/userrepository.ts';
+import { userRepository } from '@/_lib/userrepositorys';
 import { getUser } from '@/_lib/dal';
 import { regenerateCsrfToken, validateCsrfToken } from '@/_lib/csrf';
 

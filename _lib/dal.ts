@@ -1,7 +1,7 @@
 import 'server-only';
 import { cache } from 'react';
 import { verifySession } from '@/_lib/session';
-import { userRepository } from '@/_lib/userrepository';
+import { userRepository } from '@/_lib/userrepositorys';
 import { UserDetailsProps } from '@/_types';
 
 export const getUser = cache(async () => {

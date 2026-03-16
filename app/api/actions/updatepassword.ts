@@ -5,7 +5,7 @@ import { FormStatePasswordUpdate, passwordUpdateSchema } from '@/_lib/definition
 import { compare, hash } from 'bcrypt-ts';
 import { redirect } from 'next/navigation';
 import z from 'zod';
-import { userRepository } from '@/_lib/userrepository';
+import { userRepository } from '@/_lib/userrepositorys';
 import { revalidatePath } from 'next/cache';
 import { regenerateCsrfToken, validateCsrfToken } from '@/_lib/csrf';
 

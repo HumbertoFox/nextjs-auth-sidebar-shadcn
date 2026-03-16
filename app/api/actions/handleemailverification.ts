@@ -4,8 +4,8 @@ import { regenerateCsrfToken, validateCsrfToken } from '@/_lib/csrf';
 import { FormStateEmailVerification } from '@/_lib/definitions';
 import { sendEmailVerification } from '@/_lib/mail';
 import { hashToken } from '@/_lib/tokenutils';
-import { userRepository } from '@/_lib/userrepository';
-import { verificationTokenRepository } from '@/_lib/verificationtokenrepository';
+import { userRepository } from '@/_lib/userrepositorys';
+import { verificationTokenRepository } from '@/_lib/verificationtokenrepositorys';
 import crypto from 'crypto';
 
 export async function handleEmailVerification(

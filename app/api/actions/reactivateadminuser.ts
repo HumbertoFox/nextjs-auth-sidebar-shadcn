@@ -2,7 +2,7 @@
 
 import { regenerateCsrfToken, validateCsrfToken } from '@/_lib/csrf';
 import { getUser } from '@/_lib/dal';
-import { userRepository } from '@/_lib/userrepository';
+import { userRepository } from '@/_lib/userrepositorys';
 import { revalidatePath } from 'next/cache';
 
 export async function reactivateAdminUserById(

@@ -3,8 +3,8 @@
 import { regenerateCsrfToken, validateCsrfToken } from '@/_lib/csrf';
 import { FormStatePasswordReset, passwordResetSchema } from '@/_lib/definitions';
 import { hashToken } from '@/_lib/tokenutils';
-import { userRepository } from '@/_lib/userrepository';
-import { verificationTokenRepository } from '@/_lib/verificationtokenrepository';
+import { userRepository } from '@/_lib/userrepositorys';
+import { verificationTokenRepository } from '@/_lib/verificationtokenrepositorys';
 import { hash } from 'bcrypt-ts';
 import z from 'zod';
 

@@ -5,7 +5,7 @@ import { Pagination, PaginationContent, PaginationItem, PaginationLink, Paginati
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/_components/ui/table';
 import { getCsrfToken } from '@/_lib/csrf';
 import getVisiblePagination from '@/_lib/getvisiblepagination';
-import { userRepository } from '@/_lib/userrepository';
+import { userRepository } from '@/_lib/userrepositorys';
 import { deleteUserById } from '@/app/api/actions/deleteadminuser';
 import { reactivateAdminUserById } from '@/app/api/actions/reactivateadminuser';
 import { UserLock, UserPen, UserX } from 'lucide-react';

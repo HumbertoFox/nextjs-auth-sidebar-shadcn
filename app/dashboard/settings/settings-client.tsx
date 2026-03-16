@@ -2,7 +2,7 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/_components/ui/avatar';
 import { useInitials } from '@/_hooks/use-initials';
-import { formatDate } from '@/_lib/dataformat.ts';
+import { formatDate } from '@/_lib/dataformats';
 import { UserSettingsClientProps } from '@/_types';
 import { BadgeAlert, BadgeCheck } from 'lucide-react';
 

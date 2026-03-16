@@ -6,7 +6,7 @@ import { createSession } from '@/_lib/session';
 import * as bcrypt from 'bcrypt-ts';
 import z from 'zod';
 import sharp from 'sharp';
-import { userRepository } from '@/_lib/userrepository.ts';
+import { userRepository } from '@/_lib/userrepositorys';
 import { regenerateCsrfToken, validateCsrfToken } from '@/_lib/csrf';
 
 const MAX_FILE_SIZE = 512 * 1024;

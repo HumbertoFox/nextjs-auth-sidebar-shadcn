@@ -4,7 +4,7 @@ import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, Di
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/_components/ui/table';
 import { getCsrfToken } from '@/_lib/csrf';
 import { getUser } from '@/_lib/dal';
-import { userRepository } from '@/_lib/userrepository';
+import { userRepository } from '@/_lib/userrepositorys';
 import { UserDetailsProps } from '@/_types';
 import { deleteUserById } from '@/app/api/actions/deleteadminuser';
 import { reactivateAdminUserById } from '@/app/api/actions/reactivateadminuser';

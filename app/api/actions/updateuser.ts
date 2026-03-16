@@ -5,7 +5,7 @@ import { FormStateUserUpdate, updateUserSchema } from '@/_lib/definitions';
 import { redirect } from 'next/navigation';
 import z from 'zod';
 import { put, del } from '@vercel/blob';
-import { userRepository } from '@/_lib/userrepository';
+import { userRepository } from '@/_lib/userrepositorys';
 import { revalidatePath } from 'next/cache';
 import { regenerateCsrfToken, validateCsrfToken } from '@/_lib/csrf';
 
