@@ -2,7 +2,7 @@
 
 import { regenerateCsrfToken, validateCsrfToken } from '@/_lib/csrf';
 import { getUser } from '@/_lib/dal';
-import { UserRepository } from '@/_lib/userrepository';
+import { userRepository } from '@/_lib/userrepository';
 import { revalidatePath } from 'next/cache';
 
 export async function reactivateAdminUserById(
@@ -20,7 +20,7 @@ export async function reactivateAdminUserById(
 
     if (!userId) return;
 
-    const user = await UserRepository.reactivateById(userId);
+    const user = await userRepository.reactivateById(userId);
 
     await regenerateCsrfToken();
 

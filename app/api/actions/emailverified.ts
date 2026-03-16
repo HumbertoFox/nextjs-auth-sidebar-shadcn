@@ -3,8 +3,8 @@
 import { getUser } from '@/_lib/dal';
 import { sendEmailVerification } from '@/_lib/mail';
 import crypto from 'crypto';
-import { VerificationTokenRepository } from '@/_lib/verificationtokenrepository';
-import { UserRepository } from '@/_lib/userrepository';
+import { verificationTokenRepository } from '@/_lib/verificationtokenrepository';
+import { userRepository } from '@/_lib/userrepository';
 
 export async function emailVerifiedChecked() {
     const sessionUser = await getUser();
@@ -12,9 +12,9 @@ export async function emailVerifiedChecked() {
 
     const email = sessionUser.email;
 
-    const tokenExisting = await VerificationTokenRepository.findByIdentifier(email);
+    const tokenExisting = await verificationTokenRepository.findByIdentifier(email);
 
-    const user = await UserRepository.findByEmail(email);
+    const user = await userRepository.findByEmail(email);
 
     if (user?.email_verified) return null;
 
@@ -25,7 +25,7 @@ export async function emailVerifiedChecked() {
 
         const expires_at = new Date(Date.now() + 24 * 60 * 60 * 1000);
 
-        await VerificationTokenRepository.create({
+        await verificationTokenRepository.create({
             identifier: email,
             token,
             expires_at

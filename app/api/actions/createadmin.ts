@@ -6,7 +6,7 @@ import { createSession } from '@/_lib/session';
 import * as bcrypt from 'bcrypt-ts';
 import z from 'zod';
 import sharp from 'sharp';
-import { UserRepository } from '@/_lib/userrepository';
+import { userRepository } from '@/_lib/userrepository';
 import { regenerateCsrfToken, validateCsrfToken } from '@/_lib/csrf';
 
 const MAX_FILE_SIZE = 512 * 1024;
@@ -44,10 +44,10 @@ export async function createAdmin(
     } = validatedFields.data;
 
     try {
-        const existingUser = await UserRepository.findByEmail(email);
+        const existingUser = await userRepository.findByEmail(email);
         if (existingUser) return { warning: 'Data already registered.' };
 
-        const adminExists = await UserRepository.adminExists();
+        const adminExists = await userRepository.adminExists();
         const role = adminExists ? 'USER' : 'ADMIN';
 
         const hashedPassword = await bcrypt.hash(password, 12);
@@ -66,7 +66,7 @@ export async function createAdmin(
             }
         }
 
-        const user = await UserRepository.create({
+        const user = await userRepository.create({
             name,
             email,
             password: hashedPassword,
@@ -79,7 +79,7 @@ export async function createAdmin(
                 access: 'public',
             });
 
-            await UserRepository.updateAvatar(user.id, blob.url);
+            await userRepository.updateAvatar(user.id, blob.url);
         }
 
         await createSession(user.id, user.role);

@@ -5,7 +5,7 @@ import { FormStatePasswordUpdate, passwordUpdateSchema } from '@/_lib/definition
 import { compare, hash } from 'bcrypt-ts';
 import { redirect } from 'next/navigation';
 import z from 'zod';
-import { UserRepository } from '@/_lib/userrepository';
+import { userRepository } from '@/_lib/userrepository';
 import { revalidatePath } from 'next/cache';
 import { regenerateCsrfToken, validateCsrfToken } from '@/_lib/csrf';
 
@@ -31,7 +31,7 @@ export async function updatePassword(
     const sessionUser = await getUser();
     if (!sessionUser || !sessionUser?.id) return redirect('/');
 
-    const authUser = await UserRepository.findActiveById(sessionUser.id);
+    const authUser = await userRepository.findActiveById(sessionUser.id);
 
     if (!authUser) return redirect('/');
 
@@ -43,7 +43,7 @@ export async function updatePassword(
 
     const hashedPassword = await hash(password, 12);
 
-    await UserRepository.updatePassword(sessionUser.id, hashedPassword);
+    await userRepository.updatePassword(sessionUser.id, hashedPassword);
 
     revalidatePath('/dashboard/settings/password');
 

@@ -3,8 +3,8 @@
 import { sendPasswordResetEmail } from '@/_lib/mail';
 import { FormStatePasswordForgot, passwordForgotSchema } from '@/_lib/definitions';
 import crypto from 'crypto';
-import { UserRepository } from '@/_lib/userrepository';
-import { VerificationTokenRepository } from '@/_lib/verificationtokenrepository';
+import { userRepository } from '@/_lib/userrepository';
+import { verificationTokenRepository } from '@/_lib/verificationtokenrepository';
 import z from 'zod';
 import { regenerateCsrfToken, validateCsrfToken } from '@/_lib/csrf';
 import { hashToken } from '@/_lib/tokenutils';
@@ -24,7 +24,7 @@ export async function forgotPassword(
 
     const { email } = validatedFields.data;
 
-    const user = await UserRepository.findByEmail(email);
+    const user = await userRepository.findByEmail(email);
 
     const genericMessage = {
         message: 'If your email is registered, you will receive a link to reset your password.'
@@ -32,7 +32,7 @@ export async function forgotPassword(
 
     if (!user) return genericMessage;
 
-    const tokenExisting = await VerificationTokenRepository.findByIdentifier(email);
+    const tokenExisting = await verificationTokenRepository.findByIdentifier(email);
 
     if (!tokenExisting) {
         const rawToken = crypto.randomBytes(32).toString('hex');
@@ -46,15 +46,14 @@ export async function forgotPassword(
             return { error: 'email-send-error' };
         }
 
-        await VerificationTokenRepository.deleteByIdentifier(email);
-        await VerificationTokenRepository.create({
+        await verificationTokenRepository.deleteByIdentifier(email);
+        await verificationTokenRepository.create({
             identifier: email,
             token: hashToken(rawToken),
             expires_at
         });
 
         await regenerateCsrfToken();
-
         return genericMessage;
     }
 

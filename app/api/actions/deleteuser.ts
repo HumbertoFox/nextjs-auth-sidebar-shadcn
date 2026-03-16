@@ -4,7 +4,7 @@ import { getUser } from '@/_lib/dal';
 import { deleteUserSchema, FormStateUserDelete } from '@/_lib/definitions';
 import * as bcrypt from 'bcrypt-ts';
 import z from 'zod';
-import { UserRepository } from '@/_lib/userrepository';
+import { userRepository } from '@/_lib/userrepository';
 import { regenerateCsrfToken, validateCsrfToken } from '@/_lib/csrf';
 
 export async function deleteUser(
@@ -25,7 +25,7 @@ export async function deleteUser(
     const sessionUser = await getUser();
     if (!sessionUser || !sessionUser?.id) return { message: false };
 
-    const existingUser = await UserRepository.findActiveById(sessionUser.id);
+    const existingUser = await userRepository.findActiveById(sessionUser.id);
 
     if (!existingUser) return { message: false };
 
@@ -33,11 +33,11 @@ export async function deleteUser(
 
     if (!isPasswordCorrect) return { errors: { password: ['Incorrect password'] } };
 
-    const activeAdmins = await UserRepository.countActiveAdmins();
+    const activeAdmins = await userRepository.countActiveAdmins();
 
     if (activeAdmins <= 1) return { errors: { password: [`It's not possible to delete an ADMIN account when there's only one active account!`] } };
 
-    await UserRepository.softDeleteById(sessionUser.id);
+    await userRepository.softDeleteById(sessionUser.id);
 
     await regenerateCsrfToken();
 

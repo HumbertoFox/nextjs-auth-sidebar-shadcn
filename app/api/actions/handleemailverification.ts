@@ -4,8 +4,8 @@ import { regenerateCsrfToken, validateCsrfToken } from '@/_lib/csrf';
 import { FormStateEmailVerification } from '@/_lib/definitions';
 import { sendEmailVerification } from '@/_lib/mail';
 import { hashToken } from '@/_lib/tokenutils';
-import { UserRepository } from '@/_lib/userrepository';
-import { VerificationTokenRepository } from '@/_lib/verificationtokenrepository';
+import { userRepository } from '@/_lib/userrepository';
+import { verificationTokenRepository } from '@/_lib/verificationtokenrepository';
 import crypto from 'crypto';
 
 export async function handleEmailVerification(
@@ -22,17 +22,17 @@ export async function handleEmailVerification(
 
     if (!email && !rawToken) return { error: 'Not authenticated' };
 
-    const isCheckedUserEmail = await UserRepository.findByEmail(email);
+    const isCheckedUserEmail = await userRepository.findByEmail(email);
 
     if (isCheckedUserEmail?.email_verified) return { error: 'Email already verified!' };
 
     const hashedToken = hashToken(rawToken);
-    const tokenExisting = await VerificationTokenRepository.findValidToken(email, hashedToken);
+    const tokenExisting = await verificationTokenRepository.findValidToken(email, hashedToken);
 
     if (!tokenExisting) return { error: 'Invalid or expired token' };
 
     if (tokenExisting && new Date() > tokenExisting.expires_at) {
-        await VerificationTokenRepository.delete(email, hashedToken);
+        await verificationTokenRepository.delete(email, hashedToken);
 
         const newRawToken = crypto.randomBytes(32).toString('hex');
         const expires_at = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
@@ -45,7 +45,7 @@ export async function handleEmailVerification(
             return { error: 'email-send-error' };
         }
 
-        await VerificationTokenRepository.create({
+        await verificationTokenRepository.create({
             identifier: email,
             token: hashToken(newRawToken),
             expires_at
@@ -54,9 +54,9 @@ export async function handleEmailVerification(
         return { status: 'verification-link-sent' };
     }
 
-    await UserRepository.updateEmailVerified(isCheckedUserEmail.id, new Date());
+    await userRepository.updateEmailVerified(isCheckedUserEmail.id, new Date());
 
-    await VerificationTokenRepository.delete(email, hashedToken);
+    await verificationTokenRepository.delete(email, hashedToken);
 
     await regenerateCsrfToken();
 

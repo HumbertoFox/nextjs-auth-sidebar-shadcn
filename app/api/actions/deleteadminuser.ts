@@ -2,7 +2,7 @@
 
 import { regenerateCsrfToken, validateCsrfToken } from '@/_lib/csrf';
 import { getUser } from '@/_lib/dal';
-import { UserRepository } from '@/_lib/userrepository';
+import { userRepository } from '@/_lib/userrepository';
 import { revalidatePath } from 'next/cache';
 
 export async function deleteUserById(
@@ -21,11 +21,11 @@ export async function deleteUserById(
     if (!userId) return;
 
     try {
-        const user = await UserRepository.findActiveById(userId);
+        const user = await userRepository.findActiveById(userId);
 
         if (!user) return;
 
-        await UserRepository.softDeleteById(userId);
+        await userRepository.softDeleteById(userId);
 
         await regenerateCsrfToken();
 

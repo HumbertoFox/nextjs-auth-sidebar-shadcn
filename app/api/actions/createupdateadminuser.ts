@@ -6,7 +6,7 @@ import * as bcrypt from 'bcrypt-ts';
 import z from 'zod';
 import sharp from 'sharp';
 import { revalidatePath } from 'next/cache';
-import { UserRepository } from '@/_lib/userrepository';
+import { userRepository } from '@/_lib/userrepository';
 import { getUser } from '@/_lib/dal';
 import { regenerateCsrfToken, validateCsrfToken } from '@/_lib/csrf';
 
@@ -91,10 +91,10 @@ export async function createUpdateAdminUser(
         }
 
         if (id) {
-            const userInDb = await UserRepository.findActiveById(id);
+            const userInDb = await userRepository.findActiveById(id);
             if (!userInDb || userInDb.deleted_at) return { message: false };
 
-            const existingUser = await UserRepository.findByEmail(email);
+            const existingUser = await userRepository.findByEmail(email);
             if (existingUser && existingUser.id !== id) return { errors: { email: ['This email address is already in use!'] } };
 
             const imageUrl = file && file.size > 0 ? await uploadAvatar(id, userInDb.avatar) : undefined;
@@ -108,7 +108,7 @@ export async function createUpdateAdminUser(
 
             if (!hasChanges) return { message: false };
 
-            const updateUser = await UserRepository.updateByAdminUser(id, {
+            const updateUser = await userRepository.updateByAdminUser(id, {
                 name,
                 email,
                 role,
@@ -119,12 +119,12 @@ export async function createUpdateAdminUser(
             if (!updateUser) return { message: false };
             revalidatePaths(updateUser.role);
         } else {
-            const existingUser = await UserRepository.findByEmail(email);
+            const existingUser = await userRepository.findByEmail(email);
             if (existingUser) return { errors: { email: ['This email address is already in use!'] } };
 
             if (!hashedPassword) return { errors: { password: ['The password must be at least 8 characters long.'] } };
 
-            const newUser = await UserRepository.create({
+            const newUser = await userRepository.create({
                 name,
                 email,
                 password: hashedPassword,
@@ -133,7 +133,7 @@ export async function createUpdateAdminUser(
 
             if (file && file.size > 0) {
                 const imageUrl = await uploadAvatar(newUser.id);
-                await UserRepository.updateAvatar(newUser.id, imageUrl);
+                await userRepository.updateAvatar(newUser.id, imageUrl);
             }
 
             revalidatePaths(newUser.role);

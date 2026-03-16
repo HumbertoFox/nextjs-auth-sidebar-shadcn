@@ -5,7 +5,7 @@ import { FormStateUserUpdate, updateUserSchema } from '@/_lib/definitions';
 import { redirect } from 'next/navigation';
 import z from 'zod';
 import { put, del } from '@vercel/blob';
-import { UserRepository } from '@/_lib/userrepository';
+import { userRepository } from '@/_lib/userrepository';
 import { revalidatePath } from 'next/cache';
 import { regenerateCsrfToken, validateCsrfToken } from '@/_lib/csrf';
 
@@ -39,7 +39,7 @@ export async function updateUser(
     const sessionUser = await getUser();
     if (!sessionUser || !sessionUser?.id) return redirect('/');
 
-    const emailInUse = await UserRepository.findByEmailActive(email);
+    const emailInUse = await userRepository.findByEmailActive(email);
 
     if (emailInUse && emailInUse.id !== sessionUser.id) return { errors: { email: ['This email address is already in use.'] } };
 
@@ -75,7 +75,7 @@ export async function updateUser(
 
     if (Object.keys(dataToUpdate).length === 0) return { message: 'No changes made.' };
 
-    await UserRepository.updateByIdUserActive(sessionUser.id, dataToUpdate);
+    await userRepository.updateByIdUserActive(sessionUser.id, dataToUpdate);
 
     revalidatePath('/dashboard/settings/profile');
 

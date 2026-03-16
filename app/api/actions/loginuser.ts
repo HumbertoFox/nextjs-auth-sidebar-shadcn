@@ -4,7 +4,7 @@ import { FormStateLoginUser, signInSchema } from '@/_lib/definitions';
 import { compare } from 'bcrypt-ts';
 import { createSession } from '@/_lib/session';
 import z from 'zod';
-import { UserRepository } from '@/_lib/userrepository';
+import { userRepository } from '@/_lib/userrepository';
 import { regenerateCsrfToken, validateCsrfToken } from '@/_lib/csrf';
 import { headers } from 'next/headers';
 import { checkLoginRateLimit, resetLoginRateLimit } from '@/_lib/ratelimit';
@@ -41,7 +41,7 @@ export async function loginUser(
     }
 
     try {
-        const user = await UserRepository.findByEmailActive(email);
+        const user = await userRepository.findByEmailActive(email);
 
         if (!user) return { warning: 'Invalid email or password' };
 

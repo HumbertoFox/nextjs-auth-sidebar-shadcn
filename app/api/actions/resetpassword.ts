@@ -3,8 +3,8 @@
 import { regenerateCsrfToken, validateCsrfToken } from '@/_lib/csrf';
 import { FormStatePasswordReset, passwordResetSchema } from '@/_lib/definitions';
 import { hashToken } from '@/_lib/tokenutils';
-import { UserRepository } from '@/_lib/userrepository';
-import { VerificationTokenRepository } from '@/_lib/verificationtokenrepository';
+import { userRepository } from '@/_lib/userrepository';
+import { verificationTokenRepository } from '@/_lib/verificationtokenrepository';
 import { hash } from 'bcrypt-ts';
 import z from 'zod';
 
@@ -29,7 +29,7 @@ export async function resetPassword(
 
     const hashedToken = hashToken(token);
 
-    const tokenRecord = await VerificationTokenRepository.findValidTokenOnly(hashedToken);
+    const tokenRecord = await verificationTokenRepository.findValidTokenOnly(hashedToken);
 
     if (!tokenRecord) return { warning: 'Invalid or expired token.' };
 
@@ -37,9 +37,9 @@ export async function resetPassword(
 
     const hashedPassword = await hash(password, 12);
 
-    await UserRepository.updatePasswordByEmail(email, hashedPassword);
+    await userRepository.updatePasswordByEmail(email, hashedPassword);
 
-    await VerificationTokenRepository.delete(email, hashedToken);
+    await verificationTokenRepository.delete(email, hashedToken);
 
     await regenerateCsrfToken();
 

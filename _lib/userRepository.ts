@@ -42,7 +42,7 @@ const USER_PUBLIC_COLUMNS = `
     updated_at
 `;
 
-export const UserRepository = {
+export const userRepository = {
     async findPublicById(
         id: string
     ) {

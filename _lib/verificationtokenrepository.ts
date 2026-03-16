@@ -1,7 +1,7 @@
 import pool from '@/_lib/db';
 import { VerificationToken } from '@/_types';
 
-export const VerificationTokenRepository = {
+export const verificationTokenRepository = {
     async findByIdentifier(
         identifier: string
     ) {
