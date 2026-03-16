@@ -24,7 +24,7 @@ export async function handleEmailVerification(
 
     const isCheckedUserEmail = await UserRepository.findByEmail(email);
 
-    if (isCheckedUserEmail?.deleted_at) return { error: 'Email already verified!' };
+    if (isCheckedUserEmail?.email_verified) return { error: 'Email already verified!' };
 
     const hashedToken = hashToken(rawToken);
     const tokenExisting = await VerificationTokenRepository.findValidToken(email, hashedToken);

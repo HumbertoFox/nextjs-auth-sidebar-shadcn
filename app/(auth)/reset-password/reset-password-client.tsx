@@ -74,6 +74,7 @@ export default function ResetPasswordClient({
                         />
                         {state?.errors?.token?.[0] && <InputError message={state.errors.token[0]} />}
                     </div>
+                    
                     <div className="grid gap-2">
                         <Label htmlFor="password">Password</Label>
                         <div className="relative">

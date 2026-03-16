@@ -29,16 +29,14 @@ export async function loginUser(
 
     const requestHeaders = await headers();
     const forwarded = requestHeaders.get('x-forwarded-for');
-    const ip = forwarded
-        ? forwarded.split(',')[0].trim()
-        : (requestHeaders.get('x-real-ip') ?? 'unknown');
- 
+    const ip = forwarded ? forwarded.split(',')[0].trim() : (requestHeaders.get('x-real-ip') ?? 'unknown');
+
     const rateLimit = checkLoginRateLimit(ip, email);
- 
+
     if (!rateLimit.allowed) {
         const secs = rateLimit.retryAfterSeconds;
         const timeLabel = secs < 60 ? `${secs} second${secs !== 1 ? 's' : ''}` : `${Math.ceil(secs / 60)} minute${Math.ceil(secs / 60) !== 1 ? 's' : ''}`;
- 
+
         return { warning: `Too many login attempts. Please try again in ${timeLabel}.` };
     }
 

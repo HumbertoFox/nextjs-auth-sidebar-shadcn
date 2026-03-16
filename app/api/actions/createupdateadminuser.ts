@@ -1,6 +1,6 @@
 'use server';
 
-import { put, del } from '@vercel/blob';
+import { del, put } from '@vercel/blob';
 import { FormStateCreateUpdateAdminUser, getSignUpUpdateSchema } from '@/_lib/definitions';
 import * as bcrypt from 'bcrypt-ts';
 import z from 'zod';
@@ -122,10 +122,12 @@ export async function createUpdateAdminUser(
             const existingUser = await UserRepository.findByEmail(email);
             if (existingUser) return { errors: { email: ['This email address is already in use!'] } };
 
+            if (!hashedPassword) return { errors: { password: ['The password must be at least 8 characters long.'] } };
+
             const newUser = await UserRepository.create({
                 name,
                 email,
-                password: hashedPassword!,
+                password: hashedPassword,
                 role,
             });
 
@@ -135,7 +137,6 @@ export async function createUpdateAdminUser(
             }
 
             revalidatePaths(newUser.role);
-
         }
 
         await regenerateCsrfToken();

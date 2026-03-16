@@ -178,7 +178,7 @@ export const UserRepository = {
             ORDER BY created_at
             LIMIT $1
             OFFSET $2
-            `,
+        `,
             [
                 pageSize,
                 offset
@@ -217,7 +217,7 @@ export const UserRepository = {
                 $4,
                 $5
             )
-            RETURNING ${USER_PUBLIC_COLUMNS}
+            RETURNING id
         `,
             [
                 data.name,
@@ -258,7 +258,7 @@ export const UserRepository = {
             WHERE id = $1
             AND deleted_at IS NULL
             RETURNING ${USER_PUBLIC_COLUMNS}
-            `,
+        `,
             [
                 id,
                 ...values
@@ -278,7 +278,7 @@ export const UserRepository = {
             SET ${setClause}
             WHERE id = $1
             RETURNING ${USER_PUBLIC_COLUMNS}
-            `,
+        `,
             [
                 id,
                 ...values
@@ -296,7 +296,7 @@ export const UserRepository = {
             SET password = $1
             WHERE id = $2
             RETURNING ${USER_PUBLIC_COLUMNS}
-            `,
+        `,
             [
                 password,
                 id

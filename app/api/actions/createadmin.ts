@@ -83,7 +83,6 @@ export async function createAdmin(
         }
 
         await createSession(user.id, user.role);
-
         await regenerateCsrfToken();
 
         return {
