@@ -22,16 +22,24 @@ export default async function UserPage() {
             text: 'User'
         },
     ];
+    const borderColors = [
+        'border-emerald-500',
+        'border-violet-500',
+        'border-rose-500'
+    ];
     return (
         <>
             <DashboardSidebarHeader items={breadcrumbItems} />
-            <div className="flex flex-1 flex-col gap-4 p-4">
+            <div className="flex flex-1 flex-col gap-4 p-2">
                 <div className="grid auto-rows-min gap-4 md:grid-cols-3">
                     {[...Array(3)].map((_, index) => (
-                        <div key={index} className="bg-muted/50 aspect-video rounded-xl" />
+                        <div
+                            key={index}
+                            className={`bg-muted/50 aspect-video rounded-xl border ${borderColors[index % borderColors.length]}`}
+                        />
                     ))}
                 </div>
-                <div className="bg-muted/50 min-h-screen flex-1 rounded-xl md:min-h-min" />
+                <div className="bg-muted/50 min-h-screen flex-1 rounded-xl md:min-h-min border border-sky-500" />
             </div>
         </>
     );
