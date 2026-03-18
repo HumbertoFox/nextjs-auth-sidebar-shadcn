@@ -78,3 +78,38 @@ DO $$ BEGIN
             USING (false);
     END IF;
 END $$;
+
+-- ============================================================================
+-- GRANT operações em rate_limits → somente backend
+-- ============================================================================
+REVOKE ALL ON rate_limits FROM PUBLIC;
+GRANT SELECT, INSERT, UPDATE, DELETE ON rate_limits TO app_backend_role;
+
+-- ============================================================================
+-- RLS: bloqueia acesso direto à tabela rate_limits
+-- ============================================================================
+ALTER TABLE rate_limits ENABLE ROW LEVEL SECURITY;
+
+DO $$ BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_policies
+        WHERE tablename = 'rate_limits' AND policyname = 'policy_rate_limits_backend'
+    ) THEN
+        CREATE POLICY policy_rate_limits_backend
+            ON rate_limits FOR ALL
+            TO app_backend_role
+            USING (true);
+    END IF;
+END $$;
+
+DO $$ BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_policies
+        WHERE tablename = 'rate_limits' AND policyname = 'policy_rate_limits_public'
+    ) THEN
+        CREATE POLICY policy_rate_limits_public
+            ON rate_limits FOR SELECT
+            TO PUBLIC
+            USING (false);
+    END IF;
+END $$;

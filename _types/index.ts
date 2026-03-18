@@ -145,5 +145,5 @@ export type VerificationToken = {
 
 export type RateLimitEntry = {
     count: number;
-    resetAt: number;
+    reset_at: Date;
 }

@@ -31,7 +31,7 @@ export async function loginUser(
     const forwarded = requestHeaders.get('x-forwarded-for');
     const ip = forwarded ? forwarded.split(',')[0].trim() : (requestHeaders.get('x-real-ip') ?? 'unknown');
 
-    const rateLimit = checkLoginRateLimit(ip, email);
+    const rateLimit = await checkLoginRateLimit(ip, email);
 
     if (!rateLimit.allowed) {
         const secs = rateLimit.retryAfterSeconds;
@@ -47,9 +47,14 @@ export async function loginUser(
 
         const isPasswordValid = await compare(password, user.password);
 
-        if (!isPasswordValid) return { warning: 'Invalid email or password' };
+        if (!isPasswordValid) {
+            if (rateLimit.warning === 'will-be-blocked') {
+                return { warning: 'Invalid email or password. Warning: one more failed attempt will block your account for 10 minutes.' };
+            }
+            return { warning: 'Invalid email or password' };
+        }
 
-        resetLoginRateLimit(email);
+        await resetLoginRateLimit(email);
 
         await createSession(user.id, user.role);
 

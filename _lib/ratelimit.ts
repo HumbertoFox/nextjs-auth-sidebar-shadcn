@@ -1,59 +1,63 @@
-import { RateLimitEntry } from '@/_types';
+import { rateLimitRepository } from '@/_lib/ratelimitrepositorys';
 
-const ipStore = new Map<string, RateLimitEntry>();
-const emailStore = new Map<string, RateLimitEntry>();
 
-function prune(store: Map<string, RateLimitEntry>) {
-    const now = Date.now();
-    for (const [key, entry] of store) {
-        if (entry.resetAt <= now) store.delete(key);
-    }
-}
+const LOGIN_MAX_ATTEMPTS = 5;
+const LOGIN_WINDOW_MS = 10 * 60_000; // 10 minutos
 
-function check(
-    store: Map<string, RateLimitEntry>,
+async function check(
     key: string,
     maxRequests: number,
     windowMs: number
-): { allowed: boolean; retryAfterSeconds: number } {
-    prune(store);
+): Promise<{ allowed: boolean; retryAfterSeconds: number; count: number }> {
+    const now = new Date();
+    const resetAt = new Date(Date.now() + windowMs);
 
-    const now = Date.now();
-    const entry = store.get(key);
+    const entry = await rateLimitRepository.incrementAndCheck(key, resetAt);
 
-    if (!entry || entry.resetAt <= now) {
-        store.set(key, { count: 1, resetAt: now + windowMs });
-        return { allowed: true, retryAfterSeconds: 0 };
+    if (entry.count > maxRequests) {
+        const retryAfterSeconds = Math.ceil((entry.reset_at.getTime() - now.getTime()) / 1000);
+        return { allowed: false, retryAfterSeconds, count: entry.count };
     }
 
-    if (entry.count >= maxRequests) {
-        const retryAfterSeconds = Math.ceil((entry.resetAt - now) / 1000);
-        return { allowed: false, retryAfterSeconds };
-    }
-
-    entry.count += 1;
-    return { allowed: true, retryAfterSeconds: 0 };
+    return { allowed: true, retryAfterSeconds: 0, count: entry.count };
 }
 
-export function checkLoginRateLimit(
+export async function checkLoginRateLimit(
     ip: string,
     email: string
-): { allowed: boolean; retryAfterSeconds: number; reason: 'ip' | 'email' | null } {
-    const byIp = check(ipStore, ip, 5, 60_000);
+): Promise<{
+    allowed: boolean;
+    retryAfterSeconds: number;
+    reason: 'ip' | 'email' | null;
+    warning?: 'will-be-blocked';
+}> {
+    const byIp = await check(`login:ip:${ip}`, LOGIN_MAX_ATTEMPTS, LOGIN_WINDOW_MS);
     if (!byIp.allowed) {
         return { allowed: false, retryAfterSeconds: byIp.retryAfterSeconds, reason: 'ip' };
     }
 
-    const byEmail = check(emailStore, email.toLowerCase(), 10, 15 * 60_000);
+    const byEmail = await check(`login:email:${email.toLowerCase()}`, LOGIN_MAX_ATTEMPTS, LOGIN_WINDOW_MS);
     if (!byEmail.allowed) {
         return { allowed: false, retryAfterSeconds: byEmail.retryAfterSeconds, reason: 'email' };
     }
 
-    return { allowed: true, retryAfterSeconds: 0, reason: null };
+    // Na quarta tentativa exibe aviso (uma antes do bloqueio)
+    const isLastWarning = byEmail.count === LOGIN_MAX_ATTEMPTS - 1;
+
+    return {
+        allowed: true,
+        retryAfterSeconds: 0,
+        reason: null,
+        ...(isLastWarning && { warning: 'will-be-blocked' }),
+    };
 }
 
-export function resetLoginRateLimit(
+export async function resetLoginRateLimit(email: string): Promise<void> {
+    await rateLimitRepository.deleteByKey(`login:email:${email.toLowerCase()}`);
+}
+
+export async function checkForgotPasswordRateLimit(
     email: string
-) {
-    emailStore.delete(email.toLowerCase());
+): Promise<{ allowed: boolean; retryAfterSeconds: number }> {
+    return check(`forgot:email:${email.toLowerCase()}`, 3, 15 * 60_000);
 }
