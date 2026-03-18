@@ -12,7 +12,7 @@ export default function SettingsPageClient({
     const getInitials = useInitials();
     return (
         <>
-            <div className="flex flex-1 gap-4 cursor-default">
+            <div className="flex flex-1 flex-col lg:flex-row gap-4 cursor-default">
                 <div className="size-40 rounded-full overflow-hidden border border-gray-300">
                     <Avatar className="size-full overflow-hidden rounded-full">
                         {user.avatar ? (

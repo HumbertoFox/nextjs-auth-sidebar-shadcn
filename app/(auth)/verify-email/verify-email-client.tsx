@@ -7,6 +7,8 @@ import { Button } from '@/_components/ui/button';
 import { useSearchParams } from 'next/navigation';
 import { handleEmailVerification } from '@/app/api/actions/handleemailverification';
 import { csrfTokenProps } from '@/_types';
+import { Label } from '@/_components/ui/label';
+import { Input } from '@/_components/ui/input';
 
 export default function VerifyEmailClient({
     csrfToken
@@ -48,18 +50,35 @@ export default function VerifyEmailClient({
 
             <form
                 onSubmit={submit}
-                className="space-y-6 text-center"
+                className="w-full max-w-xs flex flex-col gap-6 mx-auto"
             >
-                <input
-                    type="hidden"
-                    name="email"
-                    value={email ?? ''}
-                />
-                <input
-                    type="hidden"
-                    name="token"
-                    value={token ?? ''}
-                />
+                <div className="grid gap-6">
+                    <div className="grid gap-2">
+                        <Label htmlFor="email">Email</Label>
+                        <Input
+                            id="email"
+                            type="email"
+                            name="email"
+                            value={email ?? ''}
+                            readOnly
+                            required
+                            className="block text-gray-400 w-full cursor-default"
+                        />
+                    </div>
+
+                    <div className="grid gap-2">
+                        <Label htmlFor="token">Token</Label>
+                        <Input
+                            id="token"
+                            type="text"
+                            name="token"
+                            value={token ?? ''}
+                            readOnly
+                            required
+                            className="block w-full text-gray-400 cursor-default"
+                        />
+                    </div>
+                </div>
                 <Button
                     type="submit"
                     variant="secondary"

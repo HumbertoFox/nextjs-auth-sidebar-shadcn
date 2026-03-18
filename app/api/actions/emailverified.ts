@@ -5,6 +5,7 @@ import { sendEmailVerification } from '@/_lib/mail';
 import crypto from 'crypto';
 import { verificationTokenRepository } from '@/_lib/verificationtokenrepositorys';
 import { userRepository } from '@/_lib/userrepositorys';
+import { hashToken } from '@/_lib/tokenutils';
 
 export async function emailVerifiedChecked() {
     const sessionUser = await getUser();
@@ -21,17 +22,16 @@ export async function emailVerifiedChecked() {
     if (tokenExisting && new Date() > tokenExisting.expires_at) return 'verification-link-sent';
 
     if (!tokenExisting) {
-        const token = crypto.randomBytes(32).toString('hex');
-
+        const rawToken = crypto.randomBytes(32).toString('hex');
         const expires_at = new Date(Date.now() + 24 * 60 * 60 * 1000);
 
         await verificationTokenRepository.create({
             identifier: email,
-            token,
+            token: hashToken(rawToken),
             expires_at
         });
 
-        const verifyLink = `${process.env.NEXT_URL}/verify-email?token=${token}&email=${email}`;
+        const verifyLink = `${process.env.NEXT_URL}/verify-email?token=${rawToken}&email=${email}`;
         await sendEmailVerification(email, verifyLink);
 
         return 'verification-link-sent';

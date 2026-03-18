@@ -74,7 +74,7 @@ export function LoginClient({
                             type="email"
                             ref={emailRef}
                             required
-                            disabled={Boolean(emailFromParams)}
+                            readOnly={Boolean(emailFromParams)}
                             autoFocus
                             tabIndex={1}
                             autoComplete="email"
