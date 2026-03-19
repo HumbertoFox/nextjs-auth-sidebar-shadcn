@@ -145,13 +145,13 @@ npm run db:migrate
 
 - Cria ENUM `user_role` (`ADMIN`, `USER`).
 
-- Cria tabelas `users` e `verification_tokens`.
+- Cria tabelas `users`, `verification_tokens` e `rate_limits`.
 
 - Cria views públicas e ativas para acesso seguro.
 
 - Cria função `update_updated_at` e `trigger_update_users_updated_at` para atualizar timestamps automaticamente.
 
-- Protege a tabela `users`, liberando acesso somente às views.
+- Protege a tabela `users`, `verification_tokens` e `rate_limits`, liberando acesso somente às views.
 
 ---
 
@@ -178,7 +178,7 @@ npm run make:migration "Add new Profiles Table"
 - Arquivo gerado:
 
 ```pgsql
-007_20260208124500_add_new_profiles_table.sql
+009_20260208124500_add_new_profiles_table.sql
 ```
 
 **Observações:**
@@ -232,13 +232,15 @@ npm run dev
 
 ### Modelo de Dados
 
-**Tabelas principais:** `users`, `verification_tokens`
+**Tabelas principais:** `users`, `verification_tokens`, `rate_limits`
 
 **ENUM:** `user_role` → `ADMIN`, `USER`
 
 **Relação lógica:** `users.email` ↔ `verification_tokens.identifier`
 
 **Trigger:** Atualiza `updated_at` em users automaticamente.
+
+**Rate limiting:** Tentativas de login e recuperação de senha são persistidas na tabela `rate_limits` por IP e e-mail, funcionando em múltiplas instâncias.
 
 Para detalhes de criação de tabelas, views e triggers, consulte os scripts em `database/migrations` e `_lib/db.ts`.
 

@@ -8,6 +8,7 @@ import { verificationTokenRepository } from '@/_lib/verificationtokenrepositorys
 import z from 'zod';
 import { regenerateCsrfToken, validateCsrfToken } from '@/_lib/csrf';
 import { hashToken } from '@/_lib/tokenutils';
+import { checkForgotPasswordRateLimit } from '@/_lib/ratelimit';
 
 export async function forgotPassword(
     _: FormStatePasswordForgot,
@@ -23,6 +24,13 @@ export async function forgotPassword(
     if (!validatedFields.success) return { errors: z.flattenError(validatedFields.error).fieldErrors };
 
     const { email } = validatedFields.data;
+
+    const rateLimit = await checkForgotPasswordRateLimit(email);
+    if (!rateLimit.allowed) {
+        const secs = rateLimit.retryAfterSeconds;
+        const timeLabel = secs < 60 ? `${secs} second${secs !== 1 ? 's' : ''}` : `${Math.ceil(secs / 60)} minute${Math.ceil(secs / 60) !== 1 ? 's' : ''}`;
+        return { error: `Too many attempts. Please try again in ${timeLabel}.` };
+    }
 
     const user = await userRepository.findByEmail(email);
 

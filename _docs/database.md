@@ -21,7 +21,9 @@ O objetivo é organizar, versionar e aplicar alterações no banco de dados de f
 
 006_create_verification_tokens.sql → Cria tabela verification_tokens com índices.
 
-007_create_permissions.sql → Cria role app_backend_role, permissões via GRANT/REVOKE e políticas RLS.
+007_create_ratelimits.sql → Cria tabela rate_limits com índice para rate limiting persistido no banco.
+
+008_create_permissions.sql → Cria role app_backend_role, permissões via GRANT/REVOKE e políticas RLS para as tabelas users, verification_tokens e rate_limits.
 
 **Ordem das migrations:**
 
@@ -46,7 +48,7 @@ Os arquivos são executados em ordem alfabética/numerada, garantindo consistên
 
 - Exemplo de arquivo gerado:
 
-`007_20260208124500_add_profiles.sql`
+`009_20260208124500_add_profiles.sql`
 
 **Observações importantes:**
 
@@ -99,7 +101,7 @@ Os arquivos são executados em ordem alfabética/numerada, garantindo consistên
 
 **1. Nomear sequencialmente:**
 
-Prefixo numérico (`008`, `009`) + timestamp + descrição (opcional).
+Prefixo numérico (`009`, `010`) + timestamp + descrição (opcional).
 
 **2. Idempotência:**
 
@@ -159,9 +161,9 @@ Cada alteração significativa deve ter uma migration própria.
 
 - Enum: `user_role` → `ADMIN`, `USER`
 
-- Tabelas principais: `users`, `verification_tokens`, `schema_migrations`
+- Tabelas principais: `users`, `verification_tokens`, `rate_limits`, `schema_migrations`
 
-- Índices: `idx_users_deleted_at`, `idx_verification_tokens_expires_at`, `idx_verification_tokens_identifier`
+- Índices: `idx_users_deleted_at`, `idx_verification_tokens_expires_at`, `idx_verification_tokens_identifier`, `idx_rate_limits_reset_at`
 
 - Função: `update_updated_at` compara **NEW** com **OLD** e só atualiza se houver mudança real
 
@@ -169,6 +171,6 @@ Cada alteração significativa deve ter uma migration própria.
 
 - Views públicas (sem password): `users_public`, `users_admin_public`, `users_public_active`
 
-- Role: `app_backend_role` — acesso exclusivo à tabela `users`, `users_active` e `verification_tokens`
+- Role: `app_backend_role` — acesso exclusivo à tabela `users`, `users_active`, `verification_tokens` e `rate_limits`
 
-- RLS: Row Level Security habilitado na tabela users — PUBLIC só acessa via views
+- RLS: Row Level Security habilitado na tabela `users` e `rate_limits` — PUBLIC só acessa via views
