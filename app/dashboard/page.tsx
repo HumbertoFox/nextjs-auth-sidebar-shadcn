@@ -38,7 +38,7 @@ export default function DashboardPage() {
     return (
         <>
             <DashboardSidebarHeader items={breadcrumbItems} />
-            <div className="flex flex-1 flex-col gap-4 p-2">
+            <div className="flex flex-1 flex-col-reverse lg:flex-col gap-4 p-2">
                 <div className="bg-muted/50 min-h-screen flex-1 rounded-xl md:min-h-min border border-emerald-500" />
                 <div className="grid auto-rows-min gap-4 md:grid-cols-3">
                     {cards.map((card, index) => {
