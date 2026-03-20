@@ -6,7 +6,7 @@ export default function SettingsLayout({
 }: PropsWithChildren) {
     return (
         <>
-            <div className="flex flex-col lg:flex-row lg:space-y-0">
+            <div className="flex">
                 <AuthSplitLayoutClient />
                 <section className="w-full flex justify-end items-center min-h-screen">
                     {children}

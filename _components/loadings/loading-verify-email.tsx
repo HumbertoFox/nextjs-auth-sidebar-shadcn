@@ -4,7 +4,7 @@ import { Skeleton } from '@/_components/ui/skeleton';
 
 export default function LoadingVerifyEmail() {
     return (
-        <div className="flex flex-col items-center justify-center gap-6 w-full lg:w-2/4 max-[1440px] min-h-screen space-y-3">
+        <div className="flex flex-col items-center justify-center gap-6 w-full 2xl:w-2/4 max-[1440px] min-h-screen space-y-3">
             <Skeleton className="size-10 rounded-full" />
             <div className="grid justify-items-center gap-4">
                 <Skeleton className="h-5 w-40" />
