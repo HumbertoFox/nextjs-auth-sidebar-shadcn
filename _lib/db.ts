@@ -12,8 +12,7 @@ const DB_NAME = dbUrl.pathname.replace(/^\//, '');
 async function createDatabaseIfNotExists() {
     if (isProduction) return;
 
-    if (!DATABASE_URL) throw new Error('❌ DATABASE_URL not defined in .env');
-    const tmpUrl = new URL(DATABASE_URL);
+    const tmpUrl = new URL(DATABASE_URL!);
     tmpUrl.pathname = '/postgres';
     const client = new Client({
         connectionString: tmpUrl.toString(),
@@ -44,6 +43,27 @@ async function createDatabaseIfNotExists() {
     await client.end();
 }
 
+async function setBackendRole(client: pkg.PoolClient) {
+    try {
+        const res = await client.query(`
+            SELECT 1
+            FROM pg_roles
+            WHERE rolname = 'app_backend_role'
+        `);
+
+        if (res.rowCount && res.rowCount > 0) {
+            await client.query('SET ROLE app_backend_role');
+        }
+    } catch {
+        // Em ambientes gerenciados (Neon, Supabase) o SET ROLE pode não ser
+        // suportado. O banco continua funcionando via permissões diretas ao
+        // usuário da conexão. Rode db:migrate para aplicar o GRANT correto.
+        if (!isProduction) {
+            console.warn('⚠️  SET ROLE app_backend_role not available in this environment.');
+        }
+    }
+}
+
 await createDatabaseIfNotExists();
 
 const pool = new Pool({
@@ -52,25 +72,7 @@ const pool = new Pool({
 });
 
 pool.on('connect', (client) => {
-    client
-        .query(`
-            SELECT 1
-            FROM pg_roles
-            WHERE rolname = 'app_backend_role'
-        `)
-        .then((res) => {
-            if (res.rowCount && res.rowCount > 0) {
-                return client.query('SET ROLE app_backend_role');
-            }
-        })
-        .catch(() => {
-            // Em ambientes gerenciados (Neon, Supabase) o SET ROLE pode não ser
-            // suportado. O banco continua funcionando via permissões diretas ao
-            // usuário da conexão. Rode db:migrate para aplicar o GRANT correto.
-            if (!isProduction) {
-                console.warn('⚠️  SET ROLE app_backend_role not available in this environment.');
-            }
-        });
+    setBackendRole(client);
 });
 
 export default pool;
