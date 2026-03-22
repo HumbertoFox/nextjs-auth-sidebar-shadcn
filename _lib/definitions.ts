@@ -38,7 +38,7 @@ export function getSignUpUpdateSchema(formData: FormData) {
             .max(254, 'Email must be at most 254 characters long.'),
         password: isEdit
             ? z.string().max(72, 'The password must be at most 72 characters long.').optional()
-            : z.string().min(8, 'The password must be at least 8 characters long.').max(72, 'The password must be at most 72 characters long.'),
+            : passwordSchema,
         password_confirmation: isEdit
             ? z.string().max(72, 'The password must be at most 72 characters long.').optional()
             : z.string().min(1, 'Please confirm your password.').max(72, 'The password must be at most 72 characters long.'),
@@ -63,7 +63,7 @@ export const signInSchema = z.object({
         .toLowerCase()
         .max(254, 'Email must be at most 254 characters long.'),
     password: z.string()
-        .min(8, 'The password must be longer than 8 characters.')
+        .min(1, 'The password required.')
         .max(72, 'The password must be less than 72 characters long.')
 })
 
@@ -87,9 +87,7 @@ export const passwordUpdateSchema = z.object({
     current_password: z.string()
         .min(8, 'The password must be at least 8 characters long.')
         .max(72, 'The password must be at most 72 characters long.'),
-    password: z.string()
-        .min(8, 'The password must be at least 8 characters long.')
-        .max(72, 'The password must be at most 72 characters long.'),
+    password: passwordSchema,
     password_confirmation: z.string()
         .min(8, 'Please confirm your password.')
         .max(72, 'The password must be at most 72 characters long.')
@@ -102,9 +100,7 @@ export const passwordUpdateSchema = z.object({
 export const passwordResetSchema = z.object({
     token: z.string()
         .regex(/^[a-f0-9]{64}$/, 'Invalid or expired token.'),
-    password: z.string()
-        .min(8, 'The password must be longer than 8 characters.')
-        .max(72, 'The password must be at most 72 characters long.'),
+    password: passwordSchema,
     password_confirmation: z.string()
         .min(1, 'Please confirm your password.')
         .max(72, 'The password must be at most 72 characters long.')
