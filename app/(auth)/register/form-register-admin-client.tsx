@@ -12,6 +12,7 @@ import { handleImageChange } from '@/_lib/handleimagechange';
 import Image from 'next/image';
 import { RegisterFormProps } from '@/_types';
 import { useRouter } from 'next/navigation';
+import { PasswordChecklist } from '@/_components/password-checklist';
 
 export default function RegisterAdminClient({
     TitleIntl,
@@ -185,6 +186,7 @@ export default function RegisterAdminClient({
                                 {showPassword ? <Eye /> : <EyeClosed />}
                             </button>
                         </div>
+                        <PasswordChecklist password={data.password} />
                         {state?.errors?.password?.[0] && <InputError message={state.errors.password[0]} />}
                     </div>
 

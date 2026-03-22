@@ -147,3 +147,7 @@ export type RateLimitEntry = {
     count: number;
     reset_at: Date;
 }
+
+export type PasswordChecklistProps = {
+    password: string;
+}
