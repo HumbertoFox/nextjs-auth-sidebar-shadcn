@@ -45,31 +45,33 @@ async function createDatabaseIfNotExists() {
 
 await createDatabaseIfNotExists();
 
+// Substitui sslmode=require por verify-full para evitar aviso de deprecação do pg
+const connectionString = isProduction
+    ? DATABASE_URL.replace('sslmode=require', 'sslmode=verify-full')
+    : DATABASE_URL;
+
 const basePool = new Pool({
-    connectionString: DATABASE_URL,
-    ssl: isProduction ? true : false,
+    connectionString,
+    ssl: isProduction ? { rejectUnauthorized: true } : false,
 });
 
-// Verifica uma vez se a role existe para evitar query extra a cada conexão
+// Cache — verifica a role apenas uma vez usando o primeiro cliente disponível
 let backendRoleExists: boolean | null = null;
 
-async function checkRoleExists(): Promise<boolean> {
+async function resolveBackendRole(client: pkg.PoolClient): Promise<boolean> {
     if (backendRoleExists !== null) return backendRoleExists;
+
     try {
-        const client = await basePool.connect();
-        try {
-            const res = await client.query(`
-                SELECT 1
-                FROM pg_roles
-                WHERE rolname = 'app_backend_role'
-            `);
-            backendRoleExists = (res.rowCount ?? 0) > 0;
-        } finally {
-            client.release();
-        }
+        const res = await client.query(`
+            SELECT 1
+            FROM pg_roles
+            WHERE rolname = 'app_backend_role'
+        `);
+        backendRoleExists = (res.rowCount ?? 0) > 0;
     } catch {
         backendRoleExists = false;
     }
+
     return backendRoleExists;
 }
 
@@ -80,7 +82,7 @@ const pool = {
     ): Promise<pkg.QueryResult<T>> {
         const client = await basePool.connect();
         try {
-            const roleExists = await checkRoleExists();
+            const roleExists = await resolveBackendRole(client);
             if (roleExists) {
                 try {
                     await client.query('SET ROLE app_backend_role');
