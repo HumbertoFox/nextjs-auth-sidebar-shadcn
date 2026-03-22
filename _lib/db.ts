@@ -47,7 +47,7 @@ await createDatabaseIfNotExists();
 
 const basePool = new Pool({
     connectionString: DATABASE_URL,
-    ssl: isProduction ? { rejectUnauthorized: false } : false,
+    ssl: isProduction ? true : false,
 });
 
 // Verifica uma vez se a role existe para evitar query extra a cada conexão
