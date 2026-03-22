@@ -78,9 +78,7 @@ export const updateUserSchema = z.object({
 })
 
 export const deleteUserSchema = z.object({
-    password: z.string()
-        .min(8, 'The password must be at least 8 characters long.')
-        .max(72, 'The password must be at most 72 characters long.')
+    password: passwordSchema
 })
 
 export const passwordUpdateSchema = z.object({

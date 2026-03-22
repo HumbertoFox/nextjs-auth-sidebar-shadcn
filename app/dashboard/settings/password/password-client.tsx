@@ -9,6 +9,7 @@ import { Label } from '@/_components/ui/label';
 import { Eye, EyeClosed } from 'lucide-react';
 import { updatePassword } from '@/app/api/actions/updatepassword';
 import { csrfTokenProps } from '@/_types';
+import { PasswordChecklist } from '@/_components/password-checklist';
 
 export default function PasswordPageClient({
     csrfToken
@@ -121,6 +122,7 @@ export default function PasswordPageClient({
                                 {showPassword ? <Eye /> : <EyeClosed />}
                             </button>
                         </div>
+                        <PasswordChecklist password={data.password} />
                         {state?.errors?.password?.[0] && <InputError message={state.errors.password[0]} />}
                     </div>
 

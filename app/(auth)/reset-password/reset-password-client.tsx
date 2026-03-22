@@ -10,6 +10,7 @@ import { useSearchParams } from 'next/navigation';
 import { resetPassword } from '@/app/api/actions/resetpassword';
 import { csrfTokenProps, ResetPasswordForm } from '@/_types';
 import { TextLink } from '@/_components/text-link';
+import { PasswordChecklist } from '@/_components/password-checklist';
 
 export default function ResetPasswordClient({
     csrfToken
@@ -74,7 +75,7 @@ export default function ResetPasswordClient({
                         />
                         {state?.errors?.token?.[0] && <InputError message={state.errors.token[0]} />}
                     </div>
-                    
+
                     <div className="grid gap-2">
                         <Label htmlFor="password">Password</Label>
                         <div className="relative">
@@ -99,6 +100,7 @@ export default function ResetPasswordClient({
                                 {showPassword ? <Eye /> : <EyeClosed />}
                             </button>
                         </div>
+                        <PasswordChecklist password={data.password} />
                         {state?.errors?.password?.[0] && <InputError message={state.errors.password[0]} />}
                     </div>
 
