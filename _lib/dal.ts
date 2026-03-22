@@ -9,11 +9,13 @@ export const getUser = cache(async () => {
     if (!session) return null;
 
     try {
-        const user: UserDetailsProps = await userRepository.findPublicById(session.userId);
+        const user = await userRepository.findPublicById(session.userId);
 
         if (!user) return null;
 
-        return user;
+        const { password: _, ...safeUser } = user;
+
+        return safeUser as UserDetailsProps;
     } catch (error) {
         console.log('Failed to fetch user', error);
         return null;
