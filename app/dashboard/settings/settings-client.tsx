@@ -28,9 +28,9 @@ export default function SettingsPageClient({
                     </Avatar>
                 </div>
                 <div className="flex flex-col justify-center gap-2 text-left leading-tight">
-                    <div>
+                    <div className="group">
                         <strong>ID : </strong>
-                        <span className="opacity-0 hover:opacity-100 duration-500 cursor-help">
+                        <span className="blur-sm group-hover:blur-none transition cursor-help">
                             {user.id}
                         </span>
                     </div>

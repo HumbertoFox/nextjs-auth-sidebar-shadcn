@@ -10,8 +10,9 @@ import { handleImageChange } from '@/_lib/handleimagechange';
 import Image from 'next/image';
 import { createUpdateAdminUser } from '@/app/api/actions/createupdateadminuser';
 import { RegisterFormUserProps, roleLabels, UserFormProps, UserRole } from '@/_types';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/_components/ui/select';
 import { useRouter } from 'next/navigation';
+import { PasswordChecklist } from '@/_components/password-checklist';
 
 export default function RegisterUpdateUserForm({
     user,
@@ -143,7 +144,7 @@ export default function RegisterUpdateUserForm({
                     </div>
 
                     {isEdit && (
-                        <div className="grid gap-2">
+                        <div className="grid gap-2 group">
                             <Label htmlFor="id">ID.</Label>
                             <Input
                                 id="id"
@@ -155,7 +156,7 @@ export default function RegisterUpdateUserForm({
                                 onChange={handleChange}
                                 disabled={pending}
                                 readOnly
-                                className="cursor-default"
+                                className="cursor-default blur-sm group-hover:blur-none transition"
                             />
                         </div>
                     )}
@@ -219,6 +220,7 @@ export default function RegisterUpdateUserForm({
                                 {showPassword ? <Eye /> : <EyeClosed />}
                             </button>
                         </div>
+                        <PasswordChecklist password={data.password} />
                         {state?.errors?.password?.[0] && <InputError message={state.errors.password[0]} />}
                     </div>
 
