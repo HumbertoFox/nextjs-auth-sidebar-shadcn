@@ -113,7 +113,7 @@ dimensão máxima (`512x512px`)
 
 Após o upload, o **Blob retorna uma URL pública**, que é armazenada no banco de dados no campo `avatar` do usuário.
 
-Para mais detalhes sobre o fluxo de upload, validações e configuração do storage, consulte o [Detalhes do Armazenamento de arquivos](_docs/storage.md).
+Para mais detalhes sobre o fluxo de upload, validações e configuração do storage, consulte o [Detalhes do Armazenamento de arquivos](_docs/STORAGE.md).
 
 ## Banco de Dados
 
@@ -125,7 +125,7 @@ O projeto possui scripts Node.js para gerenciar o banco de dados:
 
 `make-migration` → cria novos arquivos de migration com número sequencial e timestamp automático
 
-Para mais detalhes sobre cada migration, consulte o [Detalhes das Migrations](_docs/database.md).
+Para mais detalhes sobre cada migration, consulte o [Detalhes das Migrations](_docs/DATABASE.md).
 
 ### Inicializar Banco
 
