@@ -121,11 +121,9 @@ O projeto possui scripts Node.js para gerenciar o banco de dados:
 
 `reset.ts` → reseta o banco
 
-`migrate.ts` → aplica migrations
+`migrate.ts` → verifica se o banco existe, cria se necessário e aplica as migrations pendentes
 
 `make-migration` → cria novos arquivos de migration com número sequencial e timestamp automático
-
-Além disso, **se o banco não existir**, ele será criado automaticamente pelo `_lib/db.ts`.
 
 Para mais detalhes sobre cada migration, consulte o [Detalhes das Migrations](_docs/database.md).
 
@@ -140,6 +138,8 @@ npm run db:migrate
 ---
 
 **O que faz:**
+
+- Verifica se o banco existe e o cria automaticamente caso não exista.
 
 - Cria extensões PostgreSQL necessárias (`pgcrypto`, `citext`).
 
@@ -161,13 +161,13 @@ npm run db:migrate
 npm run make:migration "Descrição da migration"
 ```
 
-- Cria arquivo `.sql` na pasta `_database/migrations` com:
+Cria arquivo `.sql` na pasta `_database/migrations` com:
 
-Número sequencial automático
+- **Número sequencial automático**
 
-`**Timestamp automático**
+- **Timestamp automático**
 
-**Descrição opcional**, convertida para **snake_case e sem aspas**
+- **Descrição opcional**, convertida para **snake_case e sem aspas**
 
 Exemplo de uso:
 
@@ -226,8 +226,6 @@ npm run dev
 
 2. `npm run db:migrate` → recria tudo
 
-3. `npm run dev` → inicia o servidor Next.js
-
 ---
 
 ### Modelo de Dados
@@ -242,7 +240,7 @@ npm run dev
 
 **Rate limiting:** Tentativas de login e recuperação de senha são persistidas na tabela `rate_limits` por IP e e-mail, funcionando em múltiplas instâncias.
 
-Para detalhes de criação de tabelas, views e triggers, consulte os scripts em `database/migrations` e `_lib/db.ts`.
+Para detalhes de criação de tabelas, views e triggers, consulte os scripts em `_database/migrations`.
 
 ---
 

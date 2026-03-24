@@ -7,27 +7,25 @@ O objetivo é organizar, versionar e aplicar alterações no banco de dados de f
 
 ### Estrutura da Pasta
 
-000_reset.sql → Reseta o banco (drop triggers, functions, views, tables, enums, schema_migrations, extensões e role).
+`000_reset.sql` → Reseta o banco (drop triggers, functions, views, tables, enums, schema_migrations, extensões e role).
 
-001_init_extensions.sql → Cria extensões necessárias no PostgreSQL (pgcrypto, citext).
+`001_init_extensions.sql` → Cria extensões necessárias no PostgreSQL (`pgcrypto`, `citext`).
 
-002_create_enums.sql → Cria enums do sistema (user_role).
+`002_create_enums.sql` → Cria enums do sistema (`user_role`).
 
-003_create_users.sql → Cria tabela users com índices, comentários e suporte a soft delete.
+`003_create_users.sql` → Cria tabela `users` com índices, comentários e suporte a soft delete.
 
-004_create_views.sql → Cria views públicas e administrativas para usuários.
+`004_create_views.sql` → Cria views públicas e administrativas para usuários.
 
-005_create_triggers.sql → Cria função e trigger de atualização automática de updated_at.
+`005_create_triggers.sql` → Cria função e trigger de atualização automática de `updated_at`.
 
-006_create_verification_tokens.sql → Cria tabela verification_tokens com índices.
+`006_create_verification_tokens.sql` → Cria tabela `verification_tokens` com índices.
 
-007_create_ratelimits.sql → Cria tabela rate_limits com índice para rate limiting persistido no banco.
+`007_create_ratelimits.sql` → Cria tabela `rate_limits` com índice para rate limiting persistido no banco.
 
-008_create_permissions.sql → Cria role app_backend_role, permissões via GRANT/REVOKE e políticas RLS para as tabelas users, verification_tokens e rate_limits.
+`008_create_permissions.sql` → Cria role `app_backend_role`, concede `USAGE` no schema `public`, aplica permissões via `GRANT`/`REVOKE` e políticas RLS para as tabelas `users`, `verification_tokens` e `rate_limits`.
 
-**Ordem das migrations:**
-
-Os arquivos são executados em ordem alfabética/numerada, garantindo consistência.
+**Os arquivos são executados em ordem alfabética/numerada, garantindo consistência.**
 
 ---
 
@@ -39,14 +37,9 @@ Os arquivos são executados em ordem alfabética/numerada, garantindo consistên
     npm run make:migration "descrição da migration"
 ```
 
-- Cria um arquivo `.sql` na pasta `_database/migrations` com:
-  - Número sequencial automático
+- Cria um arquivo `.sql` na pasta `_database/migrations` com número sequencial automático, timestamp e descrição opcional convertida para snake_case.
 
-  - **Timestamp automático**
-
-  - **Descrição opcional**, que será convertida automaticamente para **snake_case** e **sem aspas**.
-
-- Exemplo de arquivo gerado:
+Exemplo de arquivo gerado:
 
 `009_20260208124500_add_profiles.sql`
 
@@ -64,22 +57,25 @@ Os arquivos são executados em ordem alfabética/numerada, garantindo consistên
     npm run db:migrate
 ```
 
+- Verifica se o banco existe e o cria automaticamente caso não exista.
+
 - Executa todas as migrations não aplicadas, em ordem.
 
-- Registra cada migration aplicada na tabela schema_migrations com hash do conteúdo.
+- Registra cada migration aplicada na tabela `schema_migrations` com hash do conteúdo.
 
 - Detecta alterações em migrations já aplicadas e emite aviso.
 
-- Mensagens detalhadas:
-  - ↷ Skipping: <arquivo> → migration já aplicada e sem alterações.
+Mensagens detalhadas:
 
-  - ⚠️ Migration "<arquivo>" was modified after it was applied! → migration alterada após execução.
+- ↷ `Skipping: <arquivo>` → migration já aplicada e sem alterações.
 
-  - → Running: <arquivo.sql> → migration aplicada.
+- `⚠️ Migration "<arquivo>" was modified after it was applied!` → migration alterada após execução.
 
-  - ✅ X migration(s) executed successfully. → migrations aplicadas.
+- `→ Running: <arquivo.sql>` → migration aplicada.
 
-  - ℹ️ Database is already up to date. → todas as migrations já foram aplicadas.
+- `✅ X migration(s) executed successfully.` → migrations aplicadas.
+
+- `ℹ️ Database is already up to date.` → todas as migrations já foram aplicadas.
 
 **Resetar o banco**
 
@@ -89,88 +85,54 @@ Os arquivos são executados em ordem alfabética/numerada, garantindo consistên
 
 - Aplica 000_reset.sql e limpa todas as tabelas.
 
-**Reset + migrate + iniciar dev**
+- **⚠️ Apaga todos os dados. Não usar em produção.**
+
+Após o reset, rode:
+
+```bash
+npm run db:migrate
+```
+
+**Reset + migrate**
 
 ```bash
     npm run db:setup
 ```
+
+Equivale a `db:reset` seguido de `db:migrate`.
 
 ---
 
 ### Boas práticas para novas migrations
 
-**1. Nomear sequencialmente:**
+**1. Nomear sequencialmente:** - Prefixo numérico (`009`, `010`) + timestamp + descrição (opcional).
 
-Prefixo numérico (`009`, `010`) + timestamp + descrição (opcional).
+**2. Idempotência:** - Sempre use `IF EXISTS` ou `IF NOT EXISTS` para evitar erros em execuções repetidas.
 
-**2. Idempotência:**
+**3. Evitar dados sensíveis:** - Scripts devem focar em estrutura (tabelas, views, triggers).
 
-Sempre use `IF EXISTS` ou `IF NOT EXISTS` para evitar erros em execuções repetidas.
-
-**3. Evitar dados sensíveis:**
-
-Scripts devem focar em estrutura (tabelas, views, triggers).
-
-**4. Separar lógica por arquivo:**
-
-Cada alteração significativa deve ter uma migration própria.
-
----
-
-### Fluxo de uso
-
-**1. Criar ou modificar uma migration:**
-
-```bash
-    npm run make:migration "descrição opcional"
-```
-
-**2. Rodar migrations::**
-
-```bash
-    npm run db:migrate
-```
-
-**3. Para limpar tudo e recriar o banco:**
-
-```bash
-    npm run db:setup
-```
-
----
-
-### Mensagens exibidas pelo migrate
-
-- ⚠️ Banco já possui tabelas → nenhuma migration será executada
-
-- ↷ Skipping: <arquivo> → migration já aplicada
-
-- ⚠️ Migration "<arquivo>" was modified after it was applied! → migration alterada
-
-- → Running: <arquivo.sql> → migration aplicada
-
-- ✅ X migration(s) executed successfully → migrations aplicadas
-
-- ℹ️ Database is already up to date → banco atualizado
+**4. Separar lógica por arquivo:** - Cada alteração significativa deve ter uma migration própria.
 
 ---
 
 ### Referência
 
-- Extensões PostgreSQL usadas: `pgcrypto`, `citext`
+- **Extensões**: `pgcrypto`, `citext`
 
-- Enum: `user_role` → `ADMIN`, `USER`
+- **Enum**: `user_role` → `ADMIN`, `USER`
 
-- Tabelas principais: `users`, `verification_tokens`, `rate_limits`, `schema_migrations`
+- **Tabelas**: `users`, `verification_tokens`, `rate_limits`, `schema_migrations`
 
-- Índices: `idx_users_deleted_at`, `idx_verification_tokens_expires_at`, `idx_verification_tokens_identifier`, `idx_rate_limits_reset_at`
+- **Índices**: `idx_users_deleted_at`, `idx_verification_tokens_expires_at`, `idx_verification_tokens_identifier`, `idx_rate_limits_reset_at`
 
-- Função: `update_updated_at` compara **NEW** com **OLD** e só atualiza se houver mudança real
+- **Função**: `update_updated_at` - compara **NEW** com **OLD** e só atualiza `updated_at` se houver mudança real
 
-- Trigger: `trigger_update_users_updated_at` atualiza automaticamente `updated_at` na tabela `users`
+- **Trigger**: `trigger_update_users_updated_at` - atualiza automaticamente `updated_at` na tabela `users`
 
-- Views públicas (sem password): `users_public`, `users_admin_public`, `users_public_active`
+- **Views públicas** (`sem password`): `users_public`, `users_admin_public`, `users_public_active`
 
-- Role: `app_backend_role` — acesso exclusivo à tabela `users`, `users_active`, `verification_tokens` e `rate_limits`
+- **View interna** (com `password`, somente backend): `users_active`
 
-- RLS: Row Level Security habilitado na tabela `users` e `rate_limits` — PUBLIC só acessa via views
+- **Role**: `app_backend_role` - acesso exclusivo à tabela `users`, , `verification_tokens` e `rate_limits`, e à view `users_active`
+
+- **RLS**: Row Level Security habilitado na tabela `users` e `rate_limits` - `PUBLIC` só acessa via views
