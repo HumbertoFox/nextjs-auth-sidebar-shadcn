@@ -56,7 +56,7 @@ export default function HomeMainComponent() {
             ref={containerRef}
             className="flex min-h-full w-full max-w-3xl flex-col items-center justify-between flex-1 py-32 px-16 bg-white dark:bg-black sm:items-start"
         >
-            <div className="flex gap-6">
+            <div className="flex flex-col lg:flex-row gap-6">
                 <Image
                     className="dark:invert logo opacity-0"
                     src="/next.svg"
@@ -65,7 +65,7 @@ export default function HomeMainComponent() {
                     height={20}
                     priority
                 />
-                <div className="flex items-center">
+                <div className="texts flex items-center justify-center opacity-0">
                     <Plus />
                 </div>
                 <Image
@@ -76,7 +76,7 @@ export default function HomeMainComponent() {
                     height={20}
                     priority
                 />
-                <div className="flex items-center">
+                <div className="texts flex items-center justify-center opacity-0">
                     <Plus />
                 </div>
                 <Image
