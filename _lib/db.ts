@@ -1,49 +1,10 @@
 import pkg from 'pg';
 import 'dotenv/config';
-const { Pool, Client } = pkg;
+const { Pool } = pkg;
 
 const isProduction = process.env.NODE_ENV === 'production';
 const DATABASE_URL = process.env.DATABASE_URL;
 if (!DATABASE_URL) throw new Error('❌ DATABASE_URL not defined in .env');
-
-const dbUrl = new URL(DATABASE_URL);
-const DB_NAME = dbUrl.pathname.replace(/^\//, '');
-
-async function createDatabaseIfNotExists() {
-    if (isProduction) return;
-
-    const tmpUrl = new URL(DATABASE_URL!);
-    tmpUrl.pathname = '/postgres';
-    const client = new Client({
-        connectionString: tmpUrl.toString(),
-        ssl: false,
-    });
-
-    await client.connect();
-
-    const res = await client.query(`
-        SELECT 1
-        FROM pg_database
-        WHERE datname = $1
-    `,
-        [
-            DB_NAME
-        ]
-    );
-
-    if (res.rowCount === 0) {
-        await client.query(`
-            CREATE DATABASE "${DB_NAME}"
-        `);
-        console.log(`Database "${DB_NAME}" created.`);
-    } else {
-        console.log(`Database "${DB_NAME}" It already exists.`);
-    }
-
-    await client.end();
-}
-
-await createDatabaseIfNotExists();
 
 // Substitui sslmode=require por verify-full para evitar aviso de deprecação do pg
 const connectionString = isProduction
@@ -54,6 +15,10 @@ const basePool = new Pool({
     connectionString,
     ssl: isProduction ? { rejectUnauthorized: true } : false,
 });
+
+// Pool "cru" — sem SET ROLE, para uso exclusivo em scripts de migrate/admin.
+// Roda como o usuário dono do banco (quem tem permissão de CREATE no schema).
+export const rawPool = basePool;
 
 // Cache — verifica a role apenas uma vez usando o primeiro cliente disponível
 let backendRoleExists: boolean | null = null;
@@ -75,6 +40,8 @@ async function resolveBackendRole(client: pkg.PoolClient): Promise<boolean> {
     return backendRoleExists;
 }
 
+// Pool padrão da aplicação — aplica SET ROLE app_backend_role em cada query.
+// Use este pool em todo código de aplicação (rotas, serviços, etc.).
 const pool = {
     async query<T extends pkg.QueryResultRow = pkg.QueryResultRow>(
         text: string | pkg.QueryConfig<unknown[]>,

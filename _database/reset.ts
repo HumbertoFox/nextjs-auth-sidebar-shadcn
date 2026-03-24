@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import pool from '../_lib/db.ts';
+import { rawPool } from '../_lib/db.ts';
 
 async function resetDatabase() {
     try {
@@ -19,7 +19,7 @@ async function resetDatabase() {
 
         const sql = fs.readFileSync(resetFile, 'utf8');
 
-        await pool.query(sql);
+        await rawPool.query(sql);
 
         console.log('✅ Database reset successfully.');
         process.exit(0);

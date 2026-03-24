@@ -19,6 +19,14 @@ EXCEPTION WHEN others THEN
 END $$;
 
 -- ============================================================================
+-- GRANT: acesso ao schema public
+-- Necessário no PostgreSQL 15+ onde CREATE/USAGE no public não é mais automático
+-- para roles que não são superuser ou owner do schema.
+-- Sem isso: "permissão negada para esquema public"
+-- ============================================================================
+GRANT USAGE ON SCHEMA public TO app_backend_role;
+
+-- ============================================================================
 -- REVOKE: bloqueia acesso direto à tabela users para todos
 -- ============================================================================
 REVOKE ALL ON users FROM PUBLIC;
