@@ -60,9 +60,9 @@ export function LoginClient({
             <div className="flex flex-col items-center gap-2 text-center mx-auto">
                 <Link
                     href="/"
-                    className="size-16 2xl:hidden"
+                    className="size-16 dark:invert 2xl:hidden rounded-full"
                 >
-                    <AppLogoIconSvg />
+                    <AppLogoIconSvg className="rounded-full" />
                 </Link>
                 <h1 className="text-xl font-medium">Log in to your account</h1>
                 <p className="text-muted-foreground text-sm text-balance">
