@@ -6,7 +6,7 @@ export function LoadingLogin() {
     return (
         <div className="w-full 2xl:w-2/4 2xl:p-8">
             <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-72">
-                <Skeleton className="size-16 2xl:hidden rounded-full" />
+                <Skeleton className="size-16 2xl:hidden rounded-full mx-auto" />
 
                 <div className="grid gap-2">
                     <Skeleton className="h-5 w-44 mx-auto" />
