@@ -24,9 +24,15 @@ export async function reactivateAdminUserById(
 
     await regenerateCsrfToken();
 
-    if (user.role === 'ADMIN') {
-        revalidatePath('/dashboard/admins')
-    } else {
-        revalidatePath('/dashboard/admins/users');
-    };
+    switch (user.role) {
+        case 'ADMIN':
+            revalidatePath('/dashboard/admins');
+            break;
+        case 'USER':
+            revalidatePath('/dashboard/users');
+            break;
+        default:
+            revalidatePath('/dashboard/layout');
+            break;
+    }
 }

@@ -29,10 +29,16 @@ export async function deleteUserById(
 
         await regenerateCsrfToken();
 
-        if (user.role === 'ADMIN') {
-            revalidatePath('/dashboard/admins');
-        } else if (user.role === 'USER') {
-            revalidatePath('/dashboard/users');
+        switch (user.role) {
+            case 'ADMIN':
+                revalidatePath('/dashboard/admins');
+                break;
+            case 'USER':
+                revalidatePath('/dashboard/users');
+                break;
+            default:
+                revalidatePath('/dashboard/layout');
+                break;
         }
     } catch (error) {
         console.error('Error deleting user:', error);
