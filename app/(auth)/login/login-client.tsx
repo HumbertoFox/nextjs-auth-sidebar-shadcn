@@ -10,6 +10,8 @@ import { Label } from '@/_components/ui/label';
 import { loginUser } from '@/app/api/actions/loginuser';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { csrfTokenProps, LoginFormProps } from '@/_types';
+import AppLogoIconSvg from '@/_components/app-logo-icon-svg';
+import Link from 'next/link';
 
 export function LoginClient({
     csrfToken
@@ -56,6 +58,12 @@ export function LoginClient({
     return (
         <div className="space-y-6 w-full 2xl:w-2/4">
             <div className="flex flex-col items-center gap-2 text-center mx-auto">
+                <Link
+                    href="/"
+                    className="size-16 2xl:hidden"
+                >
+                    <AppLogoIconSvg />
+                </Link>
                 <h1 className="text-xl font-medium">Log in to your account</h1>
                 <p className="text-muted-foreground text-sm text-balance">
                     Enter your email and password below to log in.
