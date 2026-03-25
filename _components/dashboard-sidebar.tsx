@@ -1,6 +1,6 @@
 'use client';
 
-import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarRail, } from '@/_components/ui/sidebar';
+import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarRail, useSidebar, } from '@/_components/ui/sidebar';
 import AppLogoSvg from '@/_components/app-logo-svg';
 import Link from 'next/link';
 import { NavMainAdmins } from '@/_components/nav-main-admins';
@@ -20,6 +20,13 @@ export default function DashboardSidebar({
     userType,
     ...props
 }: DashboardSidebarProps) {
+    const { isMobile, setOpenMobile } = useSidebar();
+
+    const handleLinkClick = () => {
+        if (isMobile) {
+            setOpenMobile(false);
+        };
+    };
     const adminNavItems: NavMainItemProps[] = [
         {
             title: 'Admins',
@@ -61,7 +68,11 @@ export default function DashboardSidebar({
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
-                            <Link href="/dashboard" prefetch>
+                            <Link
+                                href="/dashboard"
+                                onClick={handleLinkClick}
+                                prefetch
+                            >
                                 <AppLogoSvg />
                             </Link>
                         </SidebarMenuButton>
