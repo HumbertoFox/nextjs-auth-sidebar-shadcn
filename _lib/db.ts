@@ -6,10 +6,11 @@ const isProduction = process.env.NODE_ENV === 'production';
 const DATABASE_URL = process.env.DATABASE_URL;
 if (!DATABASE_URL) throw new Error('❌ DATABASE_URL not defined in .env');
 
+const dbName = new URL(DATABASE_URL).pathname.slice(1);
+const roleName = `${dbName}_backend_role`;
+
 // Substitui sslmode=require por verify-full para evitar aviso de deprecação do pg
-const connectionString = isProduction
-    ? DATABASE_URL.replace('sslmode=require', 'sslmode=verify-full')
-    : DATABASE_URL;
+const connectionString = isProduction ? DATABASE_URL.replace('sslmode=require', 'sslmode=verify-full') : DATABASE_URL;
 
 const basePool = new Pool({
     connectionString,
@@ -30,8 +31,12 @@ async function resolveBackendRole(client: pkg.PoolClient): Promise<boolean> {
         const res = await client.query(`
             SELECT 1
             FROM pg_roles
-            WHERE rolname = 'app_backend_role'
-        `);
+            WHERE rolname = $1
+        `,
+            [
+                roleName
+            ]
+        );
         backendRoleExists = (res.rowCount ?? 0) > 0;
     } catch {
         backendRoleExists = false;
@@ -40,7 +45,7 @@ async function resolveBackendRole(client: pkg.PoolClient): Promise<boolean> {
     return backendRoleExists;
 }
 
-// Pool padrão da aplicação — aplica SET ROLE app_backend_role em cada query.
+// Pool padrão da aplicação — aplica SET ROLE em cada query.
 // Use este pool em todo código de aplicação (rotas, serviços, etc.).
 const pool = {
     async query<T extends pkg.QueryResultRow = pkg.QueryResultRow>(
@@ -52,10 +57,10 @@ const pool = {
             const roleExists = await resolveBackendRole(client);
             if (roleExists) {
                 try {
-                    await client.query('SET ROLE app_backend_role');
+                    await client.query(`SET ROLE ${roleName}`);
                 } catch {
                     if (!isProduction) {
-                        console.warn('⚠️  SET ROLE app_backend_role not available.');
+                        console.warn(`⚠️  SET ROLE ${roleName} not available.`);
                     }
                     backendRoleExists = false;
                 }

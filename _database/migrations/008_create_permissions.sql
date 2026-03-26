@@ -2,20 +2,20 @@
 -- ROLES
 -- ============================================================================
 DO $$ BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'app_backend_role') THEN
-        CREATE ROLE app_backend_role NOLOGIN;
+    IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = '__ROLE_NAME__') THEN
+        CREATE ROLE __ROLE_NAME__ NOLOGIN;
     END IF;
 END $$;
 
--- Garante que o usuário da conexão pode usar SET ROLE app_backend_role
+-- Garante que o usuário da conexão pode usar SET ROLE __ROLE_NAME__
 -- Necessário no Neon e em ambientes gerenciados onde o superuser não é o owner
 DO $$
 DECLARE
     current_user_name TEXT := current_user;
 BEGIN
-    EXECUTE format('GRANT app_backend_role TO %I', current_user_name);
+    EXECUTE format('GRANT __ROLE_NAME__ TO %I', current_user_name);
 EXCEPTION WHEN others THEN
-    RAISE NOTICE 'GRANT app_backend_role TO % skipped: %', current_user_name, SQLERRM;
+    RAISE NOTICE 'GRANT __ROLE_NAME__ TO % skipped: %', current_user_name, SQLERRM;
 END $$;
 
 -- ============================================================================
@@ -24,7 +24,7 @@ END $$;
 -- para roles que não são superuser ou owner do schema.
 -- Sem isso: "permissão negada para esquema public"
 -- ============================================================================
-GRANT USAGE ON SCHEMA public TO app_backend_role;
+GRANT USAGE ON SCHEMA public TO __ROLE_NAME__;
 
 -- ============================================================================
 -- REVOKE: bloqueia acesso direto à tabela users para todos
@@ -43,18 +43,18 @@ GRANT SELECT ON users_public_active TO PUBLIC;
 -- GRANT view com password → somente backend
 -- ============================================================================
 REVOKE ALL ON users_active FROM PUBLIC;
-GRANT SELECT ON users_active TO app_backend_role;
+GRANT SELECT ON users_active TO __ROLE_NAME__;
 
 -- ============================================================================
 -- GRANT operações na tabela users → somente backend
 -- ============================================================================
-GRANT SELECT, INSERT, UPDATE, DELETE ON users TO app_backend_role;
+GRANT SELECT, INSERT, UPDATE, DELETE ON users TO __ROLE_NAME__;
 
 -- ============================================================================
 -- GRANT operações em verification_tokens → somente backend
 -- ============================================================================
 REVOKE ALL ON verification_tokens FROM PUBLIC;
-GRANT SELECT, INSERT, UPDATE, DELETE ON verification_tokens TO app_backend_role;
+GRANT SELECT, INSERT, UPDATE, DELETE ON verification_tokens TO __ROLE_NAME__;
 
 -- ============================================================================
 -- RLS: bloqueia acesso direto à tabela users (segunda camada)
@@ -69,7 +69,7 @@ DO $$ BEGIN
     ) THEN
         CREATE POLICY policy_users_backend
             ON users FOR ALL
-            TO app_backend_role
+            TO __ROLE_NAME__
             USING (true);
     END IF;
 END $$;
@@ -91,7 +91,7 @@ END $$;
 -- GRANT operações em rate_limits → somente backend
 -- ============================================================================
 REVOKE ALL ON rate_limits FROM PUBLIC;
-GRANT SELECT, INSERT, UPDATE, DELETE ON rate_limits TO app_backend_role;
+GRANT SELECT, INSERT, UPDATE, DELETE ON rate_limits TO __ROLE_NAME__;
 
 -- ============================================================================
 -- RLS: bloqueia acesso direto à tabela rate_limits
@@ -105,7 +105,7 @@ DO $$ BEGIN
     ) THEN
         CREATE POLICY policy_rate_limits_backend
             ON rate_limits FOR ALL
-            TO app_backend_role
+            TO __ROLE_NAME__
             USING (true);
     END IF;
 END $$;

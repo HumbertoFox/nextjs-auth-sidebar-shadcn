@@ -13,6 +13,8 @@ import Image from 'next/image';
 import { RegisterFormProps } from '@/_types';
 import { useRouter } from 'next/navigation';
 import { PasswordChecklist } from '@/_components/password-checklist';
+import Link from 'next/link';
+import AppLogoIconSvg from '@/_components/app-logo-icon-svg';
 
 export default function RegisterAdminClient({
     TitleIntl,
@@ -71,6 +73,12 @@ export default function RegisterAdminClient({
     return (
         <div className="space-y-6 w-full 2xl:w-2/4">
             <div className="flex flex-col items-center gap-2 text-center mx-auto">
+                <Link
+                    href="/"
+                    className="size-16 dark:invert 2xl:hidden rounded-full"
+                >
+                    <AppLogoIconSvg className="rounded-full" />
+                </Link>
                 <h1 className="text-xl font-medium">{TitleIntl}</h1>
                 <p className="text-muted-foreground text-sm text-balance">
                     Enter your details below to create your account.

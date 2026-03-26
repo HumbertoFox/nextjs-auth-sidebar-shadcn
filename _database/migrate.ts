@@ -7,9 +7,11 @@ import { rawPool } from '../_lib/db.ts';
 
 const { Pool } = pkg;
 
+const dbName = new URL(process.env.DATABASE_URL!).pathname.slice(1);
+const roleName = `${dbName}_backend_role`;
+
 async function ensureDatabase() {
     const url = new URL(process.env.DATABASE_URL!);
-    const dbName = url.pathname.slice(1);
 
     const adminPool = new Pool({
         host: url.hostname,
@@ -87,8 +89,9 @@ async function migrate() {
 
         for (const file of files) {
             const filepath = path.join(migrationsDir, file);
-            const sql = fs.readFileSync(filepath, 'utf8');
-            const hash = crypto.createHash('sha256').update(sql).digest('hex');
+            const rawSql = fs.readFileSync(filepath, 'utf8');
+            const sql = rawSql.replaceAll('__ROLE_NAME__', roleName);
+            const hash = crypto.createHash('sha256').update(rawSql).digest('hex');
 
             if (executed.has(file)) {
                 if (executed.get(file) !== hash) {

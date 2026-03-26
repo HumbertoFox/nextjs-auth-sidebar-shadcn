@@ -23,7 +23,7 @@ O objetivo é organizar, versionar e aplicar alterações no banco de dados de f
 
 `007_create_ratelimits.sql` → Cria tabela `rate_limits` com índice para rate limiting persistido no banco.
 
-`008_create_permissions.sql` → Cria role `app_backend_role`, concede `USAGE` no schema `public`, aplica permissões via `GRANT`/`REVOKE` e políticas RLS para as tabelas `users`, `verification_tokens` e `rate_limits`.
+`008_create_permissions.sql` → Cria role `<nome_do_banco>_backend_role` (derivada automaticamente do nome do banco), concede `USAGE` no schema `public`, aplica permissões via `GRANT`/`REVOKE` e políticas RLS para as tabelas `users`, `verification_tokens` e `rate_limits`.
 
 **Os arquivos são executados em ordem alfabética/numerada, garantindo consistência.**
 
@@ -133,6 +133,6 @@ Equivale a `db:reset` seguido de `db:migrate`.
 
 - **View interna** (com `password`, somente backend): `users_active`
 
-- **Role**: `app_backend_role` - acesso exclusivo à tabela `users`, , `verification_tokens` e `rate_limits`, e à view `users_active`
+- **Role**: `<nome_do_banco>_backend_role` — gerada automaticamente a partir do nome do banco definido na `DATABASE_URL`. Acesso exclusivo às tabelas `users`, `verification_tokens` e `rate_limits`, e à view `users_active`
 
 - **RLS**: Row Level Security habilitado na tabela `users` e `rate_limits` - `PUBLIC` só acessa via views

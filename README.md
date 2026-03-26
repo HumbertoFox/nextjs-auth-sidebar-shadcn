@@ -151,7 +151,7 @@ npm run db:migrate
 
 - Cria função `update_updated_at` e `trigger_update_users_updated_at` para atualizar timestamps automaticamente.
 
-- Protege a tabela `users`, `verification_tokens` e `rate_limits`, liberando acesso somente às views.
+- Cria role `<nome_do_banco>_backend_role` (derivada automaticamente do nome do banco na `DATABASE_URL`), aplica permissões e políticas RLS.
 
 ---
 
@@ -161,13 +161,7 @@ npm run db:migrate
 npm run make:migration "Descrição da migration"
 ```
 
-Cria arquivo `.sql` na pasta `_database/migrations` com:
-
-- **Número sequencial automático**
-
-- **Timestamp automático**
-
-- **Descrição opcional**, convertida para **snake_case e sem aspas**
+Cria arquivo `.sql` na pasta `_database/migrations` com número sequencial automático, timestamp e descrição opcional convertida para snake_case.
 
 Exemplo de uso:
 
@@ -197,13 +191,11 @@ npm run make:migration "Add new Profiles Table"
 npm run db:reset
 ```
 
-- Aplica 000_reset.sql e limpa todas as tabelas
+- Aplica 000_reset.sql: remove triggers, functions, views, tabelas, enums, extensões e role.
 
 - **⚠️ Aviso: apaga todos os dados. Não usar em produção**
 
-- Após reset, rode novamente:
-
-**Após reset, rode novamente:**
+Após reset, rode novamente:
 
 ```bash
 npm run db:migrate
@@ -213,11 +205,8 @@ npm run db:migrate
 
 ### Setup Completo Dev
 
-**Para resetar, recriar o banco e rodar o servidor de dev:**
-
 ```bash
 npm run db:setup
-npm run dev
 ```
 
 **Isso equivale a:**
