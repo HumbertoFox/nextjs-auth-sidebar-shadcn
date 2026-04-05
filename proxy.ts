@@ -22,7 +22,7 @@ export default async function proxy(req: NextRequest) {
   const userId = session?.userId;
   const userRole = session?.role;
 
-  let response: NextResponse = NextResponse.next();
+  let response: NextResponse;
 
   if (!userId && isProtectedRoute) {
     response = NextResponse.redirect(
