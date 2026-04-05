@@ -15,6 +15,38 @@ type DashboardSidebarProps = React.ComponentProps<typeof Sidebar> & {
     userType: UserRole;
 }
 
+const adminNavItems: NavMainItemProps[] = [
+    {
+        title: 'Admins',
+        href: '/dashboard/admins',
+        icon: UserRoundCog
+    },
+    {
+        title: 'Users',
+        href: '/dashboard/admins/users',
+        icon: UsersRound
+    },
+    {
+        title: 'Register User',
+        href: '/dashboard/admins/register',
+        icon: UserRoundPlus
+    },
+];
+const userNavItems: NavMainItemProps[] = [
+    {
+        title: 'User',
+        href: '/dashboard/user',
+        icon: UserRound
+    },
+];
+const usersDashboardNavItems: NavMainItemProps[] = [
+    {
+        title: 'Dashboard',
+        href: '/dashboard',
+        icon: LayoutGrid
+    },
+];
+
 export default function DashboardSidebar({
     user,
     userType,
@@ -27,37 +59,6 @@ export default function DashboardSidebar({
             setOpenMobile(false);
         };
     };
-    const adminNavItems: NavMainItemProps[] = [
-        {
-            title: 'Admins',
-            href: '/dashboard/admins',
-            icon: UserRoundCog
-        },
-        {
-            title: 'Users',
-            href: '/dashboard/admins/users',
-            icon: UsersRound
-        },
-        {
-            title: 'Register User',
-            href: '/dashboard/admins/register',
-            icon: UserRoundPlus
-        },
-    ];
-    const userNavItems: NavMainItemProps[] = [
-        {
-            title: 'User',
-            href: '/dashboard/user',
-            icon: UserRound
-        },
-    ];
-    const usersDashboardNavItems: NavMainItemProps[] = [
-        {
-            title: 'Dashboard',
-            href: '/dashboard',
-            icon: LayoutGrid
-        },
-    ];
     return (
         <Sidebar
             collapsible="icon"

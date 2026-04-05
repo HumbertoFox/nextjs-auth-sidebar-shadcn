@@ -10,23 +10,24 @@ export const generateMetadata = async (): Promise<Metadata> => {
     };
 }
 
+const breadcrumbItems = [
+    {
+        text: 'Dashboard',
+        href: '/dashboard'
+    },
+    {
+        text: 'User'
+    },
+];
+const borderColors = [
+    'border-emerald-500',
+    'border-violet-500',
+    'border-rose-500'
+];
+
 export default async function UserPage() {
     const user = await getUser() as UserDetailsProps;
     if (!user || (user.role !== 'ADMIN' && user.role !== 'USER')) redirect('/dashboard');
-    const breadcrumbItems = [
-        {
-            text: 'Dashboard',
-            href: '/dashboard'
-        },
-        {
-            text: 'User'
-        },
-    ];
-    const borderColors = [
-        'border-emerald-500',
-        'border-violet-500',
-        'border-rose-500'
-    ];
     return (
         <>
             <DashboardSidebarHeader items={breadcrumbItems} />

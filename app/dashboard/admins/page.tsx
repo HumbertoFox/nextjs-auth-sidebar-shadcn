@@ -18,20 +18,21 @@ export const generateMetadata = async (): Promise<Metadata> => {
     };
 }
 
+const breadcrumbItems = [
+    {
+        text: 'Dashboard',
+        href: '/dashboard'
+    },
+    {
+        text: 'Admins'
+    },
+];
+
 export default async function AdminsPage() {
     const user = await getUser() as UserDetailsProps;
     const loggedAdmin = user.id;
     const admins = await userRepository.findAllAdmins();
     const csrfToken = await getCsrfToken();
-    const breadcrumbItems = [
-        {
-            text: 'Dashboard',
-            href: '/dashboard'
-        },
-        {
-            text: 'Admins'
-        },
-    ];
     return (
         <>
             <DashboardSidebarHeader items={breadcrumbItems} />

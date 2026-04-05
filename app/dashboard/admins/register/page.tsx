@@ -11,20 +11,21 @@ export const generateMetadata = async (): Promise<Metadata> => {
     };
 }
 
+const breadcrumbItems = [
+    {
+        text: 'Dashboard',
+        href: '/dashboard'
+    },
+    {
+        text: 'Admins',
+        href: '/dashboard/admins'
+    },
+    {
+        text: 'Register'
+    },
+];
+
 export default async function RegisterUsersPage() {
-    const breadcrumbItems = [
-        {
-            text: 'Dashboard',
-            href: '/dashboard'
-        },
-        {
-            text: 'Admins',
-            href: '/dashboard/admins'
-        },
-        {
-            text: 'Register'
-        },
-    ];
     const csrfToken = await getCsrfToken();
     return (
         <>

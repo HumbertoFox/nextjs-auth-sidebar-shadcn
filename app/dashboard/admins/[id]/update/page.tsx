@@ -13,22 +13,23 @@ export const generateMetadata = async (): Promise<Metadata> => {
     };
 }
 
+const breadcrumbItems = [
+    {
+        text: 'Dashboard',
+        href: '/dashboard'
+    },
+    {
+        text: 'Admins',
+        href: '/dashboard/admins'
+    },
+    {
+        text: 'Update User'
+    },
+];
+
 export default async function Update({
     params,
 }: { params: Promise<{ id: string }> }) {
-    const breadcrumbItems = [
-        {
-            text: 'Dashboard',
-            href: '/dashboard'
-        },
-        {
-            text: 'Admins',
-            href: '/dashboard/admins'
-        },
-        {
-            text: 'Update User'
-        },
-    ];
     const { id } = await params;
     const user = await userRepository.findById(id);
     if (!user) redirect('/dashboard');

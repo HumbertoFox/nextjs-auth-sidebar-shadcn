@@ -9,32 +9,34 @@ export const generateMetadata = async (): Promise<Metadata> => {
     };
 }
 
+const breadcrumbItems = [
+    {
+        text: 'Dashboard'
+    }
+];
+
+const cards = [
+    {
+        href: "/dashboard/user",
+        color: "border-blue-500",
+        iconColor: "text-blue-500",
+        icon: UserRound
+    },
+    {
+        href: "/dashboard/settings/profile",
+        color: "border-green-500",
+        iconColor: "text-green-500",
+        icon: FileSliders
+    },
+    {
+        href: "/dashboard/settings/appearance",
+        color: "border-purple-500",
+        iconColor: "text-purple-500",
+        icon: MonitorCog
+    },
+];
+
 export default function DashboardPage() {
-    const breadcrumbItems = [
-        {
-            text: 'Dashboard'
-        }
-    ];
-    const cards = [
-        {
-            href: "/dashboard/user",
-            color: "border-blue-500",
-            iconColor: "text-blue-500",
-            icon: UserRound
-        },
-        {
-            href: "/dashboard/settings/profile",
-            color: "border-green-500",
-            iconColor: "text-green-500",
-            icon: FileSliders
-        },
-        {
-            href: "/dashboard/settings/appearance",
-            color: "border-purple-500",
-            iconColor: "text-purple-500",
-            icon: MonitorCog
-        },
-    ];
     return (
         <>
             <DashboardSidebarHeader items={breadcrumbItems} />
