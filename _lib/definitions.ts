@@ -1,3 +1,4 @@
+import { UserRolesZod } from '@/_types';
 import * as z from 'zod';
 
 const passwordSchema = z.string()
@@ -42,7 +43,7 @@ export function getSignUpUpdateSchema(formData: FormData) {
         password_confirmation: isEdit
             ? z.string().max(72, 'The password must be at most 72 characters long.').optional()
             : z.string().min(1, 'Please confirm your password.').max(72, 'The password must be at most 72 characters long.'),
-        role: z.enum(['ADMIN', 'USER'], {
+        role: z.enum(UserRolesZod, {
             error: 'The role must be USER or ADMINISTRATOR.'
         })
     })
