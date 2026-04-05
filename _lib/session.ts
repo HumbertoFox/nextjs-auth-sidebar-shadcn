@@ -108,6 +108,6 @@ export async function updateSession() {
     };
     return {
         userId: payload.userId,
-        role: payload.role
+        role: payload.role as UserRole
     };
 }

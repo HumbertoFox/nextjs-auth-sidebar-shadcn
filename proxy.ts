@@ -19,26 +19,26 @@ export default async function proxy(req: NextRequest) {
     .includes(path);
 
   const session = await updateSession();
+  const userId = session?.userId;
+  const userRole = session?.role;
 
-  let response: NextResponse;
+  let response: NextResponse = NextResponse.next();
 
-  if (isProtectedRoute && !session?.userId) {
+  if (!userId && isProtectedRoute) {
     response = NextResponse.redirect(
       new URL(`/login?redirect=${encodeURIComponent(path)}`, req.nextUrl)
     );
-  } else if (isPublicRoute && session?.userId && path !== '/' && !path.startsWith('/dashboard')) {
+  } else if (userId && isPublicRoute && path !== '/' && !path.startsWith('/dashboard')) {
     response = NextResponse.redirect(new URL('/dashboard', req.nextUrl));
-  } else if (isAdminRoute && session?.role !== 'ADMIN') {
+  } else if (isAdminRoute && userRole !== 'ADMIN') {
     response = NextResponse.redirect(new URL('/dashboard', req.nextUrl));
   } else {
     response = NextResponse.next();
   }
 
   const existingCsrfToken = req.cookies.get(CSRF_COOKIE_NAME)?.value;
-
   if (!existingCsrfToken) {
     const newCsrfToken = randomUUID();
-
     response.cookies.set(CSRF_COOKIE_NAME, newCsrfToken, {
       httpOnly: false,
       secure: true,
