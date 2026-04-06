@@ -41,12 +41,30 @@ export function UserActionButtons({
                         </DialogDescription>
                         <DialogFooter>
                             <DialogClose asChild>
-                                <Button type="button" variant="secondary">Cancel</Button>
+                                <Button
+                                    type="button"
+                                    variant="secondary"
+                                >
+                                    Cancel
+                                </Button>
                             </DialogClose>
                             <form action={deleteUserById}>
-                                <input type="hidden" name="csrfToken" value={csrfToken} />
-                                <input type="hidden" name="userId" value={user.id} />
-                                <Button type="submit" variant="destructive">Yes, delete!</Button>
+                                <input
+                                    type="hidden"
+                                    name="csrfToken"
+                                    value={csrfToken}
+                                />
+                                <input
+                                    type="hidden"
+                                    name="userId"
+                                    value={user.id}
+                                />
+                                <Button
+                                    type="submit"
+                                    variant="destructive"
+                                >
+                                    Yes, delete!
+                                </Button>
                             </form>
                         </DialogFooter>
                     </DialogContent>
@@ -58,7 +76,11 @@ export function UserActionButtons({
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <button type="button" title={`Activate ${user.name}`} className="cursor-pointer">
+                <button
+                    type="button"
+                    title={`Activate ${user.name}`}
+                    className="cursor-pointer"
+                >
                     <UserLock
                         aria-label={`Activate ${user.name}`}
                         className="size-6 text-red-600 hover:text-green-500 duration-300"
@@ -72,12 +94,30 @@ export function UserActionButtons({
                 </DialogDescription>
                 <DialogFooter>
                     <DialogClose asChild>
-                        <Button type="button" variant="destructive">Cancel</Button>
+                        <Button
+                            type="button"
+                            variant="destructive"
+                        >
+                            Cancel
+                        </Button>
                     </DialogClose>
                     <form action={reactivateAdminUserById}>
-                        <input type="hidden" name="csrfToken" value={csrfToken} />
-                        <input type="hidden" name="userId" value={user.id} />
-                        <Button type="submit" variant="outline">Yes, activate!</Button>
+                        <input
+                            type="hidden"
+                            name="csrfToken"
+                            value={csrfToken}
+                        />
+                        <input
+                            type="hidden"
+                            name="userId"
+                            value={user.id}
+                        />
+                        <Button
+                            type="submit"
+                            variant="outline"
+                        >
+                            Yes, activate!
+                        </Button>
                     </form>
                 </DialogFooter>
             </DialogContent>

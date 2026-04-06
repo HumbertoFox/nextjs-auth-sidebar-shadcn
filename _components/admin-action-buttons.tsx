@@ -43,7 +43,12 @@ export function AdminActionButtons({
                             </DialogDescription>
                             <DialogFooter>
                                 <DialogClose asChild>
-                                    <Button type="button" variant="secondary">Cancel</Button>
+                                    <Button
+                                        type="button"
+                                        variant="secondary"
+                                    >
+                                        Cancel
+                                    </Button>
                                 </DialogClose>
                                 <form action={deleteUserById}>
                                     <input type="hidden" name="csrfToken" value={csrfToken} />
@@ -61,7 +66,11 @@ export function AdminActionButtons({
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <button type="button" title={`Activate ${admin.name}`} className="cursor-pointer">
+                <button
+                    type="button"
+                    title={`Activate ${admin.name}`}
+                    className="cursor-pointer"
+                >
                     <UserLock
                         aria-label={`Activate ${admin.name}`}
                         className="size-6 text-red-600 hover:text-green-500 duration-300"
@@ -75,12 +84,30 @@ export function AdminActionButtons({
                 </DialogDescription>
                 <DialogFooter>
                     <DialogClose asChild>
-                        <Button type="button" variant="destructive">Cancel</Button>
+                        <Button
+                            type="button"
+                            variant="destructive"
+                        >
+                            Cancel
+                        </Button>
                     </DialogClose>
                     <form action={reactivateAdminUserById}>
-                        <input type="hidden" name="csrfToken" value={csrfToken} />
-                        <input type="hidden" name="userId" value={admin.id} />
-                        <Button type="submit" variant="outline">Yes, activate!</Button>
+                        <input
+                            type="hidden"
+                            name="csrfToken"
+                            value={csrfToken}
+                        />
+                        <input
+                            type="hidden"
+                            name="userId"
+                            value={admin.id}
+                        />
+                        <Button
+                            type="submit"
+                            variant="outline"
+                        >
+                            Yes, activate!
+                        </Button>
                     </form>
                 </DialogFooter>
             </DialogContent>
