@@ -7,7 +7,7 @@ import { TextLink } from '@/_components/text-link';
 import { Button } from '@/_components/ui/button';
 import { Input } from '@/_components/ui/input';
 import { Label } from '@/_components/ui/label';
-import { forgotPassword } from '@/app/api/actions/forgotpassword';
+import { forgotPassword } from '@/_actions/forgotpassword';
 import { csrfTokenProps } from '@/_types';
 
 export default function ForgotPasswordClient({

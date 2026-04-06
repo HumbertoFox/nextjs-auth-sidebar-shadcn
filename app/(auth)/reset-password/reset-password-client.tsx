@@ -7,7 +7,7 @@ import { Button } from '@/_components/ui/button';
 import { Input } from '@/_components/ui/input';
 import { Label } from '@/_components/ui/label';
 import { useSearchParams } from 'next/navigation';
-import { resetPassword } from '@/app/api/actions/resetpassword';
+import { resetPassword } from '@/_actions/resetpassword';
 import { csrfTokenProps, ResetPasswordForm } from '@/_types';
 import { TextLink } from '@/_components/text-link';
 import { PasswordChecklist } from '@/_components/password-checklist';

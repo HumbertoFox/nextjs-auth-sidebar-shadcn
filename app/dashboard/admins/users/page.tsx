@@ -1,16 +1,11 @@
 import { DashboardSidebarHeader } from '@/_components/dashboard-sidebar-header';
-import { Button } from '@/_components/ui/button';
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogTitle, DialogTrigger } from '@/_components/ui/dialog';
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/_components/ui/pagination';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/_components/ui/table';
 import { getCsrfToken } from '@/_lib/csrf';
 import getVisiblePagination from '@/_lib/getvisiblepagination';
 import { userRepository } from '@/_lib/userrepositorys';
-import { deleteUserById } from '@/app/api/actions/deleteadminuser';
-import { reactivateAdminUserById } from '@/app/api/actions/reactivateadminuser';
-import { UserLock, UserPen, UserX } from 'lucide-react';
 import { Metadata } from 'next';
-import Link from 'next/link';
+import { UserActionButtons } from '@/_components/user-action-buttons';
 
 export const generateMetadata = async (): Promise<Metadata> => {
     return {
@@ -69,120 +64,10 @@ export default async function UsersPage(props: { searchParams?: Promise<{ page?:
                                     <TableCell className="max-lg:hidden">{user.name}</TableCell>
                                     <TableCell>{user.email}</TableCell>
                                     <TableCell className="flex justify-evenly items-center my-1">
-                                        {!user.deleted_at ? (
-                                            <>
-                                                <Link
-                                                    href={`/dashboard/admins/${user.id}/update`}
-                                                    title={`To update ${user.name}`}
-                                                >
-                                                    <UserPen
-                                                        aria-label={`To update ${user.name}`}
-                                                        className="size-6 text-yellow-600 hover:text-yellow-500 duration-300"
-                                                    />
-                                                </Link>
-
-                                                <Dialog key={user.id}>
-                                                    <DialogTrigger asChild>
-                                                        <button
-                                                            type="button"
-                                                            title={`Delete ${user.name}`}
-                                                        >
-                                                            <UserX
-                                                                aria-label={`Delete ${user.name}`}
-                                                                className="size-6 text-red-600 cursor-pointer hover:text-red-500 duration-300"
-                                                            />
-                                                        </button>
-                                                    </DialogTrigger>
-                                                    <DialogContent>
-                                                        <DialogTitle>
-                                                            Are you sure?
-                                                        </DialogTitle>
-                                                        <DialogDescription>
-                                                            After confirmation, user {user.name} will no longer be able to access the system!
-                                                        </DialogDescription>
-                                                        <DialogFooter>
-                                                            <DialogClose asChild>
-                                                                <Button
-                                                                    type="button"
-                                                                    variant="secondary"
-                                                                >
-                                                                    Cancel
-                                                                </Button>
-                                                            </DialogClose>
-                                                            <form action={deleteUserById}>
-                                                                <input
-                                                                    type="hidden"
-                                                                    name="csrfToken"
-                                                                    value={csrfToken}
-                                                                />
-                                                                <input
-                                                                    type="hidden"
-                                                                    name="userId"
-                                                                    value={user.id}
-                                                                />
-                                                                <Button
-                                                                    type="submit"
-                                                                    variant="destructive"
-                                                                >
-                                                                    Yes, delete!
-                                                                </Button>
-                                                            </form>
-                                                        </DialogFooter>
-                                                    </DialogContent>
-                                                </Dialog>
-                                            </>
-                                        ) : (
-                                            <Dialog key={user.email}>
-                                                <DialogTrigger asChild>
-                                                    <button
-                                                        type="submit"
-                                                        title={`Activate ${user.name}`}
-                                                        className="cursor-pointer"
-                                                    >
-                                                        <UserLock
-                                                            aria-label={`Activate ${user.name}`}
-                                                            className="size-6 text-red-600 hover:text-green-500 duration-300"
-                                                        />
-                                                    </button>
-                                                </DialogTrigger>
-                                                <DialogContent>
-                                                    <DialogTitle>
-                                                        Are you sure?
-                                                    </DialogTitle>
-                                                    <DialogDescription>
-                                                        After confirmation, you will activate the user account {user.name}!
-                                                    </DialogDescription>
-                                                    <DialogFooter>
-                                                        <DialogClose asChild>
-                                                            <Button
-                                                                type="button"
-                                                                variant="destructive"
-                                                            >
-                                                                Cancel
-                                                            </Button>
-                                                        </DialogClose>
-                                                        <form action={reactivateAdminUserById}>
-                                                            <input
-                                                                type="hidden"
-                                                                name="csrfToken"
-                                                                value={csrfToken}
-                                                            />
-                                                            <input
-                                                                type="hidden"
-                                                                name="userId"
-                                                                value={user.id}
-                                                            />
-                                                            <Button
-                                                                type="submit"
-                                                                variant="outline"
-                                                            >
-                                                                Yes, activate!
-                                                            </Button>
-                                                        </form>
-                                                    </DialogFooter>
-                                                </DialogContent>
-                                            </Dialog>
-                                        )}
+                                        <UserActionButtons
+                                            user={user}
+                                            csrfToken={csrfToken}
+                                        />
                                     </TableCell>
                                 </TableRow>
                             ))}

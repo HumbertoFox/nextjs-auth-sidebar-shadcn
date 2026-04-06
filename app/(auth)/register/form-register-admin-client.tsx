@@ -6,7 +6,7 @@ import { InputError } from '@/_components/input-error';
 import { Button } from '@/_components/ui/button';
 import { Input } from '@/_components/ui/input';
 import { Label } from '@/_components/ui/label';
-import { createAdmin } from '@/app/api/actions/createadmin';
+import { createAdmin } from '@/_actions/createadmin';
 import { TextLink } from '@/_components/text-link';
 import { handleImageChange } from '@/_lib/handleimagechange';
 import Image from 'next/image';

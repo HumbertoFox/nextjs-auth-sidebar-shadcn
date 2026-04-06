@@ -8,7 +8,7 @@ import { Input } from '@/_components/ui/input';
 import { Label } from '@/_components/ui/label';
 import { handleImageChange } from '@/_lib/handleimagechange';
 import Image from 'next/image';
-import { createUpdateAdminUser } from '@/app/api/actions/createupdateadminuser';
+import { createUpdateAdminUser } from '@/_actions/createupdateadminuser';
 import { RegisterFormUserProps, roleLabels, UserFormProps, UserRole } from '@/_types';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/_components/ui/select';
 import { useRouter } from 'next/navigation';

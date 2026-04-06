@@ -2,7 +2,7 @@
 
 import { LoadingLogin } from '@/_components/loadings/loading-login';
 import { useRouter } from 'next/navigation';
-import { deleteSession } from '@/app/api/actions/logoutuser';
+import { deleteSession } from '@/_actions/logoutuser';
 import { useEffect } from 'react';
 
 export default function Logout() {

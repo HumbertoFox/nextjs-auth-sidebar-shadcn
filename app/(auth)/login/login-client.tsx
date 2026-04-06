@@ -7,7 +7,7 @@ import { TextLink } from '@/_components/text-link';
 import { Button } from '@/_components/ui/button';
 import { Input } from '@/_components/ui/input';
 import { Label } from '@/_components/ui/label';
-import { loginUser } from '@/app/api/actions/loginuser';
+import { loginUser } from '@/_actions/loginuser';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { csrfTokenProps, LoginFormProps } from '@/_types';
 import AppLogoIconSvg from '@/_components/app-logo-icon-svg';

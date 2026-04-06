@@ -5,7 +5,7 @@ import { FormEvent, startTransition, useActionState, useEffect } from 'react';
 import { TextLink } from '@/_components/text-link';
 import { Button } from '@/_components/ui/button';
 import { useSearchParams } from 'next/navigation';
-import { handleEmailVerification } from '@/app/api/actions/handleemailverification';
+import { handleEmailVerification } from '@/_actions/handleemailverification';
 import { csrfTokenProps } from '@/_types';
 import { Label } from '@/_components/ui/label';
 import { Input } from '@/_components/ui/input';

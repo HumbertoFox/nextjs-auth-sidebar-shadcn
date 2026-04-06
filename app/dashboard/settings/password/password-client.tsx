@@ -7,7 +7,7 @@ import { Button } from '@/_components/ui/button';
 import { Input } from '@/_components/ui/input';
 import { Label } from '@/_components/ui/label';
 import { Eye, EyeClosed } from 'lucide-react';
-import { updatePassword } from '@/app/api/actions/updatepassword';
+import { updatePassword } from '@/_actions/updatepassword';
 import { csrfTokenProps } from '@/_types';
 import { PasswordChecklist } from '@/_components/password-checklist';
 

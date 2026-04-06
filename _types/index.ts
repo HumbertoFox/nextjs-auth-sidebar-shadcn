@@ -126,9 +126,30 @@ export type UserActionsProps = {
     user: UsersActionsProps;
 }
 
+export type UserActionButtonsProps = {
+    user: {
+        id: string;
+        name: string;
+        email: string;
+        deleted_at?: Date | null;
+    };
+    csrfToken?: string;
+}
+
 export type AdminActionsProps = {
     admin: UsersActionsProps;
     readonly loggedAdmin: string;
+}
+
+export type AdminActionButtonsProps = {
+    admin: {
+        id: string;
+        name: string;
+        email: string;
+        deleted_at?: Date | null;
+    };
+    csrfToken?: string;
+    isLoggedAdmin: boolean;
 }
 
 export type User = {

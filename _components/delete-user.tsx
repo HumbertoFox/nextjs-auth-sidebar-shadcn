@@ -6,7 +6,7 @@ import { Input } from '@/_components/ui/input';
 import { Label } from '@/_components/ui/label';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogTitle, DialogTrigger } from '@/_components/ui/dialog';
 import { Eye, EyeClosed } from 'lucide-react';
-import { deleteUser } from '@/app/api/actions/deleteuser';
+import { deleteUser } from '@/_actions/deleteuser';
 import { useRouter } from 'next/navigation';
 import { InputError } from '@/_components/input-error';
 
