@@ -11,9 +11,11 @@ export async function deleteUser(
     _: FormStateUserDelete,
     formData: FormData
 ): Promise<FormStateUserDelete> {
+    const sessionUser = await getUser();
+    if (!sessionUser || !sessionUser?.id) return { message: false };
+
     const csrfToken = formData.get('csrfToken') as string;
     const isValidCsrf = await validateCsrfToken(csrfToken);
-
     if (!isValidCsrf) return { message: false };
 
     const validatedFields = deleteUserSchema.safeParse({ password: formData.get('password') as string });
@@ -21,9 +23,6 @@ export async function deleteUser(
     if (!validatedFields.success) return { errors: z.flattenError(validatedFields.error).fieldErrors };
 
     const { password } = validatedFields.data;
-
-    const sessionUser = await getUser();
-    if (!sessionUser || !sessionUser?.id) return { message: false };
 
     const existingUser = await userRepository.findActiveById(sessionUser.id);
 

@@ -14,7 +14,6 @@ export async function resetPassword(
 ): Promise<FormStatePasswordReset> {
     const csrfToken = formData.get('csrfToken') as string;
     const isValidCsrf = await validateCsrfToken(csrfToken);
-
     if (!isValidCsrf) return { warning: 'Invalid security token. Please refresh the page and try again.' };
 
     const validatedFields = passwordResetSchema.safeParse({

@@ -22,6 +22,9 @@ export async function createUpdateAdminUser(
     _: FormStateCreateUpdateAdminUser,
     formData: FormData
 ): Promise<FormStateCreateUpdateAdminUser> {
+    const sessionUser = await getUser();
+    if (!sessionUser || sessionUser.role !== 'ADMIN') return;
+
     const csrfToken = formData.get('csrfToken') as string;
     const isValidCsrf = await validateCsrfToken(csrfToken);
 
@@ -56,9 +59,6 @@ export async function createUpdateAdminUser(
         password,
         role
     } = validatedFields.data;
-
-    const sessionUser = await getUser();
-    if (!sessionUser || sessionUser.role !== 'ADMIN') return;
 
     try {
         const hashedPassword = password ? await bcrypt.hash(password, 12) : undefined;

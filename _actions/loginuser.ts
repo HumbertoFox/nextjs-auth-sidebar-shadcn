@@ -15,7 +15,6 @@ export async function loginUser(
 ): Promise<FormStateLoginUser> {
     const csrfToken = formData.get('csrfToken') as string;
     const isValidCsrf = await validateCsrfToken(csrfToken);
-
     if (!isValidCsrf) return { warning: 'Invalid security token. Please refresh the page and try again.' };
 
     const validatedFields = signInSchema.safeParse({

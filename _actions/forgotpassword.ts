@@ -16,7 +16,6 @@ export async function forgotPassword(
 ): Promise<FormStatePasswordForgot> {
     const csrfToken = formData.get('csrfToken') as string;
     const isValidCsrf = await validateCsrfToken(csrfToken);
-
     if (!isValidCsrf) return { error: 'Invalid security token. Please refresh the page and try again.' };
 
     const validatedFields = passwordForgotSchema.safeParse({ email: formData.get('email') as string });

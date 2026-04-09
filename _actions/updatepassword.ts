@@ -13,9 +13,11 @@ export async function updatePassword(
     _: FormStatePasswordUpdate,
     formData: FormData
 ): Promise<FormStatePasswordUpdate> {
+    const sessionUser = await getUser();
+    if (!sessionUser || !sessionUser?.id) return redirect('/');
+
     const csrfToken = formData.get('csrfToken') as string;
     const isValidCsrf = await validateCsrfToken(csrfToken);
-
     if (!isValidCsrf) return { message: false };
 
     const validatedFields = passwordUpdateSchema.safeParse({
@@ -27,9 +29,6 @@ export async function updatePassword(
     if (!validatedFields.success) return { errors: z.flattenError(validatedFields.error).fieldErrors };
 
     const { current_password, password } = validatedFields.data;
-
-    const sessionUser = await getUser();
-    if (!sessionUser || !sessionUser?.id) return redirect('/');
 
     const authUser = await userRepository.findActiveById(sessionUser.id);
 

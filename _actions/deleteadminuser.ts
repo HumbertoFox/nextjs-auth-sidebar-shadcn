@@ -8,15 +8,14 @@ import { revalidatePath } from 'next/cache';
 export async function deleteUserById(
     formData: FormData
 ) {
+    const sessionUser = await getUser();
+    if (!sessionUser || sessionUser.role !== 'ADMIN') return;
+
     const csrfToken = formData.get('csrfToken') as string;
     const isValidCsrf = await validateCsrfToken(csrfToken);
-
     if (!isValidCsrf) return;
 
     const userId = formData.get('userId') as string;
-
-    const sessionUser = await getUser();
-    if (!sessionUser || sessionUser.role !== 'ADMIN') return;
 
     if (!userId) return;
 

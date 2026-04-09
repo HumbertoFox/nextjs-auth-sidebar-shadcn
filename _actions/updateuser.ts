@@ -20,9 +20,11 @@ export async function updateUser(
     _: FormStateUserUpdate,
     formData: FormData
 ): Promise<FormStateUserUpdate> {
+    const sessionUser = await getUser();
+    if (!sessionUser || !sessionUser?.id) return redirect('/');
+
     const csrfToken = formData.get('csrfToken') as string;
     const isValidCsrf = await validateCsrfToken(csrfToken);
-
     if (!isValidCsrf) return { success: false };
 
     const validatedFields = updateUserSchema.safeParse({
@@ -35,9 +37,6 @@ export async function updateUser(
     if (!validatedFields.success) return { errors: z.flattenError(validatedFields.error).fieldErrors };
 
     const { name, email } = validatedFields.data;
-
-    const sessionUser = await getUser();
-    if (!sessionUser || !sessionUser?.id) return redirect('/');
 
     const emailInUse = await userRepository.findByEmailActive(email);
 
