@@ -17,7 +17,7 @@ const ALLOWED_UPDATE_COLUMNS_ADMIN: ReadonlySet<string> = new Set([
 
 function buildSetClause(
     data: Record<string,
-    unknown>,
+        unknown>,
     allowed: ReadonlySet<string>
 ): {
     setClause: string;
