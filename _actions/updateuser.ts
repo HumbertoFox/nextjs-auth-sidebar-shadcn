@@ -42,7 +42,7 @@ export async function updateUser(
 
     if (emailInUse && emailInUse.id !== sessionUser.id) return { errors: { email: ['This email address is already in use.'] } };
 
-    const dataToUpdate: { name?: string; email?: string, avatar?: string | null } = {};
+    const dataToUpdate: { name?: string, email?: string, avatar?: string | null } = {};
     if (sessionUser.name !== name) dataToUpdate.name = name;
     if (sessionUser.email !== email) dataToUpdate.email = email;
 
