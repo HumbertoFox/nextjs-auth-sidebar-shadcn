@@ -112,7 +112,6 @@ export default function ResetPasswordClient({
                                 type={showPasswordConfirm ? "text" : "password"}
                                 name="password_confirmation"
                                 tabIndex={3}
-                                autoComplete="new-password"
                                 value={data.password_confirmation}
                                 onChange={handleChange}
                                 placeholder="Confirm your password"

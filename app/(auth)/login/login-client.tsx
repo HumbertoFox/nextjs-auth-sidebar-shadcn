@@ -115,7 +115,6 @@ export function LoginClient({
                                 ref={passwordRef}
                                 required
                                 tabIndex={2}
-                                autoComplete="current-password"
                                 value={data.password}
                                 onChange={handleChange}
                                 placeholder="Password"
