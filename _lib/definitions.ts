@@ -48,7 +48,7 @@ export function getSignUpUpdateSchema(formData: FormData) {
         })
     })
         .superRefine((data, ctx) => {
-            if (data.password && data.password !== data.password_confirmation) {
+            if (data.password !== data.password_confirmation) {
                 ctx.addIssue({
                     path: ['password_confirmation'],
                     code: 'custom',
