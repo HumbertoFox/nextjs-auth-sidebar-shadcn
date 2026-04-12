@@ -35,7 +35,7 @@ export async function handleEmailVerification(
         await verificationTokenRepository.delete(email, hashedToken);
 
         const newRawToken = crypto.randomBytes(32).toString('hex');
-        const expires_at = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+        const expires_at = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
 
         const verifyLink = `${process.env.NEXT_URL}/verify-email?token=${newRawToken}&email=${email}`;
         const response = await sendEmailVerification(email, verifyLink);
