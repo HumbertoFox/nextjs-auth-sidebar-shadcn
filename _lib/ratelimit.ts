@@ -10,12 +10,12 @@ async function check(
     windowMs: number
 ): Promise<{ allowed: boolean; retryAfterSeconds: number; count: number }> {
     const now = new Date();
-    const resetAt = new Date(Date.now() + windowMs);
+    const reset_at = new Date(Date.now() + windowMs).toISOString();
 
-    const entry = await rateLimitRepository.incrementAndCheck(key, resetAt);
+    const entry = await rateLimitRepository.incrementAndCheck(key, reset_at);
 
     if (entry.count > maxRequests) {
-        const retryAfterSeconds = Math.ceil((entry.reset_at.getTime() - now.getTime()) / 1000);
+        const retryAfterSeconds = Math.ceil((new Date(entry.reset_at).getTime() - now.getTime()) / 1000);
         return { allowed: false, retryAfterSeconds, count: entry.count };
     }
 

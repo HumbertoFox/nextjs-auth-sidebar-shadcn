@@ -19,11 +19,11 @@ export async function emailVerifiedChecked() {
 
     if (user?.email_verified) return null;
 
-    if (tokenExisting && new Date() > tokenExisting.expires_at) return 'verification-link-sent';
+    if (tokenExisting && new Date() > new Date(tokenExisting.expires_at)) return 'verification-link-sent';
 
     if (!tokenExisting) {
         const rawToken = crypto.randomBytes(32).toString('hex');
-        const expires_at = new Date(Date.now() + 24 * 60 * 60 * 1000);
+        const expires_at = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
 
         await verificationTokenRepository.create({
             identifier: email,

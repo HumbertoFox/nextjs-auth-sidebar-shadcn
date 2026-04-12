@@ -43,7 +43,7 @@ export async function forgotPassword(
 
     if (!tokenExisting) {
         const rawToken = crypto.randomBytes(32).toString('hex');
-        const expires_at = new Date(Date.now() + 60 * 60 * 1000);
+        const expires_at = new Date(Date.now() + 60 * 60 * 1000).toISOString();
 
         const resetLink = `${process.env.NEXT_URL}/reset-password?token=${rawToken}`;
         const response = await sendPasswordResetEmail(email, resetLink);

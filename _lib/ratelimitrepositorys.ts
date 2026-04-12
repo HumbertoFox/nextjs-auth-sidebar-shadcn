@@ -4,7 +4,7 @@ import { RateLimitEntry } from '@/_types';
 export const rateLimitRepository = {
     async incrementAndCheck(
         key: string,
-        resetAt: Date
+        reset_at: string
     ): Promise<RateLimitEntry> {
         const result = await pool.query<RateLimitEntry>(`
             INSERT INTO rate_limits (
@@ -18,7 +18,7 @@ export const rateLimitRepository = {
                 $2
             )
             ON CONFLICT (key) DO UPDATE
-                SET count    = CASE
+                SET count = CASE
                                    WHEN rate_limits.reset_at <= NOW() THEN 1
                                    ELSE rate_limits.count + 1
                                END,
@@ -30,7 +30,7 @@ export const rateLimitRepository = {
         `,
             [
                 key,
-                resetAt
+                reset_at
             ]);
 
         return result.rows[0];

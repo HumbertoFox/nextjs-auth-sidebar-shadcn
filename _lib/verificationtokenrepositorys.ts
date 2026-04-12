@@ -64,7 +64,7 @@ export const verificationTokenRepository = {
         data: {
             identifier: string;
             token: string;
-            expires_at: Date;
+            expires_at: string;
         }
     ) {
         const result = await pool.query<VerificationToken>(`

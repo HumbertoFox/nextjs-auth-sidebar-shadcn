@@ -31,7 +31,7 @@ export async function handleEmailVerification(
 
     if (!tokenExisting) return { error: 'Invalid or expired token' };
 
-    if (tokenExisting && new Date() > tokenExisting.expires_at) {
+    if (tokenExisting && new Date() > new Date(tokenExisting.expires_at)) {
         await verificationTokenRepository.delete(email, hashedToken);
 
         const newRawToken = crypto.randomBytes(32).toString('hex');

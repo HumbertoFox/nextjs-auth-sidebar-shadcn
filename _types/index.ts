@@ -119,7 +119,7 @@ export type ResetPasswordForm = {
 export type UsersActionsProps = {
     readonly id: string;
     readonly name: string;
-    readonly deleted_at?: Date | null;
+    readonly deleted_at?: string | null;
 }
 
 export type UserActionsProps = {
@@ -131,7 +131,7 @@ export type UserActionButtonsProps = {
         id: string;
         name: string;
         email: string;
-        deleted_at?: Date | null;
+        deleted_at?: string | null;
     };
     csrfToken?: string;
 }
@@ -146,7 +146,7 @@ export type AdminActionButtonsProps = {
         id: string;
         name: string;
         email: string;
-        deleted_at?: Date | null;
+        deleted_at?: string | null;
     };
     csrfToken?: string;
     isLoggedAdmin: boolean;
@@ -157,21 +157,21 @@ export type User = {
     name: string;
     role: UserRole;
     avatar?: string | null;
-    email_verified?: Date | null;
-    deleted_at?: Date | null;
-    created_at: Date;
-    updated_at: Date;
+    email_verified?: string | null;
+    deleted_at?: string | null;
+    created_at: string;
+    updated_at: string;
 } & LoginFormProps;
 
 export type VerificationToken = {
     identifier: string;
     token: string;
-    expires_at: Date;
+    expires_at: string;
 }
 
 export type RateLimitEntry = {
     count: number;
-    reset_at: Date;
+    reset_at: string;
 }
 
 export type PasswordChecklistProps = {
