@@ -12,6 +12,7 @@ export default async function HomePage() {
           <Button
             asChild
             variant="outline"
+            size="sm"
           >
             <Link href="/dashboard">Dashboard</Link>
           </Button>
@@ -20,12 +21,14 @@ export default async function HomePage() {
             <Button
               asChild
               variant="outline"
+              size="sm"
             >
               <Link href="/login">Log in</Link>
             </Button>
             <Button
               asChild
               variant="outline"
+              size="sm"
             >
               <Link href="/register">Sign up</Link>
             </Button>
