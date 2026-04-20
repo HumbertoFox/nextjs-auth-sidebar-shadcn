@@ -12,7 +12,7 @@ export default function SettingsLayout({
                 title="Settings"
                 description="Manage your profile and account settings."
             />
-            <div className="flex flex-col space-y-8 lg:flex-row lg:space-y-0 lg:space-x-12 px-4">
+            <div className="flex flex-col space-y-8 lg:flex-row lg:space-y-0 lg:space-x-12 px-2">
                 <SettingsLayoutClient />
                 <Separator className="my-6 md:hidden" />
                 <div className="flex-1 md:max-w-2xl">

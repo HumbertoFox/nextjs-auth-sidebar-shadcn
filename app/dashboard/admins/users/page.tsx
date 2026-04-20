@@ -39,7 +39,7 @@ export default async function UsersPage(props: { searchParams?: Promise<{ page?:
     return (
         <>
             <DashboardSidebarHeader items={breadcrumbItems} />
-            <div className="flex flex-1 flex-col gap-4 p-4">
+            <div className="flex flex-1 flex-col gap-4 p-2">
                 <div className="border-sidebar-border/70 dark:border-sidebar-border relative min-h-screen flex-1 overflow-hidden rounded-xl border md:min-h-min">
                     <Table className="w-full text-center">
                         <TableHeader>

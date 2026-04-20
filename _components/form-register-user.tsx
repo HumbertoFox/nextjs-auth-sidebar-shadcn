@@ -85,7 +85,7 @@ export default function RegisterUpdateUserForm({
         };
     }, [state?.message, router, data, isEdit]);
     return (
-        <div className="max-w-96 space-y-6 p-4 mx-auto md:mx-0">
+        <div className="max-w-96 space-y-6 p-2 mx-auto md:mx-0">
             <div className="flex flex-col items-center gap-2 text-center mx-auto">
                 <h1 className="text-xl font-medium">{titleForm}</h1>
                 <p className="text-muted-foreground text-sm text-balance">
