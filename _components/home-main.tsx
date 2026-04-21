@@ -54,9 +54,9 @@ export default function HomeMainComponent() {
     return (
         <main
             ref={containerRef}
-            className="flex min-h-full w-full max-w-3xl flex-col items-center justify-between flex-1 py-32 px-16 bg-white dark:bg-black sm:items-start"
+            className="flex min-h-full w-full max-w-3xl flex-col items-center justify-between flex-1 py-16 px-16 sm:py-32 bg-white dark:bg-black lg:items-start"
         >
-            <div className="flex flex-col lg:flex-row gap-6">
+            <div className="flex flex-col lg:flex-row gap-6 pb-6">
                 <Image
                     className="dark:invert logo opacity-0"
                     src="/next.svg"
