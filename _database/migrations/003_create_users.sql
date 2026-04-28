@@ -38,11 +38,3 @@ COMMENT ON COLUMN users.avatar IS 'URL ou caminho do arquivo de avatar do usuár
 COMMENT ON COLUMN users.deleted_at IS 'Timestamp de soft delete (NULL = ativo, NOT NULL = deletado)';
 COMMENT ON COLUMN users.created_at IS 'Data e hora de criação do registro';
 COMMENT ON COLUMN users.updated_at IS 'Data e hora da última atualização (atualizado automaticamente)';
-
--- ============================================================================
--- INDEX: idx_users_deleted_at
--- Description: Otimiza queries que filtram usuários ativos/deletados
--- Usage: WHERE deleted_at IS NULL / IS NOT NULL
--- ============================================================================
-CREATE INDEX IF NOT EXISTS idx_users_deleted_at
-    ON users(deleted_at);

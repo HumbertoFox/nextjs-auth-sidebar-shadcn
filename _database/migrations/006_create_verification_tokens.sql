@@ -27,23 +27,3 @@ COMMENT ON TABLE verification_tokens IS 'Tokens temporários de verificação de
 COMMENT ON COLUMN verification_tokens.identifier IS 'Identificador do usuário, geralmente email (case-insensitive)';
 COMMENT ON COLUMN verification_tokens.token IS 'Token único de verificação (recomendado armazenar hash, não plaintext)';
 COMMENT ON COLUMN verification_tokens.expires_at IS 'Timestamp de expiração - tokens expirados devem ser deletados';
-
--- ============================================================================
--- INDEX: idx_verification_tokens_expires_at
--- Description: Otimiza limpeza de tokens expirados e validação
--- Usage: DELETE WHERE expires_at < NOW() ou WHERE expires_at > NOW()
--- ============================================================================
-CREATE INDEX IF NOT EXISTS idx_verification_tokens_expires_at
-    ON verification_tokens(expires_at);
-
-COMMENT ON INDEX idx_verification_tokens_expires_at IS 'Otimiza queries de validação e limpeza de tokens expirados';
-
--- ============================================================================
--- INDEX: idx_verification_tokens_identifier
--- Description: Otimiza busca de tokens por identificador (email)
--- Usage: SELECT * FROM verification_tokens WHERE identifier = 'user@example.com'
--- ============================================================================
-CREATE INDEX IF NOT EXISTS idx_verification_tokens_identifier
-    ON verification_tokens(identifier);
-
-COMMENT ON INDEX idx_verification_tokens_identifier IS 'Otimiza busca de tokens por identificador/email';

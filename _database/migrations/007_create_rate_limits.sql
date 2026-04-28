@@ -11,7 +11,3 @@ CREATE TABLE IF NOT EXISTS rate_limits (
 );
 
 COMMENT ON TABLE rate_limits IS 'Rate limiting persistido por chave (ip:email, email, etc.)';
-
--- Índice para limpeza eficiente de entradas expiradas
-CREATE INDEX IF NOT EXISTS idx_rate_limits_reset_at
-    ON rate_limits (reset_at);

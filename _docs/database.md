@@ -19,11 +19,13 @@ O objetivo é organizar, versionar e aplicar alterações no banco de dados de f
 
 `005_create_triggers.sql` → Cria função e trigger de atualização automática de `updated_at`.
 
-`006_create_verification_tokens.sql` → Cria tabela `verification_tokens` com índices.
+`006_create_verification_tokens.sql` → Cria tabela `verification_tokens`.
 
-`007_create_ratelimits.sql` → Cria tabela `rate_limits` com índice para rate limiting persistido no banco.
+`007_create_ratelimits.sql` → Cria tabela `rate_limits` para rate limiting persistido no banco.
 
 `008_create_permissions.sql` → Cria role `<nome_do_banco>_backend_role` (derivada automaticamente do nome do banco), concede `USAGE` no schema `public`, aplica permissões via `GRANT`/`REVOKE` e políticas RLS para as tabelas `users`, `verification_tokens` e `rate_limits`.
+
+`009_create_indexes.sql` → Cria todos os índices do banco: `idx_users_deleted_at`, `idx_verification_tokens_expires_at`, `idx_verification_tokens_identifier` e `idx_rate_limits_reset_at`.
 
 **Os arquivos são executados em ordem alfabética/numerada, garantindo consistência.**
 
@@ -41,7 +43,7 @@ O objetivo é organizar, versionar e aplicar alterações no banco de dados de f
 
 Exemplo de arquivo gerado:
 
-`009_20260208124500_add_profiles.sql`
+`010_20260208124500_add_profiles.sql`
 
 **Observações importantes:**
 
@@ -105,7 +107,7 @@ Equivale a `db:reset` seguido de `db:migrate`.
 
 ### Boas práticas para novas migrations
 
-**1. Nomear sequencialmente:** - Prefixo numérico (`009`, `010`) + timestamp + descrição (opcional).
+**1. Nomear sequencialmente:** - Prefixo numérico (`010`, `011`) + timestamp + descrição (opcional).
 
 **2. Idempotência:** - Sempre use `IF EXISTS` ou `IF NOT EXISTS` para evitar erros em execuções repetidas.
 
@@ -117,22 +119,22 @@ Equivale a `db:reset` seguido de `db:migrate`.
 
 ### Referência
 
-- **Extensões**: `pgcrypto`, `citext`
+- **Extensões**: `pgcrypto`, `citext`.
 
-- **Enum**: `user_role` → `ADMIN`, `USER`
+- **Enum**: `user_role` → `ADMIN`, `USER`.
 
-- **Tabelas**: `users`, `verification_tokens`, `rate_limits`, `schema_migrations`
+- **Tabelas**: `users`, `verification_tokens`, `rate_limits`, `schema_migrations`.
 
-- **Índices**: `idx_users_deleted_at`, `idx_verification_tokens_expires_at`, `idx_verification_tokens_identifier`, `idx_rate_limits_reset_at`
+- **Índices**: `idx_users_deleted_at`, `idx_verification_tokens_expires_at`, `idx_verification_tokens_identifier`, `idx_rate_limits_reset_at`.
 
-- **Função**: `update_updated_at` - compara **NEW** com **OLD** e só atualiza `updated_at` se houver mudança real
+- **Função**: `update_updated_at` - compara **NEW** com **OLD** e só atualiza `updated_at` se houver mudança real.
 
-- **Trigger**: `trigger_update_users_updated_at` - atualiza automaticamente `updated_at` na tabela `users`
+- **Trigger**: `trigger_update_users_updated_at` - atualiza automaticamente `updated_at` na tabela `users`.
 
-- **Views públicas** (`sem password`): `users_public`, `users_admin_public`, `users_public_active`
+- **Views públicas** (`sem password`): `users_public`, `users_admin_public`, `users_public_active`.
 
-- **View interna** (com `password`, somente backend): `users_active`
+- **View interna** (com `password`, somente backend): `users_active`.
 
-- **Role**: `<nome_do_banco>_backend_role` — gerada automaticamente a partir do nome do banco definido na `DATABASE_URL`. Acesso exclusivo às tabelas `users`, `verification_tokens` e `rate_limits`, e à view `users_active`
+- **Role**: `<nome_do_banco>_backend_role` — gerada automaticamente a partir do nome do banco definido na `DATABASE_URL`. Acesso exclusivo às tabelas `users`, `verification_tokens` e `rate_limits`, e à view `users_active`.
 
-- **RLS**: Row Level Security habilitado na tabela `users` e `rate_limits` - `PUBLIC` só acessa via views
+- **RLS**: Row Level Security habilitado na tabela `users` e `rate_limits` - `PUBLIC` só acessa via views.

@@ -172,7 +172,7 @@ npm run make:migration "Add new Profiles Table"
 - Arquivo gerado:
 
 ```pgsql
-009_20260208124500_add_new_profiles_table.sql
+010_20260208124500_add_new_profiles_table.sql
 ```
 
 **Observações:**
