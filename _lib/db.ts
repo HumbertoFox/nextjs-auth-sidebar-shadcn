@@ -21,6 +21,15 @@ const basePool = new Pool({
 // Roda como o usuário dono do banco (quem tem permissão de CREATE no schema).
 export const rawPool = basePool;
 
+// Interface mínima compatível com pool customizado e PoolClient do pg.
+// Use QueryExecutor nos repositórios no lugar de Pool | PoolClient.
+export interface QueryExecutor {
+    query<T extends pkg.QueryResultRow = pkg.QueryResultRow>(
+        text: string | pkg.QueryConfig<unknown[]>,
+        values?: unknown[]
+    ): Promise<pkg.QueryResult<T>>;
+};
+
 // Cache — verifica a role apenas uma vez usando o primeiro cliente disponível
 let backendRoleExists: boolean | null = null;
 
@@ -47,7 +56,7 @@ async function resolveBackendRole(client: pkg.PoolClient): Promise<boolean> {
 
 // Pool padrão da aplicação — aplica SET ROLE em cada query.
 // Use este pool em todo código de aplicação (rotas, serviços, etc.).
-const pool = {
+const pool: QueryExecutor = {
     async query<T extends pkg.QueryResultRow = pkg.QueryResultRow>(
         text: string | pkg.QueryConfig<unknown[]>,
         values?: unknown[]
