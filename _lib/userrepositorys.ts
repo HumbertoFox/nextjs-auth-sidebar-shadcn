@@ -202,7 +202,7 @@ export const userRepository = {
             avatar?: string | null;
         }
     ) {
-        const result = await pool.query<User>(`
+        const result = await pool.query<{id: string, role: UserRole}>(`
             INSERT INTO users (
                 name,
                 email,
@@ -217,7 +217,7 @@ export const userRepository = {
                 $4,
                 $5
             )
-            RETURNING id
+            RETURNING id, role
         `,
             [
                 data.name,

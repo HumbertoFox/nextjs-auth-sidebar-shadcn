@@ -8,6 +8,7 @@ import z from 'zod';
 import sharp from 'sharp';
 import { userRepository } from '@/_lib/userrepositorys';
 import { regenerateCsrfToken, validateCsrfToken } from '@/_lib/csrf';
+import { UserRole } from '@/_types';
 
 const MAX_FILE_SIZE = 512 * 1024;
 const MAX_DIMENSION = 512;
@@ -48,7 +49,7 @@ export async function createAdmin(
         if (existingUser) return { warning: 'Data already registered.' };
 
         const adminExists = await userRepository.adminExists();
-        const role = adminExists ? 'USER' : 'ADMIN';
+        const role: UserRole = adminExists ? 'USER' : 'ADMIN';
 
         const hashedPassword = await bcrypt.hash(password, 12);
 
@@ -60,7 +61,7 @@ export async function createAdmin(
                 const buffer = Buffer.from(await file.arrayBuffer());
                 const metadata = await sharp(buffer).metadata();
                 const { width, height } = metadata;
-                if (width > MAX_DIMENSION || height > MAX_DIMENSION) return { errors: { avatar: [`The image cannot exceed 512x512px. (current: ${width}x${height})`] } };
+                if (!width || !height || width > MAX_DIMENSION || height > MAX_DIMENSION) return { errors: { avatar: [`The image cannot exceed 512x512px. (current: ${width}x${height})`] } };
             } catch {
                 return { errors: { avatar: ['Failed to read the image.'] } };
             }

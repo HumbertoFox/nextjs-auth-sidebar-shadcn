@@ -71,7 +71,7 @@ export async function createUpdateAdminUser(
                 const buffer = Buffer.from(await file.arrayBuffer());
                 const metadata = await sharp(buffer).metadata();
                 const { width, height } = metadata;
-                if (width > MAX_DIMENSION || height > MAX_DIMENSION) return { errors: { avatar: [`The image cannot exceed 512x512px. (current: ${width}x${height})`] } };
+                if (!width || !height || width > MAX_DIMENSION || height > MAX_DIMENSION) return { errors: { avatar: [`The image cannot exceed 512x512px. (current: ${width}x${height})`] } };
             } catch {
                 return { errors: { avatar: ['Failed to read the image.'] } };
             }
@@ -103,7 +103,7 @@ export async function createUpdateAdminUser(
                 userInDb.name !== name ||
                 userInDb.email !== email ||
                 userInDb.role !== role ||
-                (hashedPassword && userInDb.password !== hashedPassword) ||
+                !!hashedPassword ||
                 imageUrl !== undefined;
 
             if (!hasChanges) return { message: false };
