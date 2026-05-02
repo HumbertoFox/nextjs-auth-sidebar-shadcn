@@ -82,6 +82,7 @@ export default function ResetPasswordClient({
                             <Input
                                 id="password"
                                 name="password"
+                                autoComplete="off"
                                 type={showPassword ? "text" : "password"}
                                 tabIndex={2}
                                 value={data.password}
@@ -109,8 +110,9 @@ export default function ResetPasswordClient({
                         <div className="relative">
                             <Input
                                 id="password_confirmation"
-                                type={showPasswordConfirm ? "text" : "password"}
                                 name="password_confirmation"
+                                autoComplete="off"
+                                type={showPasswordConfirm ? "text" : "password"}
                                 tabIndex={3}
                                 value={data.password_confirmation}
                                 onChange={handleChange}

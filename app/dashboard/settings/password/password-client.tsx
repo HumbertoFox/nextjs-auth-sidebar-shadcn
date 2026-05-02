@@ -75,6 +75,7 @@ export default function PasswordPageClient({
                             <Input
                                 id="current_password"
                                 name="current_password"
+                                autoComplete="off"
                                 tabIndex={1}
                                 ref={currentPasswordInput}
                                 value={data.current_password}
@@ -102,6 +103,7 @@ export default function PasswordPageClient({
                             <Input
                                 id="password"
                                 name="password"
+                                autoComplete="off"
                                 tabIndex={2}
                                 ref={passwordInput}
                                 value={data.password}
@@ -130,6 +132,7 @@ export default function PasswordPageClient({
                             <Input
                                 id="password_confirmation"
                                 name="password_confirmation"
+                                autoComplete="off"
                                 tabIndex={3}
                                 value={data.password_confirmation}
                                 onChange={handleChange}

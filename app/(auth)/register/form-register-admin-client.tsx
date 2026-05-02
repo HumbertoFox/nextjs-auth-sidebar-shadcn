@@ -177,6 +177,7 @@ export default function RegisterAdminClient({
                             <Input
                                 id="password"
                                 name="password"
+                                autoComplete="off"
                                 type={showPassword ? "text" : "password"}
                                 required
                                 tabIndex={4}
@@ -204,6 +205,7 @@ export default function RegisterAdminClient({
                             <Input
                                 id="password_confirmation"
                                 name="password_confirmation"
+                                autoComplete="off"
                                 type={showPasswordConfirm ? "text" : "password"}
                                 required
                                 tabIndex={5}
