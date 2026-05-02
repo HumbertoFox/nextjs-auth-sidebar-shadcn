@@ -60,8 +60,9 @@ export default function DeleteUser({ csrfToken }: { csrfToken?: string; }) {
                                 <div className="relative">
                                     <Input
                                         id="password"
-                                        type={showPassword ? "text" : "password"}
                                         name="password"
+                                        autoComplete="off"
+                                        type={showPassword ? "text" : "password"}
                                         ref={passwordInput}
                                         value={data.password}
                                         onChange={handleChange}
