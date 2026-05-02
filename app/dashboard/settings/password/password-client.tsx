@@ -80,7 +80,6 @@ export default function PasswordPageClient({
                                 value={data.current_password}
                                 onChange={handleChange}
                                 type={showOldPassword ? "text" : "password"}
-                                autoComplete="current-password"
                                 placeholder="Current password"
                                 required
                                 className="block w-full"
@@ -108,7 +107,6 @@ export default function PasswordPageClient({
                                 value={data.password}
                                 onChange={handleChange}
                                 type={showPassword ? "text" : "password"}
-                                autoComplete="new-password"
                                 placeholder="New Password"
                                 required
                                 className="block w-full"
@@ -136,7 +134,6 @@ export default function PasswordPageClient({
                                 value={data.password_confirmation}
                                 onChange={handleChange}
                                 type={showPasswordConfirm ? "text" : "password"}
-                                autoComplete="new-password"
                                 placeholder="Confirm your new password."
                                 required
                                 className="block w-full"
