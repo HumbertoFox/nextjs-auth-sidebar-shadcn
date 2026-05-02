@@ -28,6 +28,17 @@ export function PasswordChecklist({ password }: PasswordChecklistProps) {
 
     if (!password) return null;
 
+    const allValid = checks.every(({ valid }) => valid);
+
+    if (allValid) {
+        return (
+            <p className="flex items-center gap-2 text-xs text-green-600 mt-1">
+                <span className="text-base leading-none">✓</span>
+                Strong password!
+            </p>
+        );
+    }
+
     return (
         <ul className="mt-1 space-y-1">
             {checks.map(({ label, valid }) => (
