@@ -203,6 +203,7 @@ export default function RegisterUpdateUserForm({
                             <Input
                                 id="password"
                                 name="password"
+                                autoComplete="off"
                                 type={showPassword ? "text" : "password"}
                                 required={!isEdit}
                                 tabIndex={4}
@@ -230,6 +231,7 @@ export default function RegisterUpdateUserForm({
                             <Input
                                 id="password_confirmation"
                                 name="password_confirmation"
+                                autoComplete="off"
                                 type={showPasswordConfirm ? "text" : "password"}
                                 required={!isEdit}
                                 tabIndex={5}
