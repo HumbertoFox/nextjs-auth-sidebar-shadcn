@@ -88,7 +88,7 @@ export default function DashboardSidebar({
                     <NavMainAdmins items={adminNavItems} />
                 </SidebarContent>
             )}
-            {(userType === 'ADMIN' || userType === 'USER') && (
+            {userType && (
                 <SidebarContent
                     key="user"
                     className="flex-none"

@@ -17,7 +17,7 @@ export function NavMainUsers({
         };
     };
     return (
-        <SidebarGroup className="px-2 py-0">
+        <SidebarGroup className="px-2 py-0 pb-2">
             <SidebarGroupLabel>User</SidebarGroupLabel>
             <SidebarMenu>
                 {items.map((item) => (

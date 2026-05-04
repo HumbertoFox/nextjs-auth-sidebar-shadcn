@@ -21,7 +21,7 @@ export function UserActionButtons({
                 >
                     <UserPen
                         aria-label={`To update ${user.name}`}
-                        className="size-6 text-yellow-600 hover:text-yellow-500 duration-300"
+                        className="size-5 text-yellow-600 hover:text-yellow-500 duration-300"
                     />
                 </Link>
 
@@ -30,7 +30,7 @@ export function UserActionButtons({
                         <button type="button" title={`Delete ${user.name}`}>
                             <UserX
                                 aria-label={`Delete ${user.name}`}
-                                className="size-6 text-red-600 cursor-pointer hover:text-red-500 duration-300"
+                                className="size-5 text-red-600 cursor-pointer hover:text-red-500 duration-300"
                             />
                         </button>
                     </DialogTrigger>
@@ -83,7 +83,7 @@ export function UserActionButtons({
                 >
                     <UserLock
                         aria-label={`Activate ${user.name}`}
-                        className="size-6 text-red-600 hover:text-green-500 duration-300"
+                        className="size-5 text-red-600 hover:text-green-500 duration-300"
                     />
                 </button>
             </DialogTrigger>

@@ -33,7 +33,7 @@ export default async function AdminsPage() {
             <DashboardSidebarHeader items={breadcrumbItems} />
             <div className="flex flex-1 flex-col gap-4 p-2">
                 <div className="border-sidebar-border/70 dark:border-sidebar-border relative min-h-screen flex-1 overflow-hidden rounded-xl border md:min-h-min">
-                    <Table className="w-full text-center">
+                    <Table className="w-full text-center text-xs">
                         <TableHeader>
                             <TableRow className="cursor-default">
                                 <TableHead className="text-center">No.</TableHead>

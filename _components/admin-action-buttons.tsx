@@ -22,7 +22,7 @@ export function AdminActionButtons({
                 >
                     <UserRoundPen
                         aria-label={`To update ${admin.name}`}
-                        className="size-6 text-yellow-600 hover:text-yellow-500 duration-300"
+                        className="size-5 text-yellow-600 hover:text-yellow-500 duration-300"
                     />
                 </Link>
 
@@ -32,7 +32,7 @@ export function AdminActionButtons({
                             <button type="button" title={`Delete ${admin.name}`}>
                                 <UserRoundX
                                     aria-label={`Delete ${admin.name}`}
-                                    className="size-6 text-red-600 cursor-pointer hover:text-red-500 duration-300"
+                                    className="size-5 text-red-600 cursor-pointer hover:text-red-500 duration-300"
                                 />
                             </button>
                         </DialogTrigger>
@@ -73,7 +73,7 @@ export function AdminActionButtons({
                 >
                     <UserLock
                         aria-label={`Activate ${admin.name}`}
-                        className="size-6 text-red-600 hover:text-green-500 duration-300"
+                        className="size-5 text-red-600 hover:text-green-500 duration-300"
                     />
                 </button>
             </DialogTrigger>
