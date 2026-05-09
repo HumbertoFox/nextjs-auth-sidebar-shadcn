@@ -26,8 +26,10 @@ const breadcrumbItems = [
 export default async function AdminsPage() {
     const user = await getUser() as UserDetailsProps;
     const loggedAdmin = user.id;
-    const admins = await userRepository.findAllAdmins();
-    const csrfToken = await getCsrfToken();
+    const [admins, csrfToken] = await Promise.all([
+        userRepository.findAllAdmins(),
+        getCsrfToken()
+    ]);
     return (
         <>
             <DashboardSidebarHeader items={breadcrumbItems} />

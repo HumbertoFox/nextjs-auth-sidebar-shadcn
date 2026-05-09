@@ -13,9 +13,11 @@ export const generateMetadata = async (): Promise<Metadata> => {
 }
 
 export default async function RegisterPage() {
-  const isAdmin = await getIsAdmin();
+  const [isAdmin, csrfToken] = await Promise.all([
+    getIsAdmin(),
+    getCsrfToken()
+  ]);
   const Title = isAdmin ? 'Register User' : 'Register Administrator';
-  const csrfToken = await getCsrfToken();
   return (
     <Suspense fallback={<LoadingRegister />}>
       <RegisterAdminClient

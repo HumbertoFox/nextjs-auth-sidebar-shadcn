@@ -31,9 +31,11 @@ export default async function Update({
     params,
 }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
-    const user = await userRepository.findById(id);
+    const [user, csrfToken] = await Promise.all([
+        userRepository.findById(id),
+        getCsrfToken()
+    ]);
     if (!user) redirect('/dashboard');
-    const csrfToken = await getCsrfToken();
     return (
         <>
             <DashboardSidebarHeader items={breadcrumbItems} />
