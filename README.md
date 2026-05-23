@@ -65,7 +65,7 @@ Crie um arquivo `.env` na raiz do projeto:
 ### Descrição
 
 | Variável              | Descrição                                                  |
-| --------------------- | -----------------------------------------------------------|
+| --------------------- | ---------------------------------------------------------- |
 | NEXT_PUBLIC_APP_NAME  | Nome público da aplicação (exposto ao cliente via Next.js) |
 | BLOB_READ_WRITE_TOKEN | Token para upload de arquivos no Vercel Blob               |
 | DATABASE_URL          | Conexão com PostgreSQL                                     |
