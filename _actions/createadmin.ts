@@ -8,15 +8,10 @@ import z from 'zod';
 import sharp from 'sharp';
 import { userRepository } from '@/_lib/userrepositorys';
 import { regenerateCsrfToken, validateCsrfToken } from '@/_lib/csrf';
-import { UserRole } from '@/_types';
+import { MIME_TO_EXT, UserRole } from '@/_types';
 
 const MAX_FILE_SIZE = 512 * 1024;
 const MAX_DIMENSION = 512;
-const MIME_TO_EXT: Record<string, string> = {
-    'image/jpeg': 'jpg',
-    'image/png': 'png',
-    'image/webp': 'webp',
-};
 
 export async function createAdmin(
     _: FormStateCreateAdmin,
@@ -31,7 +26,7 @@ export async function createAdmin(
         name: formData.get('name') as string,
         email: formData.get('email') as string,
         password: formData.get('password') as string,
-        password_confirmation: formData.get('password_confirmation') as string
+        password_confirmation: formData.get('password_confirmation') as string,
     });
 
     const file = formData.get('file') as File | null;
@@ -41,7 +36,7 @@ export async function createAdmin(
     const {
         name,
         email,
-        password
+        password,
     } = validatedFields.data;
 
     try {
@@ -88,7 +83,7 @@ export async function createAdmin(
 
         return {
             message: true,
-            info: 'Account created successfully! Redirecting to the Dashboard, please wait...'
+            info: 'Account created successfully! Redirecting to the Dashboard, please wait...',
         };
     } catch (error) {
         console.error(error);

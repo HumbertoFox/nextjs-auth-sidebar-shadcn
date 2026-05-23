@@ -8,13 +8,9 @@ import { put, del } from '@vercel/blob';
 import { userRepository } from '@/_lib/userrepositorys';
 import { revalidatePath } from 'next/cache';
 import { regenerateCsrfToken, validateCsrfToken } from '@/_lib/csrf';
+import { MIME_TO_EXT } from '@/_types';
 
 const MAX_FILE_SIZE = 512 * 1024;
-const MIME_TO_EXT: Record<string, string> = {
-    'image/jpeg': 'jpg',
-    'image/png': 'png',
-    'image/webp': 'webp',
-};
 
 export async function updateUser(
     _: FormStateUserUpdate,
@@ -47,7 +43,7 @@ export async function updateUser(
     if (sessionUser.email !== email) dataToUpdate.email = email;
 
     if (file && file.size > 0) {
-        if (!(file.type in MIME_TO_EXT)) return { errors: { avatar: ['Only JPEG, PNG, or WebP formats are allowed.'] } };
+        if (!(file.type in MIME_TO_EXT)) return { errors: { avatar: ['Only JPEG, PNG, and WebP formats are allowed.'] } };
 
         if (file.size > MAX_FILE_SIZE) return { errors: { avatar: ['The image cannot exceed 512 KB.'] } };
 

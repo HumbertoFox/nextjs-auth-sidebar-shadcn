@@ -140,7 +140,7 @@ export type FormStateCreateUpdateAdminUser =
             password_confirmation?: string[];
             avatar?: string[];
         }
-        message?: boolean;
+        warning?: string;
     } | undefined;
 
 export type FormStateLoginUser =

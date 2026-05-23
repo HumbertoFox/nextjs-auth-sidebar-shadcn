@@ -11,7 +11,6 @@ import Image from 'next/image';
 import { createUpdateAdminUser } from '@/_actions/createupdateadminuser';
 import { RegisterFormUserProps, roleLabels, UserFormProps, UserRole } from '@/_types';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/_components/ui/select';
-import { useRouter } from 'next/navigation';
 import { PasswordChecklist } from '@/_components/password-checklist';
 
 export default function RegisterUpdateUserForm({
@@ -21,7 +20,6 @@ export default function RegisterUpdateUserForm({
     valueButton,
     csrfToken,
 }: RegisterFormUserProps) {
-    const router = useRouter();
     const emailRef = useRef<HTMLInputElement>(null);
     const [state, action, pending] = useActionState(createUpdateAdminUser, undefined);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -59,31 +57,6 @@ export default function RegisterUpdateUserForm({
         if (csrfToken) formData.append('csrfToken', csrfToken);
         startTransition(() => action(formData));
     };
-    useEffect(() => {
-        if (state?.message) {
-            const { role } = data;
-
-            if (!isEdit) {
-                startTransition(() => {
-                    setData({
-                        id: '',
-                        name: '',
-                        email: '',
-                        password: '',
-                        role: 'USER',
-                        password_confirmation: '',
-                        avatar: undefined,
-                    });
-                });
-            }
-
-            if (role === 'USER') {
-                router.push('/dashboard/admins/users');
-            } else {
-                router.push('/dashboard/admins');
-            }
-        };
-    }, [state?.message, router, data, isEdit]);
     return (
         <div className="max-w-96 space-y-6 p-2 mx-auto md:mx-0">
             <div className="flex flex-col items-center gap-2 text-center mx-auto">
@@ -91,6 +64,7 @@ export default function RegisterUpdateUserForm({
                 <p className="text-muted-foreground text-sm text-balance">
                     {`Enter ${isEdit ? 'user' : 'the'} details below to ${isEdit ? 'update' : 'create an'} account.`}
                 </p>
+                {state?.warning && <p className="mb-4 text-center text-sm font-medium text-orange-400">{state.warning}</p>}
             </div>
             <form
                 onSubmit={submit}

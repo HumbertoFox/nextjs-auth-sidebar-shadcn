@@ -9,26 +9,23 @@ import { revalidatePath } from 'next/cache';
 import { userRepository } from '@/_lib/userrepositorys';
 import { getUser } from '@/_lib/dal';
 import { regenerateCsrfToken, validateCsrfToken } from '@/_lib/csrf';
+import { MIME_TO_EXT } from '@/_types';
+import { redirect } from 'next/navigation';
 
 const MAX_FILE_SIZE = 512 * 1024;
 const MAX_DIMENSION = 512;
-const MIME_TO_EXT: Record<string, string> = {
-    'image/jpeg': 'jpg',
-    'image/png': 'png',
-    'image/webp': 'webp',
-};
 
 export async function createUpdateAdminUser(
     _: FormStateCreateUpdateAdminUser,
     formData: FormData
 ): Promise<FormStateCreateUpdateAdminUser> {
     const sessionUser = await getUser();
-    if (!sessionUser || sessionUser.role !== 'ADMIN') return;
+    if (!sessionUser || sessionUser.role !== 'ADMIN') return { warning: 'Invalid security token. Please refresh the page and try again.' };
 
     const csrfToken = formData.get('csrfToken') as string;
     const isValidCsrf = await validateCsrfToken(csrfToken);
 
-    if (!isValidCsrf) return { message: false };
+    if (!isValidCsrf) return { warning: 'Invalid security token. Please refresh the page and try again.' };
 
     const schema = getSignUpUpdateSchema(formData);
 
@@ -37,7 +34,7 @@ export async function createUpdateAdminUser(
         email: formData.get('email') as string,
         password: formData.get('password') as string,
         role: formData.get('role') as string,
-        password_confirmation: formData.get('password_confirmation') as string
+        password_confirmation: formData.get('password_confirmation') as string,
     });
 
     const id = formData.get('id') as string | undefined;
@@ -48,7 +45,11 @@ export async function createUpdateAdminUser(
             revalidatePath('/dashboard/admins');
         } else {
             revalidatePath('/dashboard/admins/users');
-        };
+        }
+    }
+
+    function getRedirectPath(role: string) {
+        return role === 'ADMIN' ? '/dashboard/admins' : '/dashboard/admins/users';
     }
 
     if (!validatedFields.success) return { errors: z.flattenError(validatedFields.error).fieldErrors };
@@ -57,23 +58,25 @@ export async function createUpdateAdminUser(
         name,
         email,
         password,
-        role
+        role,
     } = validatedFields.data;
+
+    let redirectPath: string | undefined;
 
     try {
         const hashedPassword = password ? await bcrypt.hash(password, 12) : undefined;
 
         if (file && file.size > 0) {
-            if (!(file.type in MIME_TO_EXT)) return { errors: { avatar: ['Only JPEG, PNG, or WebP formats are allowed.'] } };
-            if (file.size > MAX_FILE_SIZE) return { errors: { avatar: ['The image cannot exceed 512 KB.'] } };
+            if (!(file.type in MIME_TO_EXT)) return { errors: { avatar: ['Only JPEG, PNG, and WebP formats are allowed.'] } };
+            if (file.size > MAX_FILE_SIZE) return { errors: { avatar: ['The image size cannot exceed 512 KB.'] } };
 
             try {
                 const buffer = Buffer.from(await file.arrayBuffer());
                 const metadata = await sharp(buffer).metadata();
                 const { width, height } = metadata;
-                if (!width || !height || width > MAX_DIMENSION || height > MAX_DIMENSION) return { errors: { avatar: [`The image cannot exceed 512x512px. (current: ${width}x${height})`] } };
+                if (!width || !height || width > MAX_DIMENSION || height > MAX_DIMENSION) return { errors: { avatar: [`The image dimensions cannot exceed 512x512px. (current: ${width}x${height})`] } };
             } catch {
-                return { errors: { avatar: ['Failed to read the image.'] } };
+                return { errors: { avatar: ['Unable to read the image file.'] } };
             }
         }
 
@@ -82,7 +85,7 @@ export async function createUpdateAdminUser(
                 try {
                     await del(currentAvatar);
                 } catch (deleteErr) {
-                    console.warn('It was not possible to delete the previous avatar:', deleteErr);
+                    console.warn('Unable to delete the previous avatar:', deleteErr);
                 }
             }
             const extension = MIME_TO_EXT[file!.type];
@@ -92,10 +95,10 @@ export async function createUpdateAdminUser(
 
         if (id) {
             const userInDb = await userRepository.findActiveById(id);
-            if (!userInDb || userInDb.deleted_at) return { message: false };
+            if (!userInDb) return { warning: 'Invalid security token. Please refresh the page and try again.' };
 
             const existingUser = await userRepository.findByEmail(email);
-            if (existingUser && existingUser.id !== id) return { errors: { email: ['This email address is already in use!'] } };
+            if (existingUser && existingUser.id !== id) return { errors: { email: ['This email address is already in use.'] } };
 
             const imageUrl = file && file.size > 0 ? await uploadAvatar(id, userInDb.avatar) : undefined;
 
@@ -106,9 +109,9 @@ export async function createUpdateAdminUser(
                 !!hashedPassword ||
                 imageUrl !== undefined;
 
-            if (!hasChanges) return { message: false };
+            if (!hasChanges) return { warning: 'No changes were detected.' };
 
-            const updateUser = await userRepository.updateByAdminUser(id, {
+            const updatedUser = await userRepository.updateByAdminUser(id, {
                 name,
                 email,
                 role,
@@ -116,8 +119,9 @@ export async function createUpdateAdminUser(
                 ...(imageUrl && { avatar: imageUrl }),
             });
 
-            if (!updateUser) return { message: false };
-            revalidatePaths(updateUser.role);
+            if (!updatedUser) return { warning: 'Failed to update the user. Please try again.' };
+            revalidatePaths(updatedUser.role);
+            redirectPath = getRedirectPath(updatedUser.role);
         } else {
             const existingUser = await userRepository.findByEmail(email);
             if (existingUser) return { errors: { email: ['This email address is already in use!'] } };
@@ -137,12 +141,14 @@ export async function createUpdateAdminUser(
             }
 
             revalidatePaths(newUser.role);
+            redirectPath = getRedirectPath(newUser.role);
         }
 
         await regenerateCsrfToken();
-        return { message: true };
     } catch (error) {
         console.error(error);
-        return { message: false };
+        return { warning: 'An unexpected error occurred. Please try again.' };
     }
+
+    if (redirectPath) redirect(redirectPath);
 }
