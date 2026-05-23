@@ -8,6 +8,8 @@ import { Plus } from 'lucide-react';
 import AppLogoIconSvgVercel from '@/_components/app-logo-icon-svg-vercel';
 import Image from 'next/image';
 
+const APP_NAME = process.env.NEXT_PUBLIC_APP_NAME ?? 'NextJs + Shadcn + Neon';
+
 export default function AuthSplitLayoutClient() {
     const logoNextRef = useRef<HTMLDivElement>(null);
     const logoPlusOneRef = useRef<HTMLDivElement>(null);
@@ -65,7 +67,7 @@ export default function AuthSplitLayoutClient() {
                 <div className="flex">
                     <Link href="/" className="relative z-20 flex items-center text-lg font-medium">
                         <AppLogoIconSvg className="mr-2 size-8 fill-current" />
-                        Next.Js + Vercel + Neon
+                        {APP_NAME}
                     </Link>
                 </div>
                 <div className="flex items-center justify-center gap-6 h-full z-10">
@@ -108,7 +110,7 @@ export default function AuthSplitLayoutClient() {
                 </div>
                 <div className="relative z-20 mt-auto">
                     <blockquote className="space-y-2">
-                        <p className="text-lg">&ldquo;Next.js + Vercel + Neon = Starter kit&rdquo;</p>
+                        <p className="text-lg">&ldquo;{APP_NAME} = Starter kit&rdquo;</p>
                         <footer className="text-sm text-neutral-300">Your Next.js authentication system with Vercel.</footer>
                     </blockquote>
                 </div>
