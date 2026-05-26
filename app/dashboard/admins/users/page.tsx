@@ -8,23 +8,13 @@ import { Metadata } from 'next';
 import { UserActionButtons } from '@/_components/user-action-buttons';
 
 export const generateMetadata = async (): Promise<Metadata> => {
-    return {
-        title: 'Users'
-    };
+    return { title: 'Users' };
 }
 
 const breadcrumbItems = [
-    {
-        text: 'Dashboard',
-        href: '/dashboard'
-    },
-    {
-        text: 'Admins',
-        href: '/dashboard/admins'
-    },
-    {
-        text: 'Users'
-    },
+    { text: 'Dashboard', href: '/dashboard' },
+    { text: 'Admins', href: '/dashboard/admins' },
+    { text: 'Users' }
 ];
 
 const pageSize = 10;

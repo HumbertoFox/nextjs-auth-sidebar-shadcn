@@ -1,24 +1,11 @@
 import pool, { QueryExecutor } from '@/_lib/db';
 import { User, UserRole } from '@/_types';
 
-const ALLOWED_UPDATE_COLUMNS_USER: ReadonlySet<string> = new Set([
-    'name',
-    'email',
-    'avatar'
-]);
+const ALLOWED_UPDATE_COLUMNS_USER: ReadonlySet<string> = new Set(['name', 'email', 'avatar']);
 
-const ALLOWED_UPDATE_COLUMNS_ADMIN: ReadonlySet<string> = new Set([
-    'name',
-    'email',
-    'role',
-    'password',
-    'avatar'
-]);
+const ALLOWED_UPDATE_COLUMNS_ADMIN: ReadonlySet<string> = new Set(['name', 'email', 'role', 'password', 'avatar']);
 
-function buildSetClause(
-    data: Record<string, unknown>,
-    allowed: ReadonlySet<string>
-): {
+function buildSetClause(data: Record<string, unknown>, allowed: ReadonlySet<string>): {
     setClause: string;
     values: unknown[];
 } {
@@ -29,26 +16,13 @@ function buildSetClause(
     return { setClause, values };
 }
 
-const USER_PUBLIC_COLUMNS = `
-    id,
-    name,
-    email,
-    role,
-    avatar,
-    email_verified,
-    deleted_at,
-    created_at,
-    updated_at
-`;
+const USER_PUBLIC_COLUMNS = ` id, name, email, role, avatar, email_verified, deleted_at, created_at, updated_at `;
 
 export const userRepository = {
     // -------------------------------------------------------------------------
     // Busca na view pública por ID (sem password)
     // -------------------------------------------------------------------------
-    async findPublicById(
-        id: string,
-        client?: QueryExecutor
-    ) {
+    async findPublicById(id: string, client?: QueryExecutor) {
         const executor = client ?? pool;
         const result = await executor.query(`
             SELECT *
@@ -56,9 +30,7 @@ export const userRepository = {
             WHERE id = $1
             LIMIT 1
         `,
-            [
-                id
-            ]
+            [id]
         );
         return result.rows[0] ?? null;
     },
@@ -66,10 +38,7 @@ export const userRepository = {
     // -------------------------------------------------------------------------
     // Busca usuário ativo por ID (inclui password — uso interno)
     // -------------------------------------------------------------------------
-    async findActiveById(
-        id: string,
-        client?: QueryExecutor
-    ) {
+    async findActiveById(id: string, client?: QueryExecutor) {
         const executor = client ?? pool;
         const result = await executor.query<User>(`
             SELECT *
@@ -77,9 +46,7 @@ export const userRepository = {
             WHERE id = $1
             LIMIT 1
         `,
-            [
-                id
-            ]
+            [id]
         );
         return result.rows[0] ?? null;
     },
@@ -87,10 +54,7 @@ export const userRepository = {
     // -------------------------------------------------------------------------
     // Busca usuário ativo por email (inclui password — uso interno/autenticação)
     // -------------------------------------------------------------------------
-    async findByEmailActive(
-        email: string,
-        client?: QueryExecutor
-    ) {
+    async findByEmailActive(email: string, client?: QueryExecutor) {
         const executor = client ?? pool;
         const result = await executor.query<User>(`
             SELECT *
@@ -98,9 +62,7 @@ export const userRepository = {
             WHERE email = $1
             LIMIT 1
         `,
-            [
-                email
-            ]
+            [email]
         );
         return result.rows[0] ?? null;
     },
@@ -108,10 +70,7 @@ export const userRepository = {
     // -------------------------------------------------------------------------
     // Busca usuário ativo por email na view pública (sem password)
     // -------------------------------------------------------------------------
-    async findByEmail(
-        email: string,
-        client?: QueryExecutor
-    ) {
+    async findByEmail(email: string, client?: QueryExecutor) {
         const executor = client ?? pool;
         const result = await executor.query<User>(`
             SELECT *
@@ -119,9 +78,7 @@ export const userRepository = {
             WHERE email = $1
             LIMIT 1
         `,
-            [
-                email
-            ]
+            [email]
         );
         return result.rows[0] ?? null;
     },
@@ -129,9 +86,7 @@ export const userRepository = {
     // -------------------------------------------------------------------------
     // Verifica se existe ao menos um ADMIN ativo no sistema
     // -------------------------------------------------------------------------
-    async adminExists(
-        client?: QueryExecutor
-    ): Promise<boolean> {
+    async adminExists(client?: QueryExecutor): Promise<boolean> {
         const executor = client ?? pool;
         const result = await executor.query<{ exists: boolean }>(`
             SELECT EXISTS (
@@ -146,9 +101,7 @@ export const userRepository = {
     // -------------------------------------------------------------------------
     // Retorna o primeiro ADMIN (apenas id)
     // -------------------------------------------------------------------------
-    async findAdminOnly(
-        client?: QueryExecutor
-    ) {
+    async findAdminOnly(client?: QueryExecutor) {
         const executor = client ?? pool;
         const result = await executor.query(`
             SELECT id
@@ -161,9 +114,7 @@ export const userRepository = {
     // -------------------------------------------------------------------------
     // Retorna todos os ADMINs
     // -------------------------------------------------------------------------
-    async findAllAdmins(
-        client?: QueryExecutor
-    ) {
+    async findAllAdmins(client?: QueryExecutor) {
         const executor = client ?? pool;
         const result = await executor.query<User>(`
             SELECT *
@@ -175,9 +126,7 @@ export const userRepository = {
     // -------------------------------------------------------------------------
     // Contagem de ADMINs ativos
     // -------------------------------------------------------------------------
-    async countActiveAdmins(
-        client?: QueryExecutor
-    ): Promise<number> {
+    async countActiveAdmins(client?: QueryExecutor): Promise<number> {
         const executor = client ?? pool;
         const result = await executor.query<{ count: string }>(`
             SELECT COUNT(*)
@@ -190,10 +139,7 @@ export const userRepository = {
     // -------------------------------------------------------------------------
     // Busca por ID na view pública
     // -------------------------------------------------------------------------
-    async findById(
-        id: string,
-        client?: QueryExecutor
-    ) {
+    async findById(id: string, client?: QueryExecutor) {
         const executor = client ?? pool;
         const result = await executor.query<User>(`
             SELECT *
@@ -201,9 +147,7 @@ export const userRepository = {
             WHERE id = $1
             LIMIT 1
         `,
-            [
-                id
-            ]
+            [id]
         );
         return result.rows[0] ?? null;
     },
@@ -211,11 +155,7 @@ export const userRepository = {
     // -------------------------------------------------------------------------
     // Busca paginada de usuários com role USER
     // -------------------------------------------------------------------------
-    async findUsersPaginated(
-        page: number,
-        pageSize: number,
-        client?: QueryExecutor
-    ) {
+    async findUsersPaginated(page: number, pageSize: number, client?: QueryExecutor) {
         const executor = client ?? pool;
         const offset = (page - 1) * pageSize;
 
@@ -231,10 +171,7 @@ export const userRepository = {
             LIMIT $1
             OFFSET $2
         `,
-            [
-                pageSize,
-                offset
-            ]
+            [pageSize, offset]
         );
 
         const countResult = await executor.query<{ count: string }>(`
@@ -252,41 +189,20 @@ export const userRepository = {
     // -------------------------------------------------------------------------
     // Criação de usuário
     // -------------------------------------------------------------------------
-    async create(
-        data: {
-            name: string;
-            email: string;
-            password: string;
-            role: UserRole;
-            avatar?: string | null;
-        },
-        client?: QueryExecutor
-    ): Promise<{ id: string; role: UserRole }> {
+    async create(data: {
+        name: string;
+        email: string;
+        password: string;
+        role: UserRole;
+        avatar?: string | null;
+    }, client?: QueryExecutor): Promise<{ id: string; role: UserRole }> {
         const executor = client ?? pool;
         const result = await executor.query<{ id: string; role: UserRole }>(`
-            INSERT INTO users (
-                name,
-                email,
-                password,
-                role,
-                avatar
-            )
-            VALUES (
-                $1,
-                $2,
-                $3,
-                $4,
-                $5
-            )
+            INSERT INTO users ( name, email, password, role, avatar )
+            VALUES ( $1, $2, $3, $4, $5 )
             RETURNING id, role
         `,
-            [
-                data.name,
-                data.email,
-                data.password,
-                data.role,
-                data.avatar ?? null,
-            ]
+            [data.name, data.email, data.password, data.role, data.avatar ?? null,]
         );
         return result.rows[0];
     },
@@ -294,32 +210,21 @@ export const userRepository = {
     // -------------------------------------------------------------------------
     // Atualização de avatar
     // -------------------------------------------------------------------------
-    async updateAvatar(
-        id: string,
-        avatar: string,
-        client?: QueryExecutor
-    ) {
+    async updateAvatar(id: string, avatar: string, client?: QueryExecutor) {
         const executor = client ?? pool;
         await executor.query(`
             UPDATE users
             SET avatar = $1
             WHERE id = $2
         `,
-            [
-                avatar,
-                id
-            ]
+            [avatar, id]
         );
     },
 
     // -------------------------------------------------------------------------
     // Atualização pelo próprio usuário ativo (campos permitidos: name, email, avatar)
     // -------------------------------------------------------------------------
-    async updateByIdUserActive(
-        id: string,
-        data: Partial<Pick<User, 'name' | 'email' | 'avatar'>>,
-        client?: QueryExecutor
-    ) {
+    async updateByIdUserActive(id: string, data: Partial<Pick<User, 'name' | 'email' | 'avatar'>>, client?: QueryExecutor) {
         if (!Object.keys(data).length) return null;
         const executor = client ?? pool;
         const { setClause, values } = buildSetClause(
@@ -333,10 +238,7 @@ export const userRepository = {
             AND deleted_at IS NULL
             RETURNING ${USER_PUBLIC_COLUMNS}
         `,
-            [
-                id,
-                ...values
-            ]
+            [id, ...values]
         );
         return result.rows[0] ?? null;
     },
@@ -344,26 +246,16 @@ export const userRepository = {
     // -------------------------------------------------------------------------
     // Atualização por admin
     // -------------------------------------------------------------------------
-    async updateByAdminUser(
-        id: string,
-        data: Partial<Pick<User, 'name' | 'email' | 'role' | 'password' | 'avatar'>>,
-        client?: QueryExecutor
-    ) {
+    async updateByAdminUser(id: string, data: Partial<Pick<User, 'name' | 'email' | 'role' | 'password' | 'avatar'>>, client?: QueryExecutor) {
         const executor = client ?? pool;
-        const { setClause, values } = buildSetClause(
-            data as Record<string, unknown>,
-            ALLOWED_UPDATE_COLUMNS_ADMIN
-        );
+        const { setClause, values } = buildSetClause(data as Record<string, unknown>, ALLOWED_UPDATE_COLUMNS_ADMIN);
         const result = await executor.query<User>(`
             UPDATE users
             SET ${setClause}
             WHERE id = $1
             RETURNING ${USER_PUBLIC_COLUMNS}
         `,
-            [
-                id,
-                ...values
-            ]
+            [id, ...values]
         );
         return result.rows[0] ?? null;
     },
@@ -371,11 +263,7 @@ export const userRepository = {
     // -------------------------------------------------------------------------
     // Atualização de senha por ID
     // -------------------------------------------------------------------------
-    async updatePassword(
-        id: string,
-        password: string,
-        client?: QueryExecutor
-    ) {
+    async updatePassword(id: string, password: string, client?: QueryExecutor) {
         const executor = client ?? pool;
         const result = await executor.query<User>(`
             UPDATE users
@@ -383,10 +271,7 @@ export const userRepository = {
             WHERE id = $2
             RETURNING ${USER_PUBLIC_COLUMNS}
         `,
-            [
-                password,
-                id
-            ]
+            [password, id]
         );
         return result.rows[0] ?? null;
     },
@@ -394,10 +279,7 @@ export const userRepository = {
     // -------------------------------------------------------------------------
     // Soft delete
     // -------------------------------------------------------------------------
-    async softDeleteById(
-        id: string,
-        client?: QueryExecutor
-    ) {
+    async softDeleteById(id: string, client?: QueryExecutor) {
         const executor = client ?? pool;
         const result = await executor.query<User>(`
             UPDATE users
@@ -405,9 +287,7 @@ export const userRepository = {
             WHERE id = $1
             RETURNING ${USER_PUBLIC_COLUMNS}
         `,
-            [
-                id
-            ]
+            [id]
         );
         return result.rows[0] ?? null;
     },
@@ -415,10 +295,7 @@ export const userRepository = {
     // -------------------------------------------------------------------------
     // Reativação (desfaz soft delete)
     // -------------------------------------------------------------------------
-    async reactivateById(
-        id: string,
-        client?: QueryExecutor
-    ) {
+    async reactivateById(id: string, client?: QueryExecutor) {
         const executor = client ?? pool;
         const result = await executor.query<User>(`
             UPDATE users
@@ -426,9 +303,7 @@ export const userRepository = {
             WHERE id = $1
             RETURNING ${USER_PUBLIC_COLUMNS}
         `,
-            [
-                id
-            ]
+            [id]
         );
         return result.rows[0] ?? null;
     },
@@ -436,11 +311,7 @@ export const userRepository = {
     // -------------------------------------------------------------------------
     // Atualização do timestamp de verificação de email
     // -------------------------------------------------------------------------
-    async updateEmailVerified(
-        id: string,
-        date: Date,
-        client?: QueryExecutor
-    ) {
+    async updateEmailVerified(id: string, date: Date, client?: QueryExecutor) {
         const executor = client ?? pool;
         const result = await executor.query<User>(`
             UPDATE users
@@ -448,10 +319,7 @@ export const userRepository = {
             WHERE id = $2
             RETURNING ${USER_PUBLIC_COLUMNS}
         `,
-            [
-                date,
-                id
-            ]
+            [date, id]
         );
         return result.rows[0] ?? null;
     },
@@ -459,11 +327,7 @@ export const userRepository = {
     // -------------------------------------------------------------------------
     // Atualização de senha por email (reset de senha)
     // -------------------------------------------------------------------------
-    async updatePasswordByEmail(
-        email: string,
-        hashedPassword: string,
-        client?: QueryExecutor
-    ) {
+    async updatePasswordByEmail(email: string, hashedPassword: string, client?: QueryExecutor) {
         const executor = client ?? pool;
         const result = await executor.query(`
             UPDATE users
@@ -471,10 +335,7 @@ export const userRepository = {
             WHERE email = $1
             RETURNING ${USER_PUBLIC_COLUMNS}
         `,
-            [
-                email,
-                hashedPassword
-            ]
+            [email, hashedPassword]
         );
         return result.rows[0] ?? null;
     },

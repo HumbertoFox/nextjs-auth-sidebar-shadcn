@@ -11,9 +11,7 @@ import { updatePassword } from '@/_actions/updatepassword';
 import { csrfTokenProps } from '@/_types';
 import { PasswordChecklist } from '@/_components/password-checklist';
 
-export default function PasswordPageClient({
-    csrfToken
-}: csrfTokenProps) {
+export default function PasswordPageClient({ csrfToken }: csrfTokenProps) {
     const passwordInput = useRef<HTMLInputElement>(null);
     const currentPasswordInput = useRef<HTMLInputElement>(null);
     const [state, action, pending] = useActionState(updatePassword, undefined);
@@ -21,11 +19,7 @@ export default function PasswordPageClient({
     const [showPassword, setShowPassword] = useState<boolean>(false);
     const [showPasswordConfirm, setShowPasswordConfirm] = useState<boolean>(false);
     const [recentlySuccessful, setrecentlySuccessful] = useState<boolean>(false);
-    const [data, setData] = useState({
-        current_password: '',
-        password: '',
-        password_confirmation: ''
-    });
+    const [data, setData] = useState({ current_password: '', password: '', password_confirmation: '' });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { id, value } = e.target;

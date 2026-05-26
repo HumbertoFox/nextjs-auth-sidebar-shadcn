@@ -8,33 +8,18 @@ import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
 
 export const generateMetadata = async (): Promise<Metadata> => {
-    return {
-        title: 'Update User'
-    };
+    return { title: 'Update User' };
 }
 
 const breadcrumbItems = [
-    {
-        text: 'Dashboard',
-        href: '/dashboard'
-    },
-    {
-        text: 'Admins',
-        href: '/dashboard/admins'
-    },
-    {
-        text: 'Update User'
-    },
+    { text: 'Dashboard', href: '/dashboard' },
+    { text: 'Admins', href: '/dashboard/admins' },
+    { text: 'Update User' }
 ];
 
-export default async function Update({
-    params,
-}: { params: Promise<{ id: string }> }) {
+export default async function Update({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
-    const [user, csrfToken] = await Promise.all([
-        userRepository.findById(id),
-        getCsrfToken()
-    ]);
+    const [user, csrfToken] = await Promise.all([userRepository.findById(id), getCsrfToken()]);
     if (!user) redirect('/dashboard');
     return (
         <>

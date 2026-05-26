@@ -6,23 +6,13 @@ import { LoadingRegister } from '@/_components/loadings/loading-register';
 import { getCsrfToken } from '@/_lib/csrf';
 
 export const generateMetadata = async (): Promise<Metadata> => {
-    return {
-        title: 'Register User'
-    };
+    return { title: 'Register User' };
 }
 
 const breadcrumbItems = [
-    {
-        text: 'Dashboard',
-        href: '/dashboard'
-    },
-    {
-        text: 'Admins',
-        href: '/dashboard/admins'
-    },
-    {
-        text: 'Register'
-    },
+    { text: 'Dashboard', href: '/dashboard' },
+    { text: 'Admins', href: '/dashboard/admins' },
+    { text: 'Register' }
 ];
 
 export default async function RegisterUsersPage() {

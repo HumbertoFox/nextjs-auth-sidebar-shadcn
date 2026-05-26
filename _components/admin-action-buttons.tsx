@@ -8,11 +8,7 @@ import { UserLock, UserRoundPen, UserRoundX } from 'lucide-react';
 import Link from 'next/link';
 import { AdminActionButtonsProps } from '@/_types';
 
-export function AdminActionButtons({
-    admin,
-    csrfToken,
-    isLoggedAdmin
-}: AdminActionButtonsProps) {
+export function AdminActionButtons({ admin, csrfToken, isLoggedAdmin }: AdminActionButtonsProps) {
     if (!admin.deleted_at) {
         return (
             <>

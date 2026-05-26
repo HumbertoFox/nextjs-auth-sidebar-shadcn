@@ -6,9 +6,7 @@ import LoadingSettings from '@/_components/loadings/loading-settings';
 import { Suspense } from 'react';
 
 export const generateMetadata = async (): Promise<Metadata> => {
-    return {
-        title: 'Settings'
-    };
+    return { title: 'Settings' };
 }
 
 export default async function SettingsPage() {

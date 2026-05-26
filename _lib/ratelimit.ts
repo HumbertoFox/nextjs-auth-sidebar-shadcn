@@ -1,14 +1,9 @@
 import { rateLimitRepository } from '@/_lib/ratelimitrepositorys';
 
-
 const LOGIN_MAX_ATTEMPTS = 5;
 const LOGIN_WINDOW_MS = 10 * 60_000; // 10 minutos
 
-async function check(
-    key: string,
-    maxRequests: number,
-    windowMs: number
-): Promise<{ allowed: boolean; retryAfterSeconds: number; count: number }> {
+async function check(key: string, maxRequests: number, windowMs: number): Promise<{ allowed: boolean; retryAfterSeconds: number; count: number }> {
     const now = new Date();
     const reset_at = new Date(Date.now() + windowMs).toISOString();
 
@@ -22,10 +17,7 @@ async function check(
     return { allowed: true, retryAfterSeconds: 0, count: entry.count };
 }
 
-export async function checkLoginRateLimit(
-    ip: string,
-    email: string
-): Promise<{
+export async function checkLoginRateLimit(ip: string, email: string): Promise<{
     allowed: boolean;
     retryAfterSeconds: number;
     reason: 'ip' | 'email' | null;
@@ -56,8 +48,6 @@ export async function resetLoginRateLimit(email: string): Promise<void> {
     await rateLimitRepository.deleteByKey(`login:email:${email.toLowerCase()}`);
 }
 
-export async function checkForgotPasswordRateLimit(
-    email: string
-): Promise<{ allowed: boolean; retryAfterSeconds: number }> {
+export async function checkForgotPasswordRateLimit(email: string): Promise<{ allowed: boolean; retryAfterSeconds: number }> {
     return check(`forgot:email:${email.toLowerCase()}`, 3, 15 * 60_000);
 }

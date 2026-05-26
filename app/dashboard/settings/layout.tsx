@@ -3,9 +3,7 @@ import { Separator } from '@/_components/ui/separator';
 import { type PropsWithChildren } from 'react';
 import SettingsLayoutClient from './settings-layout-client';
 
-export default function SettingsLayout({
-    children,
-}: PropsWithChildren) {
+export default function SettingsLayout({ children }: PropsWithChildren) {
     return (
         <>
             <Heading

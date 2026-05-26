@@ -5,10 +5,7 @@ import { LucideIcon, Monitor, Moon, Sun } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { HTMLAttributes, useEffect, useState } from 'react';
 
-export default function AppearancePageClient({
-    className = '',
-    ...props
-}: HTMLAttributes<HTMLDivElement>) {
+export default function AppearancePageClient({ className = '', ...props }: HTMLAttributes<HTMLDivElement>) {
     const { theme, setTheme } = useTheme();
     const [mounted, setMounted] = useState(false);
     useEffect(() => {
@@ -20,21 +17,9 @@ export default function AppearancePageClient({
         icon: LucideIcon;
         label: string;
     }[] = [
-            {
-                value: 'light',
-                icon: Sun,
-                label: 'Light'
-            },
-            {
-                value: 'dark',
-                icon: Moon,
-                label: 'Dark'
-            },
-            {
-                value: 'system',
-                icon: Monitor,
-                label: 'System'
-            },
+            { value: 'light', icon: Sun, label: 'Light' },
+            { value: 'dark', icon: Moon, label: 'Dark' },
+            { value: 'system', icon: Monitor, label: 'System' }
         ];
     if (!mounted) return null;
     return (

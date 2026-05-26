@@ -13,13 +13,7 @@ import { RegisterFormUserProps, roleLabels, UserFormProps, UserRole } from '@/_t
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/_components/ui/select';
 import { PasswordChecklist } from '@/_components/password-checklist';
 
-export default function RegisterUpdateUserForm({
-    user,
-    isEdit,
-    titleForm,
-    valueButton,
-    csrfToken,
-}: RegisterFormUserProps) {
+export default function RegisterUpdateUserForm({ user, isEdit, titleForm, valueButton, csrfToken }: RegisterFormUserProps) {
     const emailRef = useRef<HTMLInputElement>(null);
     const [state, action, pending] = useActionState(createUpdateAdminUser, undefined);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -27,15 +21,7 @@ export default function RegisterUpdateUserForm({
     const [imageError, setImageError] = useState<string | null>(null);
     const [showPassword, setShowPassword] = useState<boolean>(false);
     const [showPasswordConfirm, setShowPasswordConfirm] = useState<boolean>(false);
-    const [data, setData] = useState<UserFormProps>({
-        id: user?.id ?? '',
-        name: user?.name ?? '',
-        email: user?.email ?? '',
-        role: user?.role ?? 'USER',
-        password: '',
-        password_confirmation: '',
-        avatar: user?.avatar ?? undefined,
-    });
+    const [data, setData] = useState<UserFormProps>({ id: user?.id ?? '', name: user?.name ?? '', email: user?.email ?? '', role: user?.role ?? 'USER', password: '', password_confirmation: '', avatar: user?.avatar ?? undefined });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { id, value } = e.target;

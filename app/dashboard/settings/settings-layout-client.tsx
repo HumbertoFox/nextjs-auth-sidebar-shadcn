@@ -7,22 +7,10 @@ import { cn } from '@/_lib/utils';
 import { SidebarNavItemProps } from '@/_types';
 
 const sidebarNavItems: SidebarNavItemProps[] = [
-    {
-        text: 'Settings',
-        href: '/dashboard/settings'
-    },
-    {
-        text: 'Profile',
-        href: '/dashboard/settings/profile'
-    },
-    {
-        text: 'Password',
-        href: '/dashboard/settings/password'
-    },
-    {
-        text: 'Appearance',
-        href: '/dashboard/settings/appearance'
-    },
+    { text: 'Settings', href: '/dashboard/settings' },
+    { text: 'Profile', href: '/dashboard/settings/profile' },
+    { text: 'Password', href: '/dashboard/settings/password' },
+    { text: 'Appearance', href: '/dashboard/settings/appearance' }
 ];
 
 export default function SettingsLayoutClient() {

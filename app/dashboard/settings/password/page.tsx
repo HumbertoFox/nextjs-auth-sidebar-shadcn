@@ -5,9 +5,7 @@ import { Suspense } from 'react';
 import { getCsrfToken } from '@/_lib/csrf';
 
 export const generateMetadata = async (): Promise<Metadata> => {
-    return {
-        title: 'Update Password User'
-    };
+    return { title: 'Update Password User' };
 }
 
 export default async function PasswordPage() {

@@ -5,25 +5,14 @@ import { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 
 export const generateMetadata = async (): Promise<Metadata> => {
-    return {
-        title: 'User'
-    };
+    return { title: 'User' };
 }
 
 const breadcrumbItems = [
-    {
-        text: 'Dashboard',
-        href: '/dashboard'
-    },
-    {
-        text: 'User'
-    },
+    { text: 'Dashboard', href: '/dashboard' },
+    { text: 'User' }
 ];
-const borderColors = [
-    'border-emerald-500',
-    'border-violet-500',
-    'border-rose-500'
-];
+const borderColors = ['border-emerald-500', 'border-violet-500', 'border-rose-500'];
 
 export default async function UserPage() {
     const user = await getUser() as UserDetailsProps;

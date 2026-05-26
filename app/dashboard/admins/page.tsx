@@ -8,28 +8,18 @@ import { Metadata } from 'next';
 import { AdminActionButtons } from '@/_components/admin-action-buttons';
 
 export const generateMetadata = async (): Promise<Metadata> => {
-    return {
-        title: 'Administrators'
-    };
+    return { title: 'Administrators' };
 }
 
 const breadcrumbItems = [
-    {
-        text: 'Dashboard',
-        href: '/dashboard'
-    },
-    {
-        text: 'Admins'
-    },
+    { text: 'Dashboard', href: '/dashboard' },
+    { text: 'Admins' }
 ];
 
 export default async function AdminsPage() {
     const user = await getUser() as UserDetailsProps;
     const loggedAdmin = user.id;
-    const [admins, csrfToken] = await Promise.all([
-        userRepository.findAllAdmins(),
-        getCsrfToken()
-    ]);
+    const [admins, csrfToken] = await Promise.all([userRepository.findAllAdmins(), getCsrfToken()]);
     return (
         <>
             <DashboardSidebarHeader items={breadcrumbItems} />

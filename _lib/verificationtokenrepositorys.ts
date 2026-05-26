@@ -2,9 +2,7 @@ import pool from '@/_lib/db';
 import { VerificationToken } from '@/_types';
 
 export const verificationTokenRepository = {
-    async findByIdentifier(
-        identifier: string
-    ) {
+    async findByIdentifier(identifier: string) {
         const result = await pool.query<VerificationToken>(`
             SELECT *
             FROM verification_tokens
@@ -13,18 +11,13 @@ export const verificationTokenRepository = {
             ORDER BY expires_at DESC
             LIMIT 1
         `,
-            [
-                identifier
-            ]
+            [identifier]
         );
 
         return result.rows[0] ?? null;
     },
 
-    async findValidToken(
-        identifier: string,
-        hashedToken: string
-    ) {
+    async findValidToken(identifier: string, hashedToken: string) {
         const result = await pool.query<VerificationToken>(`
             SELECT *
             FROM verification_tokens
@@ -33,18 +26,13 @@ export const verificationTokenRepository = {
               AND expires_at > NOW()
             LIMIT 1
         `,
-            [
-                identifier,
-                hashedToken
-            ]
+            [identifier, hashedToken]
         );
 
         return result.rows[0] ?? null;
     },
 
-    async findValidTokenOnly(
-        hashedToken: string
-    ) {
+    async findValidTokenOnly(hashedToken: string) {
         const result = await pool.query<VerificationToken>(`
             SELECT *
             FROM verification_tokens
@@ -52,70 +40,45 @@ export const verificationTokenRepository = {
               AND expires_at > NOW()
             LIMIT 1
         `,
-            [
-                hashedToken
-            ]
+            [hashedToken]
         );
- 
+
         return result.rows[0] ?? null;
     },
 
-    async create(
-        data: {
-            identifier: string;
-            token: string;
-            expires_at: string;
-        }
+    async create(data: {
+        identifier: string;
+        token: string;
+        expires_at: string;
+    }
     ) {
         const result = await pool.query<VerificationToken>(`
-            INSERT INTO verification_tokens (
-                identifier,
-                token,
-                expires_at
-            )
-            VALUES (
-                $1,
-                $2,
-                $3
-            )
+            INSERT INTO verification_tokens ( identifier, token, expires_at )
+            VALUES ( $1, $2, $3 )
             RETURNING *
         `,
-            [
-                data.identifier,
-                data.token,
-                data.expires_at
-            ]
+            [data.identifier, data.token, data.expires_at]
         );
 
         return result.rows[0];
     },
 
-    async deleteByIdentifier(
-        identifier: string
-    ) {
+    async deleteByIdentifier(identifier: string) {
         await pool.query(`
             DELETE FROM verification_tokens
             WHERE identifier = $1
         `,
-            [
-                identifier
-            ]
+            [identifier]
         );
     },
 
-    async delete(
-        identifier: string,
-        hashedToken: string
-    ) {
+    async delete(identifier: string, hashedToken: string) {
         await pool.query(`
             DELETE FROM verification_tokens
             WHERE identifier = $1
               AND token = $2
         `,
-            [
-                identifier,
-                hashedToken
-            ]
+            [identifier, hashedToken]
         );
     },
 }

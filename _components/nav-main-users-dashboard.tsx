@@ -5,9 +5,7 @@ import { NavMainItemProps } from '@/_types';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
-export function NavMainUsersDashboard({
-    items = []
-}: { items: NavMainItemProps[] }) {
+export function NavMainUsersDashboard({ items = [] }: { items: NavMainItemProps[] }) {
     const pathname = usePathname();
     const { isMobile, setOpenMobile } = useSidebar();
 

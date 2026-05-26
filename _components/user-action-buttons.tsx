@@ -8,10 +8,7 @@ import { UserLock, UserPen, UserX } from 'lucide-react';
 import Link from 'next/link';
 import { UserActionButtonsProps } from '@/_types';
 
-export function UserActionButtons({
-    user,
-    csrfToken
-}: UserActionButtonsProps) {
+export function UserActionButtons({ user, csrfToken }: UserActionButtonsProps) {
     if (!user.deleted_at) {
         return (
             <>

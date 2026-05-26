@@ -7,9 +7,7 @@ import { Suspense } from 'react';
 import { getCsrfToken } from '@/_lib/csrf';
 
 export const generateMetadata = async (): Promise<Metadata> => {
-    return {
-        title: 'Profile of User'
-    };
+    return { title: 'Profile of User' };
 }
 
 export default async function ProfilePage() {

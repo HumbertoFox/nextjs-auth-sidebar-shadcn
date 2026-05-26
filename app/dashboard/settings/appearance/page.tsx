@@ -4,9 +4,7 @@ import LoadingAppearance from '@/_components/loadings/loading-appearance';
 import { Suspense } from 'react';
 
 export const generateMetadata = async (): Promise<Metadata> => {
-    return {
-        title: 'Appearance of System'
-    };
+    return { title: 'Appearance of System' };
 }
 
 export default function AppearancePage() {

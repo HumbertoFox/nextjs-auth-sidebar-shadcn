@@ -6,9 +6,7 @@ import { formatDate } from '@/_lib/dataformats';
 import { UserSettingsClientProps } from '@/_types';
 import { BadgeAlert, BadgeCheck } from 'lucide-react';
 
-export default function SettingsPageClient({
-    user,
-}: UserSettingsClientProps) {
+export default function SettingsPageClient({ user }: UserSettingsClientProps) {
     const getInitials = useInitials();
     return (
         <>

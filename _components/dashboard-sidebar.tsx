@@ -16,42 +16,18 @@ type DashboardSidebarProps = React.ComponentProps<typeof Sidebar> & {
 }
 
 const adminNavItems: NavMainItemProps[] = [
-    {
-        title: 'Admins',
-        href: '/dashboard/admins',
-        icon: UserRoundCog
-    },
-    {
-        title: 'Users',
-        href: '/dashboard/admins/users',
-        icon: UsersRound
-    },
-    {
-        title: 'Register User',
-        href: '/dashboard/admins/register',
-        icon: UserRoundPlus
-    },
+    { title: 'Admins', href: '/dashboard/admins', icon: UserRoundCog },
+    { title: 'Users', href: '/dashboard/admins/users', icon: UsersRound },
+    { title: 'Register User', href: '/dashboard/admins/register', icon: UserRoundPlus }
 ];
 const userNavItems: NavMainItemProps[] = [
-    {
-        title: 'User',
-        href: '/dashboard/user',
-        icon: UserRound
-    },
+    { title: 'User', href: '/dashboard/user', icon: UserRound }
 ];
 const usersDashboardNavItems: NavMainItemProps[] = [
-    {
-        title: 'Dashboard',
-        href: '/dashboard',
-        icon: LayoutGrid
-    },
+    { title: 'Dashboard', href: '/dashboard', icon: LayoutGrid }
 ];
 
-export default function DashboardSidebar({
-    user,
-    userType,
-    ...props
-}: DashboardSidebarProps) {
+export default function DashboardSidebar({ user, userType, ...props }: DashboardSidebarProps) {
     const { isMobile, setOpenMobile } = useSidebar();
 
     const handleLinkClick = () => {

@@ -10,42 +10,21 @@ export default function HomeMainComponent() {
     useEffect(() => {
         const ctx = gsap.context(() => {
             gsap.fromTo('.logo', {
-                opacity: 0,
-                scale: 0.5,
-                rotate: -45
+                opacity: 0, scale: 0.5, rotate: -45
             }, {
-                opacity: 1,
-                scale: 1,
-                rotate: 0,
-                duration: 1.2,
-                ease: 'elastic.out(1, 0.5)'
+                opacity: 1, scale: 1, rotate: 0, duration: 1.2, ease: 'elastic.out(1, 0.5)'
             });
 
             gsap.fromTo('.texts', {
-                opacity: 0,
-                x: -50,
-                rotation: -15
+                opacity: 0, x: -50, rotation: -15
             }, {
-                opacity: 1,
-                x: 0,
-                rotation: 0,
-                duration: 1,
-                ease: 'back.out(1.7)',
-                stagger: 0.25,
-                delay: 0.4
+                opacity: 1, x: 0, rotation: 0, duration: 1, ease: 'back.out(1.7)', stagger: 0.25, delay: 0.4
             });
 
             gsap.fromTo('.buttons', {
-                opacity: 0,
-                y: 80,
-                scale: 0.8
+                opacity: 0, y: 80, scale: 0.8
             }, {
-                opacity: 1,
-                y: 0,
-                scale: 1,
-                duration: 1,
-                ease: 'bounce.out',
-                delay: 1
+                opacity: 1, y: 0, scale: 1, duration: 1, ease: 'bounce.out', delay: 1
             });
         }, containerRef);
 

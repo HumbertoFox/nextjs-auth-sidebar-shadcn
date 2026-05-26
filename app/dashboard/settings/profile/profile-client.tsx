@@ -14,13 +14,7 @@ import Image from 'next/image';
 import { handleImageChange } from '@/_lib/handleimagechange';
 import { ProfileForm, ProfileFormClientProps } from '@/_types';
 
-export function ProfilePageClient({
-    name,
-    email,
-    avatar,
-    mustVerifyEmail,
-    csrfToken,
-}: ProfileFormClientProps) {
+export function ProfilePageClient({ name, email, avatar, mustVerifyEmail, csrfToken }: ProfileFormClientProps) {
     const router = useRouter();
     const [state, action, pending] = useActionState(updateUser, undefined);
     const [imagePreview, setImagePreview] = useState<string | null | undefined>(avatar);
@@ -28,11 +22,7 @@ export function ProfilePageClient({
     const [imageError, setImageError] = useState<string | null>(null);
     const [status, setStatus] = useState<string | null>(null);
     const [recentlySuccessful, setRecentlySuccessful] = useState<boolean>(false);
-    const [data, setData] = useState<ProfileForm>({
-        name: name,
-        email: email,
-        avatar: avatar,
-    });
+    const [data, setData] = useState<ProfileForm>({ name: name, email: email, avatar: avatar });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { id, value } = e.target;

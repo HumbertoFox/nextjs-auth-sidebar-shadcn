@@ -4,9 +4,7 @@ import { CSRF_COOKIE_NAME } from '@/_types';
 import crypto, { randomUUID } from 'crypto';
 import { cookies } from 'next/headers';
 
-export async function validateCsrfToken(
-    submittedToken: string | null
-): Promise<boolean> {
+export async function validateCsrfToken(submittedToken: string | null): Promise<boolean> {
     if (!submittedToken) return false;
 
     const storedToken = (await cookies()).get(CSRF_COOKIE_NAME)?.value;
@@ -14,10 +12,7 @@ export async function validateCsrfToken(
     if (!storedToken) return false;
 
     try {
-        return crypto.timingSafeEqual(
-            Buffer.from(submittedToken),
-            Buffer.from(storedToken)
-        );
+        return crypto.timingSafeEqual(Buffer.from(submittedToken), Buffer.from(storedToken));
     } catch {
         return false;
     }
