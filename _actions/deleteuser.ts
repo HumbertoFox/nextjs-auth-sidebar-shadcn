@@ -7,10 +7,7 @@ import z from 'zod';
 import { userRepository } from '@/_lib/userrepositorys';
 import { regenerateCsrfToken, validateCsrfToken } from '@/_lib/csrf';
 
-export async function deleteUser(
-    _: FormStateUserDelete,
-    formData: FormData
-): Promise<FormStateUserDelete> {
+export async function deleteUser(_: FormStateUserDelete, formData: FormData): Promise<FormStateUserDelete> {
     const sessionUser = await getUser();
     if (!sessionUser || !sessionUser?.id) return { message: false };
 

@@ -9,10 +9,7 @@ import { userRepository } from '@/_lib/userrepositorys';
 import { revalidatePath } from 'next/cache';
 import { regenerateCsrfToken, validateCsrfToken } from '@/_lib/csrf';
 
-export async function updatePassword(
-    _: FormStatePasswordUpdate,
-    formData: FormData
-): Promise<FormStatePasswordUpdate> {
+export async function updatePassword(_: FormStatePasswordUpdate, formData: FormData): Promise<FormStatePasswordUpdate> {
     const sessionUser = await getUser();
     if (!sessionUser || !sessionUser?.id) return redirect('/');
 

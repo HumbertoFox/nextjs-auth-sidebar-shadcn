@@ -8,10 +8,7 @@ import { verificationTokenRepository } from '@/_lib/verificationtokenrepositorys
 import { hash } from 'bcrypt-ts';
 import z from 'zod';
 
-export async function resetPassword(
-    _: FormStatePasswordReset,
-    formData: FormData
-): Promise<FormStatePasswordReset> {
+export async function resetPassword(_: FormStatePasswordReset, formData: FormData): Promise<FormStatePasswordReset> {
     const csrfToken = formData.get('csrfToken') as string;
     const isValidCsrf = await validateCsrfToken(csrfToken);
     if (!isValidCsrf) return { warning: 'Invalid security token. Please refresh the page and try again.' };

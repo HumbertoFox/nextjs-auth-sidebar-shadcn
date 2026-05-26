@@ -15,10 +15,7 @@ import { redirect } from 'next/navigation';
 const MAX_FILE_SIZE = 512 * 1024;
 const MAX_DIMENSION = 512;
 
-export async function createUpdateAdminUser(
-    _: FormStateCreateUpdateAdminUser,
-    formData: FormData
-): Promise<FormStateCreateUpdateAdminUser> {
+export async function createUpdateAdminUser(_: FormStateCreateUpdateAdminUser, formData: FormData): Promise<FormStateCreateUpdateAdminUser> {
     const sessionUser = await getUser();
     if (!sessionUser || sessionUser.role !== 'ADMIN') return { warning: 'Invalid security token. Please refresh the page and try again.' };
 

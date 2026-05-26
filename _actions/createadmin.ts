@@ -13,10 +13,7 @@ import { MIME_TO_EXT, UserRole } from '@/_types';
 const MAX_FILE_SIZE = 512 * 1024;
 const MAX_DIMENSION = 512;
 
-export async function createAdmin(
-    _: FormStateCreateAdmin,
-    formData: FormData
-): Promise<FormStateCreateAdmin> {
+export async function createAdmin(_: FormStateCreateAdmin, formData: FormData): Promise<FormStateCreateAdmin> {
     const csrfToken = formData.get('csrfToken') as string;
     const isValidCsrf = await validateCsrfToken(csrfToken);
 

@@ -9,10 +9,7 @@ import { regenerateCsrfToken, validateCsrfToken } from '@/_lib/csrf';
 import { headers } from 'next/headers';
 import { checkLoginRateLimit, resetLoginRateLimit } from '@/_lib/ratelimit';
 
-export async function loginUser(
-    _: FormStateLoginUser,
-    formData: FormData
-): Promise<FormStateLoginUser> {
+export async function loginUser(_: FormStateLoginUser, formData: FormData): Promise<FormStateLoginUser> {
     const csrfToken = formData.get('csrfToken') as string;
     const isValidCsrf = await validateCsrfToken(csrfToken);
     if (!isValidCsrf) return { warning: 'Invalid security token. Please refresh the page and try again.' };

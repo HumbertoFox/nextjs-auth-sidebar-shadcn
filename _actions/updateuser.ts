@@ -12,10 +12,7 @@ import { MIME_TO_EXT } from '@/_types';
 
 const MAX_FILE_SIZE = 512 * 1024;
 
-export async function updateUser(
-    _: FormStateUserUpdate,
-    formData: FormData
-): Promise<FormStateUserUpdate> {
+export async function updateUser(_: FormStateUserUpdate, formData: FormData): Promise<FormStateUserUpdate> {
     const sessionUser = await getUser();
     if (!sessionUser || !sessionUser?.id) return redirect('/');
 

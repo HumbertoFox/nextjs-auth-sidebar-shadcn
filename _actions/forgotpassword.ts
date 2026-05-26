@@ -10,10 +10,7 @@ import { regenerateCsrfToken, validateCsrfToken } from '@/_lib/csrf';
 import { hashToken } from '@/_lib/tokenutils';
 import { checkForgotPasswordRateLimit } from '@/_lib/ratelimit';
 
-export async function forgotPassword(
-    _: FormStatePasswordForgot,
-    formData: FormData
-): Promise<FormStatePasswordForgot> {
+export async function forgotPassword(_: FormStatePasswordForgot, formData: FormData): Promise<FormStatePasswordForgot> {
     const csrfToken = formData.get('csrfToken') as string;
     const isValidCsrf = await validateCsrfToken(csrfToken);
     if (!isValidCsrf) return { error: 'Invalid security token. Please refresh the page and try again.' };

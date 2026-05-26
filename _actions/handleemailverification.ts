@@ -8,10 +8,7 @@ import { userRepository } from '@/_lib/userrepositorys';
 import { verificationTokenRepository } from '@/_lib/verificationtokenrepositorys';
 import crypto from 'crypto';
 
-export async function handleEmailVerification(
-    _: FormStateEmailVerification | undefined,
-    formData: FormData
-) {
+export async function handleEmailVerification(_: FormStateEmailVerification | undefined, formData: FormData) {
     const csrfToken = formData.get('csrfToken') as string;
     const isValidCsrf = await validateCsrfToken(csrfToken);
 

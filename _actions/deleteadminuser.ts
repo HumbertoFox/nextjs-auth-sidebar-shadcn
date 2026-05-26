@@ -5,9 +5,7 @@ import { getUser } from '@/_lib/dal';
 import { userRepository } from '@/_lib/userrepositorys';
 import { revalidatePath } from 'next/cache';
 
-export async function deleteUserById(
-    formData: FormData
-) {
+export async function deleteUserById(formData: FormData) {
     const sessionUser = await getUser();
     if (!sessionUser || sessionUser.role !== 'ADMIN') return;
 
