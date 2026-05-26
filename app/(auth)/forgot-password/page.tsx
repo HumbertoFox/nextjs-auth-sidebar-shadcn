@@ -5,9 +5,7 @@ import { Metadata } from 'next';
 import { getCsrfToken } from '@/_lib/csrf';
 
 export const generateMetadata = async (): Promise<Metadata> => {
-    return {
-        title: 'Forgot Password'
-    };
+    return { title: 'Forgot Password' };
 }
 
 export default async function ForgotPasswordPage() {

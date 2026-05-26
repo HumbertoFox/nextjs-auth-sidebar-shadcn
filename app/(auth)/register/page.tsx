@@ -7,9 +7,7 @@ import { getCsrfToken } from '@/_lib/csrf';
 
 export const generateMetadata = async (): Promise<Metadata> => {
   const isAdmin = await getIsAdmin();
-  return {
-    title: isAdmin ? 'Register User' : 'Register Administrator'
-  };
+  return { title: isAdmin ? 'Register User' : 'Register Administrator' };
 }
 
 export default async function RegisterPage() {

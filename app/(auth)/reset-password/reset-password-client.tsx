@@ -12,18 +12,12 @@ import { csrfTokenProps, ResetPasswordForm } from '@/_types';
 import { TextLink } from '@/_components/text-link';
 import { PasswordChecklist } from '@/_components/password-checklist';
 
-export default function ResetPasswordClient({
-    csrfToken
-}: csrfTokenProps) {
+export default function ResetPasswordClient({ csrfToken }: csrfTokenProps) {
     const searchParams = useSearchParams();
     const [state, action, pending] = useActionState(resetPassword, undefined);
     const [showPassword, setShowPassword] = useState<boolean>(false);
     const [showPasswordConfirm, setShowPasswordConfirm] = useState<boolean>(false);
-    const [data, setData] = useState<ResetPasswordForm>({
-        token: searchParams.get('token') ?? '',
-        password: '',
-        password_confirmation: ''
-    });
+    const [data, setData] = useState<ResetPasswordForm>({ token: searchParams.get('token') ?? '', password: '', password_confirmation: '' });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { id, value } = e.target;
@@ -41,11 +35,7 @@ export default function ResetPasswordClient({
         if (!state?.message) return;
 
         startTransition(() => {
-            setData(prev => ({
-                ...prev,
-                password: '',
-                password_confirmation: ''
-            }));
+            setData(prev => ({ ...prev, password: '', password_confirmation: '' }));
         });
     }, [state]);
     return (

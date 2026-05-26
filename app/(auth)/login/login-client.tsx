@@ -13,9 +13,7 @@ import { csrfTokenProps, LoginFormProps } from '@/_types';
 import AppLogoIconSvg from '@/_components/app-logo-icon-svg';
 import Link from 'next/link';
 
-export function LoginClient({
-    csrfToken
-}: csrfTokenProps) {
+export function LoginClient({ csrfToken }: csrfTokenProps) {
     const searchParams = useSearchParams();
     const emailFromParams = searchParams.get('email') ?? '';
     const statusFromParams = searchParams.get('status');
@@ -23,11 +21,9 @@ export function LoginClient({
     const emailRef = useRef<HTMLInputElement>(null);
     const passwordRef = useRef<HTMLInputElement>(null);
     const [state, action, pending] = useActionState(loginUser, undefined);
+    const [secondsLeft, setSecondsLeft] = useState<number | null>(null);
     const [isVisibledPassword, setIsVisibledPassword] = useState<boolean>(false);
-    const [data, setData] = useState<LoginFormProps>({
-        email: emailFromParams,
-        password: '',
-    });
+    const [data, setData] = useState<LoginFormProps>({ email: emailFromParams, password: '' });
 
     const togglePasswordVisibility = () => setIsVisibledPassword(!isVisibledPassword);
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,20 +37,38 @@ export function LoginClient({
         startTransition(() => action(formData));
     };
     useEffect(() => {
-        if (!state?.message) return;
-
         if (state?.warning && emailRef.current) {
             emailRef.current.focus();
+            return;
         };
 
+        if (!state?.message) return;
+
         startTransition(() => {
-            setData({
-                email: '',
-                password: ''
-            });
+            setData({ email: '', password: '' });
         });
         router.push('/dashboard');
     }, [state, router]);
+    useEffect(() => {
+        if (state?.retryAfterSeconds) {
+            setSecondsLeft(state.retryAfterSeconds);
+        }
+    }, [state]);
+    useEffect(() => {
+        if (!secondsLeft) return;
+
+        const interval = setInterval(() => {
+            setSecondsLeft(prev => {
+                if (prev === null || prev <= 1) {
+                    clearInterval(interval);
+                    return null;
+                }
+                return prev - 1;
+            });
+        }, 1000);
+
+        return () => clearInterval(interval);
+    }, [secondsLeft]);
     return (
         <div className="space-y-6 w-full 2xl:w-2/4">
             <div className="flex flex-col items-center gap-2 text-center mx-auto">
@@ -136,7 +150,7 @@ export function LoginClient({
                         type="submit"
                         className="mt-4 w-full"
                         tabIndex={3}
-                        disabled={pending}
+                        disabled={pending || secondsLeft !== null}
                     >
                         {pending && <LoaderCircle className="h-4 w-4 animate-spin" />}
                         Log in
@@ -154,9 +168,19 @@ export function LoginClient({
                 </div>
             </form>
 
-            {statusFromParams && <p className="mb-4 text-center text-sm font-medium text-blue-600">{statusFromParams}</p>}
             {state?.message && <p className="mb-4 text-center text-sm font-medium text-blue-600">{state.message}</p>}
-            {state?.warning && <p className="mb-4 text-center text-sm font-medium text-red-400">{state.warning}</p>}
+            {!state?.message && state?.warning && (
+                <p className="mb-4 text-center text-sm font-medium text-red-400">
+                    {secondsLeft !== null
+                        ? `Too many login attempts. Please try again in ${secondsLeft < 60
+                            ? `${secondsLeft} second${secondsLeft !== 1 ? 's' : ''}`
+                            : `${Math.ceil(secondsLeft / 60)} minute${Math.ceil(secondsLeft / 60) !== 1 ? 's' : ''}`
+                        }.`
+                        : state.warning
+                    }
+                </p>
+            )}
+            {!state?.message && !state?.warning && statusFromParams && <p className="mb-4 text-center text-sm font-medium text-blue-600">{statusFromParams}</p>}
         </div>
     );
 }

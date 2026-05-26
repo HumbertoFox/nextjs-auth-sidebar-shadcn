@@ -151,6 +151,7 @@ export type FormStateLoginUser =
         }
         message?: string;
         warning?: string;
+        retryAfterSeconds?: number;
     } | undefined;
 
 export type FormStateUserDelete =

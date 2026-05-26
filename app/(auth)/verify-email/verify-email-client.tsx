@@ -10,9 +10,7 @@ import { csrfTokenProps } from '@/_types';
 import { Label } from '@/_components/ui/label';
 import { Input } from '@/_components/ui/input';
 
-export default function VerifyEmailClient({
-    csrfToken
-}: csrfTokenProps) {
+export default function VerifyEmailClient({ csrfToken }: csrfTokenProps) {
     const searchParams = useSearchParams();
     const email = searchParams.get('email');
     const token = searchParams.get('token');

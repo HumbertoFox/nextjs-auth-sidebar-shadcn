@@ -33,7 +33,7 @@ export async function loginUser(_: FormStateLoginUser, formData: FormData): Prom
         const secs = rateLimit.retryAfterSeconds;
         const timeLabel = secs < 60 ? `${secs} second${secs !== 1 ? 's' : ''}` : `${Math.ceil(secs / 60)} minute${Math.ceil(secs / 60) !== 1 ? 's' : ''}`;
 
-        return { warning: `Too many login attempts. Please try again in ${timeLabel}.` };
+        return { warning: `Too many login attempts. Please try again in ${timeLabel}.`, retryAfterSeconds: secs };
     }
 
     try {
@@ -45,12 +45,12 @@ export async function loginUser(_: FormStateLoginUser, formData: FormData): Prom
 
         if (!isPasswordValid) {
             if (rateLimit.warning === 'will-be-blocked') {
-                return { warning: 'Invalid email or password. Warning: one more failed attempt will block your account for 10 minutes.' };
+                return { warning: 'Invalid email or password! Warning: one more failed attempt will block your account for 10 minutes.' };
             }
             return { warning: 'Invalid email or password' };
         }
 
-        await resetLoginRateLimit(email);
+        await resetLoginRateLimit(ip, email);
 
         await createSession(user.id, user.role);
 

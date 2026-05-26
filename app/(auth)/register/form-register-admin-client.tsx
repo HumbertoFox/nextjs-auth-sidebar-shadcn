@@ -16,10 +16,7 @@ import { PasswordChecklist } from '@/_components/password-checklist';
 import Link from 'next/link';
 import AppLogoIconSvg from '@/_components/app-logo-icon-svg';
 
-export default function RegisterAdminClient({
-    TitleIntl,
-    csrfToken,
-}: { TitleIntl: string; csrfToken?: string; }) {
+export default function RegisterAdminClient({ TitleIntl, csrfToken }: { TitleIntl: string; csrfToken?: string; }) {
     const emailRef = useRef<HTMLInputElement>(null);
     const router = useRouter();
     const [state, action, pending] = useActionState(createAdmin, undefined);
@@ -28,13 +25,7 @@ export default function RegisterAdminClient({
     const [imageError, setImageError] = useState<string | null>(null);
     const [showPassword, setShowPassword] = useState<boolean>(false);
     const [showPasswordConfirm, setShowPasswordConfirm] = useState<boolean>(false);
-    const [data, setData] = useState<RegisterFormProps>({
-        name: '',
-        email: '',
-        password: '',
-        password_confirmation: '',
-        avatar: undefined,
-    });
+    const [data, setData] = useState<RegisterFormProps>({ name: '', email: '', password: '', password_confirmation: '', avatar: undefined });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { id, value } = e.target;
@@ -60,13 +51,7 @@ export default function RegisterAdminClient({
         if (!state?.message) return;
 
         startTransition(() => {
-            setData({
-                name: '',
-                email: '',
-                password: '',
-                password_confirmation: '',
-                avatar: undefined,
-            });
+            setData({ name: '', email: '', password: '', password_confirmation: '', avatar: undefined });
         });
         router.push('/dashboard');
     }, [state, router]);
