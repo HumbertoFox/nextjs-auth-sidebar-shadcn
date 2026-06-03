@@ -42,7 +42,6 @@ GRANT SELECT ON users_public_active TO PUBLIC;
 -- ============================================================================
 -- GRANT view com password → somente backend
 -- ============================================================================
-REVOKE ALL ON users_active FROM PUBLIC;
 GRANT SELECT ON users_active TO __ROLE_NAME__;
 
 -- ============================================================================
