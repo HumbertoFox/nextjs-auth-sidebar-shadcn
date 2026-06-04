@@ -9,11 +9,8 @@ import { revalidatePath } from 'next/cache';
 import { userRepository } from '@/_lib/userrepositorys';
 import { getUser } from '@/_lib/dal';
 import { regenerateCsrfToken, validateCsrfToken } from '@/_lib/csrf';
-import { MIME_TO_EXT } from '@/_types';
+import { MAX_DIMENSION, MAX_FILE_SIZE, MIME_TO_EXT } from '@/_types';
 import { redirect } from 'next/navigation';
-
-const MAX_FILE_SIZE = 512 * 1024;
-const MAX_DIMENSION = 512;
 
 export async function createUpdateAdminUser(_: FormStateCreateUpdateAdminUser, formData: FormData): Promise<FormStateCreateUpdateAdminUser> {
     const sessionUser = await getUser();

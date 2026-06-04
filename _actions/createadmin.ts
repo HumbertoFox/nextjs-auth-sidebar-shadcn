@@ -8,10 +8,8 @@ import z from 'zod';
 import sharp from 'sharp';
 import { userRepository } from '@/_lib/userrepositorys';
 import { regenerateCsrfToken, validateCsrfToken } from '@/_lib/csrf';
-import { MIME_TO_EXT, UserRole } from '@/_types';
-
-const MAX_FILE_SIZE = 512 * 1024;
-const MAX_DIMENSION = 512;
+import { MAX_DIMENSION, MAX_FILE_SIZE, MIME_TO_EXT, UserRole } from '@/_types';
+import { redirect } from 'next/navigation';
 
 export async function createAdmin(_: FormStateCreateAdmin, formData: FormData): Promise<FormStateCreateAdmin> {
     const csrfToken = formData.get('csrfToken') as string;
@@ -76,14 +74,11 @@ export async function createAdmin(_: FormStateCreateAdmin, formData: FormData): 
         }
 
         await createSession(user.id, user.role);
-        await regenerateCsrfToken();
-
-        return {
-            message: true,
-            info: 'Account created successfully! Redirecting to the Dashboard, please wait...',
-        };
     } catch (error) {
         console.error(error);
         return { warning: 'Something went wrong. Please try again later.' };
     }
+
+    await regenerateCsrfToken();
+    redirect('/dashboard');
 }

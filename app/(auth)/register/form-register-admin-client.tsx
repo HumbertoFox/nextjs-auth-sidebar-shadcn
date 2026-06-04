@@ -1,7 +1,7 @@
 'use client';
 
 import { Eye, EyeClosed, LoaderCircle } from 'lucide-react';
-import { startTransition, useActionState, useEffect, useRef, useState } from 'react';
+import { startTransition, useActionState, useRef, useState } from 'react';
 import { InputError } from '@/_components/input-error';
 import { Button } from '@/_components/ui/button';
 import { Input } from '@/_components/ui/input';
@@ -11,14 +11,12 @@ import { TextLink } from '@/_components/text-link';
 import { handleImageChange } from '@/_lib/handleimagechange';
 import Image from 'next/image';
 import { RegisterFormProps } from '@/_types';
-import { useRouter } from 'next/navigation';
 import { PasswordChecklist } from '@/_components/password-checklist';
 import Link from 'next/link';
 import AppLogoIconSvg from '@/_components/app-logo-icon-svg';
 
 export default function RegisterAdminClient({ TitleIntl, csrfToken }: { TitleIntl: string; csrfToken?: string; }) {
     const emailRef = useRef<HTMLInputElement>(null);
-    const router = useRouter();
     const [state, action, pending] = useActionState(createAdmin, undefined);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
     const [imageFile, setImageFile] = useState<File | null>(null);
@@ -47,14 +45,6 @@ export default function RegisterAdminClient({ TitleIntl, csrfToken }: { TitleInt
         if (csrfToken) formData.append('csrfToken', csrfToken);
         startTransition(() => action(formData));
     };
-    useEffect(() => {
-        if (!state?.message) return;
-
-        startTransition(() => {
-            setData({ name: '', email: '', password: '', password_confirmation: '', avatar: undefined });
-        });
-        router.push('/dashboard');
-    }, [state, router]);
     return (
         <div className="space-y-6 w-full py-2 2xl:w-2/4">
             <div className="flex flex-col items-center gap-2 text-center mx-auto">
@@ -232,7 +222,6 @@ export default function RegisterAdminClient({ TitleIntl, csrfToken }: { TitleInt
             </form>
 
             {state?.warning && <p className="mb-4 text-center text-sm font-medium text-orange-400">{state.warning}</p>}
-            {state?.info && <p className="mb-4 text-center text-sm font-medium text-blue-400">{state.info}</p>}
         </div>
     );
 }

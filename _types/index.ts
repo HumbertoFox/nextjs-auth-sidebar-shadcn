@@ -8,6 +8,10 @@ export const roleLabels: Record<UserRole, string> = { ADMIN: 'Admin', USER: 'Use
 
 export const MIME_TO_EXT: Record<string, string> = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp' }
 
+export const MAX_FILE_SIZE = 512 * 1024;
+
+export const MAX_DIMENSION = 512;
+
 export const CSRF_COOKIE_NAME = 'csrfToken';
 
 export type UserDetailsProps = {

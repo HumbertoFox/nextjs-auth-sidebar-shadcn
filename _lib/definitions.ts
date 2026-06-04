@@ -125,8 +125,6 @@ export type FormStateCreateAdmin =
             password_confirmation?: string[];
             avatar?: string[];
         }
-        message?: boolean;
-        info?: string;
         warning?: string;
     } | undefined;
 
