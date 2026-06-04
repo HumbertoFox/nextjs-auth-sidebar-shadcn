@@ -1,6 +1,6 @@
 import { DashboardSidebarHeader } from '@/_components/dashboard-sidebar-header';
 import { getUser } from '@/_lib/dal';
-import { UserDetailsProps } from '@/_types';
+import { UserDetailsProps, UserRolesZod } from '@/_types';
 import { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 
@@ -16,7 +16,7 @@ const borderColors = ['border-emerald-500', 'border-violet-500', 'border-rose-50
 
 export default async function UserPage() {
     const user = await getUser() as UserDetailsProps;
-    if (!user || (user.role !== 'ADMIN' && user.role !== 'USER')) redirect('/dashboard');
+    if (!user || !UserRolesZod.includes(user.role)) redirect('/dashboard');
     return (
         <>
             <DashboardSidebarHeader items={breadcrumbItems} />

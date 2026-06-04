@@ -43,8 +43,8 @@ export default function VerifyEmailClient({ csrfToken }: csrfTokenProps) {
                     <p>A new verification link has been sent to the email address you provided during registration.</p>
                 </div>
             )}
-            {state?.success && <div className="mb-4 text-center text-sm font-medium text-blue-600">{state.success}</div>}
-            {state?.error && <div className="mb-4 text-center text-sm font-medium text-red-600">{state.error}</div>}
+            {state?.success && <p className="mb-4 text-center text-sm font-medium text-blue-600">{state.success}</p>}
+            {state?.error && <p className="mb-4 text-center text-sm font-medium text-red-600">{state.error}</p>}
 
             <form
                 onSubmit={submit}
