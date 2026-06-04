@@ -1,5 +1,5 @@
 import pool, { QueryExecutor } from '@/_lib/db';
-import { User, UserRole } from '@/_types';
+import { User, UserDetailsProps, UserPublicProps, UserRole } from '@/_types';
 
 const ALLOWED_UPDATE_COLUMNS_USER: ReadonlySet<string> = new Set(['name', 'email', 'avatar']);
 
@@ -72,7 +72,7 @@ export const userRepository = {
     // -------------------------------------------------------------------------
     async findByEmail(email: string, client?: QueryExecutor) {
         const executor = client ?? pool;
-        const result = await executor.query<User>(`
+        const result = await executor.query<UserPublicProps>(`
             SELECT *
             FROM users_public_active
             WHERE email = $1
@@ -141,7 +141,7 @@ export const userRepository = {
     // -------------------------------------------------------------------------
     async findById(id: string, client?: QueryExecutor) {
         const executor = client ?? pool;
-        const result = await executor.query<User>(`
+        const result = await executor.query<UserDetailsProps>(`
             SELECT *
             FROM users_public
             WHERE id = $1
@@ -159,7 +159,7 @@ export const userRepository = {
         const executor = client ?? pool;
         const offset = (page - 1) * pageSize;
 
-        const usersResult = await executor.query<User>(`
+        const usersResult = await executor.query<UserDetailsProps>(`
             SELECT
                 id,
                 name,

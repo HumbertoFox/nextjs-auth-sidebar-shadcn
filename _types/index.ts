@@ -22,6 +22,17 @@ export type UserDetailsProps = {
     readonly updated_at: string;
 }
 
+export type UserPublicProps = {
+    readonly id: string;
+    readonly name: string;
+    readonly email: string;
+    readonly avatar?: string | null;
+    readonly role: UserRole;
+    readonly email_verified?: string | null;
+    readonly created_at: string;
+    readonly updated_at: string;
+}
+
 export type UserProfilePageProps = {
     readonly name: string;
     readonly email: string;
@@ -95,7 +106,7 @@ export type RegisterFormProps = LoginFormProps & {
 export type UserFormProps = ProfileForm & {
     readonly id: string;
     readonly role: UserRole;
-    readonly password: string;
+    readonly password?: string;
     readonly password_confirmation?: string;
 }
 
@@ -171,5 +182,5 @@ export type RateLimitEntry = {
 }
 
 export type PasswordChecklistProps = {
-    password: string;
+    password?: string;
 }
