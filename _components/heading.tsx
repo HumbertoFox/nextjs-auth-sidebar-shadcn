@@ -14,6 +14,11 @@ const breadcrumbMap: Record<string, BreadcrumbItemProps[]> = {
         { text: 'Settings', href: '/dashboard/settings' },
         { text: 'Profile' }
     ],
+    '/dashboard/settings/verify-email': [
+        { text: 'Dashboard', href: '/dashboard' },
+        { text: 'Settings', href: '/dashboard/settings' },
+        { text: 'Verify Email' }
+    ],
     '/dashboard/settings/password': [
         { text: 'Dashboard', href: '/dashboard' },
         { text: 'Settings', href: '/dashboard/settings' },

@@ -87,7 +87,7 @@ export function LoginClient({ csrfToken }: csrfTokenProps) {
                 onSubmit={submit}
                 className="w-full max-w-xs flex flex-col gap-6 mx-auto"
             >
-                <div className=" grid gap-6">
+                <div className="grid gap-6">
                     <div className="grid gap-2">
                         <Label htmlFor="email">Email address</Label>
                         <Input

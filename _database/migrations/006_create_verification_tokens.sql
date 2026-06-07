@@ -13,7 +13,7 @@
 -- Security: Tokens devem ser hasheados antes de armazenar
 -- ============================================================================
 CREATE TABLE IF NOT EXISTS verification_tokens (
-    identifier CITEXT NOT NULL,      -- Email ou identificador do usuário
+    identifier CITEXT NOT NULL,       -- Email ou identificador do usuário
     token TEXT NOT NULL,              -- Token único (recomendado: hash SHA-256)
     expires_at TIMESTAMPTZ NOT NULL,  -- Data/hora de expiração do token
     PRIMARY KEY (identifier, token)
@@ -25,5 +25,5 @@ COMMENT ON TABLE verification_tokens IS 'Tokens temporários de verificação de
 -- COLUMN COMMENTS
 -- ============================================================================
 COMMENT ON COLUMN verification_tokens.identifier IS 'Identificador do usuário, geralmente email (case-insensitive)';
-COMMENT ON COLUMN verification_tokens.token IS 'Token único de verificação (recomendado armazenar hash, não plaintext)';
+COMMENT ON COLUMN verification_tokens.token      IS 'Token único de verificação (recomendado armazenar hash, não plaintext)';
 COMMENT ON COLUMN verification_tokens.expires_at IS 'Timestamp de expiração - tokens expirados devem ser deletados';
