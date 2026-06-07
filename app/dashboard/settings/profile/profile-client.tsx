@@ -142,7 +142,7 @@ export function ProfilePageClient({ name, email, avatar, mustVerifyEmail, csrfTo
                                             target="_blank"
                                             rel="noopener noreferrer"
                                         >
-                                            Abrir {provider.name}
+                                            Open {provider.name}
                                         </a>
                                     </Button>
                                 </div>
