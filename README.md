@@ -239,7 +239,7 @@ Para detalhes de criação de tabelas, views e triggers, consulte os scripts em 
 
 - Primeiro usuário registrado → `ADMIN`
 
-- Apenas `ADMINs` podem criar novos usuários
+- Apenas `ADMINs` podem criar novos usuários `ADMINs`
 
 - Login: e-mail + senha ou login mágico
 
@@ -270,7 +270,7 @@ Para detalhes de criação de tabelas, views e triggers, consulte os scripts em 
 
 - TailwindCSS
 
-- Radix UI
+- Radix UI / Shadnc/iu
 
 - Nodemailer
 
