@@ -168,6 +168,7 @@ export type FormStatePasswordUpdate =
             password_confirmation?: string[];
         }
         message?: boolean;
+        ts?: number;
     } | undefined;
 
 export type FormStateUserUpdate =
@@ -179,6 +180,7 @@ export type FormStateUserUpdate =
         };
         message?: string;
         success?: boolean;
+        ts?: number;
     } | undefined;
 
 export type FormStatePasswordForgot =
