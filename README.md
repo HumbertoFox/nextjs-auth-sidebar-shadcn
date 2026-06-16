@@ -52,6 +52,7 @@ Crie um arquivo `.env` na raiz do projeto:
     NEXT_PUBLIC_APP_NAME=
     BLOB_READ_WRITE_TOKEN=
     DATABASE_URL=
+    DB_SSL=
     AUTH_SECRET=
     SMTP_HOST=
     SMTP_PORT=
@@ -64,17 +65,18 @@ Crie um arquivo `.env` na raiz do projeto:
 
 ### Descrição
 
-| Variável              | Descrição                                                  |
-| --------------------- | ---------------------------------------------------------- |
-| NEXT_PUBLIC_APP_NAME  | Nome público da aplicação (exposto ao cliente via Next.js) |
-| BLOB_READ_WRITE_TOKEN | Token para upload de arquivos no Vercel Blob               |
-| DATABASE_URL          | Conexão com PostgreSQL                                     |
-| AUTH_SECRET           | Chave secreta para sessões                                 |
-| SMTP_HOST             | Servidor SMTP                                              |
-| SMTP_PORT             | Porta SMTP                                                 |
-| SMTP_USER             | Usuário SMTP                                               |
-| SMTP_PASS             | Senha SMTP                                                 |
-| NEXT_URL              | URL da aplicação                                           |
+| Variável              | Descrição                                                                                           |
+| --------------------- | --------------------------------------------------------------------------------------------------- |
+| NEXT_PUBLIC_APP_NAME  | Nome público da aplicação (exposto ao cliente via Next.js)                                          |
+| BLOB_READ_WRITE_TOKEN | Token para upload de arquivos no Vercel Blob                                                        |
+| DATABASE_URL          | Conexão com PostgreSQL                                                                              |
+| DB_SSL                | Controla SSL na conexão com o banco. Use `false` em ambiente local, omita ou use `true` em produção |
+| AUTH_SECRET           | Chave secreta para sessões                                                                          |
+| SMTP_HOST             | Servidor SMTP                                                                                       |
+| SMTP_PORT             | Porta SMTP                                                                                          |
+| SMTP_USER             | Usuário SMTP                                                                                        |
+| SMTP_PASS             | Senha SMTP                                                                                          |
+| NEXT_URL              | URL da aplicação                                                                                    |
 
 ---
 
