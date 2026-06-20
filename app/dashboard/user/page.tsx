@@ -21,7 +21,7 @@ export default async function UserPage() {
         <>
             <DashboardSidebarHeader items={breadcrumbItems} />
             <div className="flex flex-1 flex-col gap-4 p-2">
-                <div className="grid auto-rows-min gap-4 md:grid-cols-3">
+                <div className="grid gap-4 md:grid-cols-3">
                     {[...Array(3)].map((_, index) => (
                         <div
                             key={index}
@@ -29,7 +29,7 @@ export default async function UserPage() {
                         />
                     ))}
                 </div>
-                <div className="bg-muted/50 min-h-screen flex-1 rounded-xl md:min-h-min border border-sky-500" />
+                <div className="bg-muted/50 aspect-video flex-1 rounded-xl border border-sky-500" />
             </div>
         </>
     );

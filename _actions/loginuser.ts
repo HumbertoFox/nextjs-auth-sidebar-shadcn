@@ -50,6 +50,12 @@ export async function loginUser(_: FormStateLoginUser, formData: FormData): Prom
             return { warning: 'Invalid email or password' };
         }
 
+        const accountAgeInDays = (Date.now() - new Date(user.created_at).getTime()) / (1000 * 60 * 60 * 24);
+
+        if (!user.email_verified && accountAgeInDays > 30) {
+            return { warning: 'Your account was created more than 30 days ago and your email has not yet been verified. Please check your email to continue.' };
+        }
+
         await resetLoginRateLimit(ip, email);
 
         await createSession(user.id, user.role);
