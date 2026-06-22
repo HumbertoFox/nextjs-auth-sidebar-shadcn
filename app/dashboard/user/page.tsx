@@ -29,7 +29,7 @@ export default async function UserPage() {
                         />
                     ))}
                 </div>
-                <div className="bg-muted/50 aspect-video flex-1 rounded-xl border border-sky-500" />
+                <div className="bg-muted/50 max-md:aspect-video flex-1 rounded-xl border border-sky-500" />
             </div>
         </>
     );

@@ -22,7 +22,7 @@ export default function DashboardPage() {
         <>
             <DashboardSidebarHeader items={breadcrumbItems} />
             <div className="h-full max-h-full flex flex-1 flex-col-reverse lg:flex-col gap-4 p-2">
-                <div className="bg-muted/50 flex-1 aspect-video rounded-xl border border-emerald-500" />
+                <div className="bg-muted/50 flex-1 max-md:aspect-video rounded-xl border border-emerald-500" />
                 <div className="grid auto-rows-min gap-4 md:grid-cols-3">
                     {cards.map((card, index) => {
                         const Icon = card.icon;
