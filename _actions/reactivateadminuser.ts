@@ -4,10 +4,11 @@ import { regenerateCsrfToken, validateCsrfToken } from '@/_lib/csrf';
 import { getUser } from '@/_lib/dal';
 import { userRepository } from '@/_lib/userrepositorys';
 import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
 
 export async function reactivateAdminUserById(formData: FormData) {
     const sessionUser = await getUser();
-    if (!sessionUser || sessionUser.role !== 'ADMIN') return;
+    if (!sessionUser || sessionUser.role !== 'ADMIN') return redirect('/login');
 
     const csrfToken = formData.get('csrfToken') as string;
     const isValidCsrf = await validateCsrfToken(csrfToken);

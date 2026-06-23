@@ -6,10 +6,11 @@ import * as bcrypt from 'bcrypt-ts';
 import z from 'zod';
 import { userRepository } from '@/_lib/userrepositorys';
 import { regenerateCsrfToken, validateCsrfToken } from '@/_lib/csrf';
+import { redirect } from 'next/navigation';
 
 export async function deleteUser(_: FormStateUserDelete, formData: FormData): Promise<FormStateUserDelete> {
     const sessionUser = await getUser();
-    if (!sessionUser || !sessionUser?.id) return { message: false };
+    if (!sessionUser || !sessionUser?.id) return redirect('/login');
 
     const csrfToken = formData.get('csrfToken') as string;
     const isValidCsrf = await validateCsrfToken(csrfToken);

@@ -66,5 +66,5 @@ export async function loginUser(_: FormStateLoginUser, formData: FormData): Prom
     } catch (error) {
         console.error('Unknown error occurred:', error);
         return { warning: 'Something went wrong. Please try again later.' };
-    };
+    }
 }
