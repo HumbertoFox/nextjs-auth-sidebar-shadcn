@@ -48,12 +48,7 @@ export async function createUpdateAdminUser(_: FormStateCreateUpdateAdminUser, f
 
     if (!validatedFields.success) return { errors: z.flattenError(validatedFields.error).fieldErrors };
 
-    const {
-        name,
-        email,
-        password,
-        role,
-    } = validatedFields.data;
+    const { name, email, password, role } = validatedFields.data;
 
     let redirectPath: string | undefined;
 
@@ -106,11 +101,7 @@ export async function createUpdateAdminUser(_: FormStateCreateUpdateAdminUser, f
             if (!hasChanges) return { warning: 'No changes were detected.' };
 
             const updatedUser = await userRepository.updateByAdminUser(id, {
-                name,
-                email,
-                role,
-                ...(hashedPassword && { password: hashedPassword }),
-                ...(imageUrl && { avatar: imageUrl }),
+                name, email, role, ...(hashedPassword && { password: hashedPassword }), ...(imageUrl && { avatar: imageUrl })
             });
 
             if (!updatedUser) return { warning: 'Failed to update the user. Please try again.' };
@@ -123,10 +114,7 @@ export async function createUpdateAdminUser(_: FormStateCreateUpdateAdminUser, f
             if (!hashedPassword) return { errors: { password: ['The password must be at least 8 characters long.'] } };
 
             const newUser = await userRepository.create({
-                name,
-                email,
-                password: hashedPassword,
-                role,
+                name, email, password: hashedPassword, role
             });
 
             if (file && file.size > 0) {

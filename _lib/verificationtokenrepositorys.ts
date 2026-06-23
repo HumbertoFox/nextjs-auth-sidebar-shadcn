@@ -1,12 +1,14 @@
-import pool from '@/_lib/db';
+import pool, { QueryExecutor } from '@/_lib/db';
 import { VerificationToken } from '@/_types';
 
 export const verificationTokenRepository = {
     // -------------------------------------------------------------------------
     // Busca o token mais recente e válido por identifier (não expirado)
     // -------------------------------------------------------------------------
-    async findByIdentifier(identifier: string) {
-        const result = await pool.query<VerificationToken>(`
+    async findByIdentifier(identifier: string, client?: QueryExecutor) {
+        const executor = client ?? pool;
+
+        const result = await executor.query<VerificationToken>(`
             SELECT *
             FROM verification_tokens
             WHERE identifier = $1
@@ -23,8 +25,10 @@ export const verificationTokenRepository = {
     // -------------------------------------------------------------------------
     // Valida token por identifier + hash (verificação completa)
     // -------------------------------------------------------------------------
-    async findValidToken(identifier: string, hashedToken: string) {
-        const result = await pool.query<VerificationToken>(`
+    async findValidToken(identifier: string, hashedToken: string, client?: QueryExecutor) {
+        const executor = client ?? pool;
+
+        const result = await executor.query<VerificationToken>(`
             SELECT *
             FROM verification_tokens
             WHERE identifier = $1
@@ -41,8 +45,10 @@ export const verificationTokenRepository = {
     // -------------------------------------------------------------------------
     // Valida token apenas pelo hash (sem identifier — ex: magic link direto)
     // -------------------------------------------------------------------------
-    async findValidTokenOnly(hashedToken: string) {
-        const result = await pool.query<VerificationToken>(`
+    async findValidTokenOnly(hashedToken: string, client?: QueryExecutor) {
+        const executor = client ?? pool;
+
+        const result = await executor.query<VerificationToken>(`
             SELECT *
             FROM verification_tokens
             WHERE token = $1
@@ -62,8 +68,10 @@ export const verificationTokenRepository = {
         identifier: string;
         token: string;
         expires_at: string;
-    }) {
-        const result = await pool.query<VerificationToken>(`
+    }, client?: QueryExecutor) {
+        const executor = client ?? pool;
+
+        const result = await executor.query<VerificationToken>(`
             INSERT INTO verification_tokens ( identifier, token, expires_at )
             VALUES ( $1, $2, $3 )
             RETURNING *
@@ -77,8 +85,10 @@ export const verificationTokenRepository = {
     // -------------------------------------------------------------------------
     // Remove todos os tokens de um identifier (ex: reenvio de email)
     // -------------------------------------------------------------------------
-    async deleteByIdentifier(identifier: string) {
-        await pool.query(`
+    async deleteByIdentifier(identifier: string, client?: QueryExecutor) {
+        const executor = client ?? pool;
+
+        await executor.query(`
             DELETE FROM verification_tokens
             WHERE identifier = $1
         `,
@@ -89,8 +99,10 @@ export const verificationTokenRepository = {
     // -------------------------------------------------------------------------
     // Remove token específico por identifier + hash (após uso bem-sucedido)
     // -------------------------------------------------------------------------
-    async delete(identifier: string, hashedToken: string) {
-        await pool.query(`
+    async delete(identifier: string, hashedToken: string, client?: QueryExecutor) {
+        const executor = client ?? pool;
+
+        await executor.query(`
             DELETE FROM verification_tokens
             WHERE identifier = $1
               AND token = $2

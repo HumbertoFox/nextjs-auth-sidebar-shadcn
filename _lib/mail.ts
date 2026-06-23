@@ -10,7 +10,7 @@ export const transporter = nodemailer.createTransport({ host: SMTP_HOST, port: S
 export const sendPasswordResetEmail = async (to: string, resetLink: string) => {
     try {
         const result = await transporter.sendMail({
-            from: `'nextjs-starter-kit' <${SMTP_USER}>`,
+            from: `"nextjs-starter-kit" <${SMTP_USER}>`,
             to,
             subject: 'Password reset',
             html: `
@@ -24,13 +24,13 @@ export const sendPasswordResetEmail = async (to: string, resetLink: string) => {
 
     } catch (error) {
         return { ok: false, error };
-    };
+    }
 }
 
 export const sendEmailVerification = async (to: string, link: string, linkSession?: string) => {
     try {
         const result = await transporter.sendMail({
-            from: `'nextjs-starter-kit' <${SMTP_USER}>`,
+            from: `"nextjs-starter-kit" <${SMTP_USER}>`,
             to,
             subject: 'Check your email.',
             html: `
@@ -45,5 +45,26 @@ export const sendEmailVerification = async (to: string, link: string, linkSessio
         return { ok: true, result };
     } catch (error) {
         return { ok: false, error };
-    };
+    }
+}
+
+export const sendCreatedEmailAccountVerification = async (to: string, link: string, linkSession?: string) => {
+    try {
+        const result = await transporter.sendMail({
+            from: `"nextjs-starter-kit" <${SMTP_USER}>`,
+            to,
+            subject: 'Check your email.',
+            html: `
+                <h2>Your account has been successfully created!</h2>
+                <p>Click the link below to confirm your email; if the email is not confirmed within 30 days, you will not be able to access your account.</p>
+                <a href='${link}'>${link}</a>
+                <p>Click the link below to confirm your email (System opens in the same browser):</p>
+                <a href='${linkSession}'>${linkSession}</a>
+                <p>If you did not request this, you can ignore this email.</p>
+            `,
+        });
+        return { ok: true, result };
+    } catch (error) {
+        return { ok: false, error };
+    }
 }

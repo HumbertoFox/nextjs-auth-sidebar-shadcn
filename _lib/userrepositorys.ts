@@ -311,7 +311,7 @@ export const userRepository = {
     // -------------------------------------------------------------------------
     // Atualização do timestamp de verificação de email
     // -------------------------------------------------------------------------
-    async updateEmailVerified(id: string, date: Date, client?: QueryExecutor) {
+    async updateEmailVerified(id: string, date: Date | null, client?: QueryExecutor) {
         const executor = client ?? pool;
         const result = await executor.query<User>(`
             UPDATE users
