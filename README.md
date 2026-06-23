@@ -23,6 +23,8 @@
 
 - [Usuários e Autenticação](#usuários-e-autenticação)
 
+- [Segurança de Sessão](#segurança-de-sessão)
+
 - [Fluxo de Desenvolvimento](#fluxo-de-desenvolvimento)
 
 - [Dependências](#dependências)
@@ -32,7 +34,7 @@
 ### Introdução
 
 Aplicação Next.js com autenticação, controle de papéis (`ADMIN`, `USER`) e backend PostgreSQL.
-Suporta login com senha, login mágico e verificação de e-mail.
+Suporta login com senha e verificação de e-mail.
 
 ---
 
@@ -235,6 +237,8 @@ npm run db:setup
 
 Para detalhes de criação de tabelas, views e triggers, consulte os scripts em `_database/migrations`.
 
+**Coluna `password_changed_at`:** Registra o timestamp da última troca de senha. Usada para invalidar sessões (JWT) emitidas antes da troca — ver seção [Segurança de Sessão](#segurança-de-sessão).
+
 ---
 
 ### Usuários e Autenticação
@@ -243,11 +247,27 @@ Para detalhes de criação de tabelas, views e triggers, consulte os scripts em 
 
 - Apenas `ADMINs` podem criar novos usuários `ADMINs`
 
-- Login: e-mail + senha ou login mágico
+- Login: e-mail + senha
 
 - Controle de acesso por papéis (`ADMIN`, `USER`)
 
 - Soft delete de usuários
+
+- Proteção CSRF em todas as Server Actions sensíveis (cookie + token validado a cada submissão)
+
+---
+
+### Segurança de Sessão
+
+- Sessões são JWTs assinados (`jose`), armazenados em cookie `httpOnly`, sem registro em banco (stateless).
+
+- Cada JWT carrega um snapshot do `password_changed_at` do usuário no momento da emissão.
+
+- A cada renovação de sessão (middleware → `updateSession`), o valor do token é comparado com o valor atual em `users.password_changed_at`.
+
+- Se a senha foi trocada após a emissão do JWT, a sessão é invalidada automaticamente — força novo login em qualquer dispositivo com sessão antiga.
+
+- Fluxos que trocam senha (reset via e-mail, troca pelo próprio usuário, edição por `ADMIN`) atualizam `password_changed_at` e, quando aplicável, reemitem a sessão do usuário atual para evitar logout indesejado da própria ação.
 
 ---
 

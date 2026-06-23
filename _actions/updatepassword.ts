@@ -71,9 +71,15 @@ export async function updatePassword(_: FormStatePasswordUpdate, formData: FormD
         client.release();
     }
 
-    // Reemite a sessão com o novo passwordChangedAt, evitando que o próprio
-    // usuário seja deslogado imediatamente após trocar sua própria senha.
-    await createSession(sessionUser.id, userRole);
+    // A partir daqui, a senha já foi trocada com sucesso no banco.
+    // Reemitir a sessão é best-effort: se falhar, o usuário ainda recebe
+    // a confirmação de sucesso, apenas perde a sessão automática e
+    // precisará logar de novo na próxima ação protegida.
+    try {
+        await createSession(sessionUser.id, userRole);
+    } catch (sessionError) {
+        console.error('Failed to reissue session after password update:', sessionError);
+    }
 
     revalidatePath('/dashboard/settings/password');
 
