@@ -38,11 +38,6 @@ export default function VerifyEmailClient({ csrfToken }: csrfTokenProps) {
                     Please verify your email address by clicking the link we just sent you.
                 </p>
             </div>
-            {state?.status === 'verification-link-sent' && (
-                <div className="mb-4 text-center text-sm font-medium text-green-600">
-                    <p>A new verification link has been sent to the email address you provided during registration.</p>
-                </div>
-            )}
             {state?.success && <p className="mb-4 text-center text-sm font-medium text-blue-600">{state.success}</p>}
             {state?.error && <p className="mb-4 text-center text-sm font-medium text-red-600">{state.error}</p>}
 
@@ -80,18 +75,18 @@ export default function VerifyEmailClient({ csrfToken }: csrfTokenProps) {
                 <Button
                     type="submit"
                     variant="secondary"
-                    disabled={pending || state?.status === 'verification-link-sent' || Boolean(state?.error)}
+                    disabled={pending || Boolean(state?.success) || Boolean(state?.error)}
                     className="cursor-pointer"
                 >
                     {pending && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                    Resend verification email
+                    Try verifying again
                 </Button>
 
                 <TextLink
-                    href={!state?.status ? "/login" : `/login?status=email%20verified&email=${email}`}
+                    href={!state?.success ? "/login" : `/login?status=email%20verified&email=${email}`}
                     className="mx-auto block text-sm"
                 >
-                    {!state?.status ? 'Log in' : 'Continue to login'}
+                    {!state?.success ? 'Log in' : 'Continue to login'}
                 </TextLink>
             </form>
         </div>

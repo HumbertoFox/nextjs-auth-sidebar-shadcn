@@ -2,11 +2,10 @@
 
 import { regenerateCsrfToken, validateCsrfToken } from '@/_lib/csrf';
 import { FormStateEmailVerification } from '@/_lib/definitions';
-import { sendEmailVerification } from '@/_lib/mail';
 import { hashToken } from '@/_lib/tokenutils';
 import { userRepository } from '@/_lib/userrepositorys';
 import { verificationTokenRepository } from '@/_lib/verificationtokenrepositorys';
-import crypto from 'crypto';
+import { getTransactionClient } from '@/_lib/db';
 
 export async function handleEmailVerification(_: FormStateEmailVerification | undefined, formData: FormData) {
     const csrfToken = formData.get('csrfToken') as string;
@@ -17,41 +16,44 @@ export async function handleEmailVerification(_: FormStateEmailVerification | un
     const email = formData.get('email') as string;
     const rawToken = formData.get('token') as string;
 
-    if (!email && !rawToken) return { error: 'Not authenticated' };
+    if (!email || !rawToken) return { error: 'Not authenticated' };
 
-    const isCheckedUserEmail = await userRepository.findByEmail(email);
+    const client = await getTransactionClient();
 
-    if (isCheckedUserEmail?.email_verified) return { error: 'Email already verified!' };
+    try {
+        await client.query('BEGIN');
 
-    const hashedToken = hashToken(rawToken);
-    const tokenExisting = await verificationTokenRepository.findValidToken(email, hashedToken);
+        const isCheckedUserEmail = await userRepository.findByEmail(email, client);
 
-    if (!tokenExisting) return { error: 'Invalid or expired token' };
-
-    if (tokenExisting && new Date() > new Date(tokenExisting.expires_at)) {
-        await verificationTokenRepository.delete(email, hashedToken);
-
-        const newRawToken = crypto.randomBytes(32).toString('hex');
-        const expires_at = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
-
-        const verifyLink = `${process.env.NEXT_URL}/verify-email?token=${newRawToken}&email=${email}`;
-        const response = await sendEmailVerification(email, verifyLink);
-
-        if (!response.ok) {
-            console.error("Error sending verification email:", response.error);
-            return { error: 'email-send-error' };
+        if (isCheckedUserEmail?.email_verified) {
+            await client.query('ROLLBACK');
+            return { error: 'Email already verified!' };
         }
 
-        await verificationTokenRepository.create({
-            identifier: email, token: hashToken(newRawToken), expires_at
-        });
+        const hashedToken = hashToken(rawToken);
+        const tokenExisting = await verificationTokenRepository.findValidToken(email, hashedToken, client);
 
-        return { status: 'verification-link-sent' };
+        if (!tokenExisting) {
+            await client.query('ROLLBACK');
+            return { error: 'Invalid or expired token' };
+        }
+
+        if (!isCheckedUserEmail) {
+            await client.query('ROLLBACK');
+            return { error: 'Invalid or expired token' };
+        }
+
+        await userRepository.updateEmailVerified(isCheckedUserEmail.id, new Date(), client);
+        await verificationTokenRepository.delete(email, hashedToken, client);
+
+        await client.query('COMMIT');
+    } catch (error) {
+        await client.query('ROLLBACK');
+        console.error(error);
+        return { error: 'An unexpected error occurred. Please try again.' };
+    } finally {
+        client.release();
     }
-
-    await userRepository.updateEmailVerified(isCheckedUserEmail.id, new Date());
-
-    await verificationTokenRepository.delete(email, hashedToken);
 
     await regenerateCsrfToken();
 
