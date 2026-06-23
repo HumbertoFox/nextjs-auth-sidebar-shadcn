@@ -6,6 +6,7 @@ import { hashToken } from '@/_lib/tokenutils';
 import { userRepository } from '@/_lib/userrepositorys';
 import { verificationTokenRepository } from '@/_lib/verificationtokenrepositorys';
 import { hash } from 'bcrypt-ts';
+import { getTransactionClient } from '@/_lib/db';
 import z from 'zod';
 
 export async function resetPassword(_: FormStatePasswordReset, formData: FormData): Promise<FormStatePasswordReset> {
@@ -22,20 +23,36 @@ export async function resetPassword(_: FormStatePasswordReset, formData: FormDat
     if (!validatedFields.success) return { errors: z.flattenError(validatedFields.error).fieldErrors };
 
     const { token, password } = validatedFields.data;
-
     const hashedToken = hashToken(token);
 
-    const tokenRecord = await verificationTokenRepository.findValidTokenOnly(hashedToken);
+    const client = await getTransactionClient();
 
-    if (!tokenRecord) return { warning: 'Invalid or expired token.' };
+    try {
+        await client.query('BEGIN');
 
-    const email = tokenRecord.identifier;
+        // FOR UPDATE trava a linha até o fim da transação — impede que uma
+        // segunda requisição concorrente reutilize o mesmo token.
+        const tokenRecord = await verificationTokenRepository.findValidTokenOnlyForUpdate(hashedToken, client);
 
-    const hashedPassword = await hash(password, 12);
+        if (!tokenRecord) {
+            await client.query('ROLLBACK');
+            return { warning: 'Invalid or expired token.' };
+        }
 
-    await userRepository.updatePasswordByEmail(email, hashedPassword);
+        const email = tokenRecord.identifier;
+        const hashedPassword = await hash(password, 12);
 
-    await verificationTokenRepository.delete(email, hashedToken);
+        await userRepository.updatePasswordByEmail(email, hashedPassword, client);
+        await verificationTokenRepository.delete(email, hashedToken, client);
+
+        await client.query('COMMIT');
+    } catch (error) {
+        await client.query('ROLLBACK');
+        console.error(error);
+        return { warning: 'Something went wrong. Please try again later.' };
+    } finally {
+        client.release();
+    }
 
     await regenerateCsrfToken();
 

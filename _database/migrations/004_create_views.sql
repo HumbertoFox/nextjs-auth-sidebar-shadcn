@@ -56,12 +56,13 @@ SELECT
     role,
     avatar,
     email_verified,
+    password_changed_at,
     created_at,
     updated_at
 FROM users
 WHERE deleted_at IS NULL;
 
-COMMENT ON VIEW users_active IS 'View de usuários ativos incluindo password (uso interno apenas)';
+COMMENT ON VIEW users_active IS 'View de usuários ativos incluindo password e password_changed_at (uso interno apenas)';
 
 -- ============================================================================
 -- VIEW: users_public_active

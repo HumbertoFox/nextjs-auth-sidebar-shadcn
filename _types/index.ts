@@ -139,12 +139,12 @@ export type UserActionsProps = {
 
 export type UserActionButtonsProps = {
     user: {
-        id: string;
-        name: string;
-        email: string;
-        deleted_at?: string | null;
+        readonly id: string;
+        readonly name: string;
+        readonly email: string;
+        readonly deleted_at?: string | null;
     };
-    csrfToken?: string;
+    readonly csrfToken?: string;
 }
 
 export type AdminActionsProps = {
@@ -154,37 +154,38 @@ export type AdminActionsProps = {
 
 export type AdminActionButtonsProps = {
     admin: {
-        id: string;
-        name: string;
-        email: string;
-        deleted_at?: string | null;
+        readonly id: string;
+        readonly name: string;
+        readonly email: string;
+        readonly deleted_at?: string | null;
     };
-    csrfToken?: string;
-    isLoggedAdmin: boolean;
+    readonly csrfToken?: string;
+    readonly isLoggedAdmin: boolean;
 }
 
 export type User = {
-    id: string;
-    name: string;
-    role: UserRole;
-    avatar?: string | null;
-    email_verified?: string | null;
-    deleted_at?: string | null;
-    created_at: string;
-    updated_at: string;
+    readonly id: string;
+    readonly name: string;
+    readonly role: UserRole;
+    readonly avatar?: string | null;
+    readonly email_verified?: string | null;
+    readonly password_changed_at: string | null;
+    readonly deleted_at?: string | null;
+    readonly created_at: string;
+    readonly updated_at: string;
 } & LoginFormProps;
 
 export type VerificationToken = {
-    identifier: string;
-    token: string;
-    expires_at: string;
+    readonly identifier: string;
+    readonly token: string;
+    readonly expires_at: string;
 }
 
 export type RateLimitEntry = {
-    count: number;
-    reset_at: string;
+    readonly count: number;
+    readonly reset_at: string;
 }
 
 export type PasswordChecklistProps = {
-    password?: string;
+    readonly password?: string;
 }

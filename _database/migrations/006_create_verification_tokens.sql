@@ -14,8 +14,9 @@
 -- ============================================================================
 CREATE TABLE IF NOT EXISTS verification_tokens (
     identifier CITEXT NOT NULL,       -- Email ou identificador do usuário
-    token TEXT NOT NULL,              -- Token único (recomendado: hash SHA-256)
+    token      TEXT NOT NULL,         -- Token único (recomendado: hash SHA-256)
     expires_at TIMESTAMPTZ NOT NULL,  -- Data/hora de expiração do token
+    
     PRIMARY KEY (identifier, token)
 );
 

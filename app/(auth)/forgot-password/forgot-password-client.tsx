@@ -46,11 +46,10 @@ export default function ForgotPasswordClient({ csrfToken }: csrfTokenProps) {
                             id="email"
                             type="email"
                             name="email"
-                            autoComplete="off"
                             value={data.email}
                             autoFocus
                             onChange={handleChange}
-                            placeholder="email@exemple.com"
+                            placeholder="email@example.com"
                             required
                         />
                         {state?.errors?.email?.[0] && <InputError message={state.errors.email[0]} />}
@@ -59,11 +58,11 @@ export default function ForgotPasswordClient({ csrfToken }: csrfTokenProps) {
                     <div className="my-6 flex items-center justify-start">
                         <Button
                             type="submit"
-                            disabled={pending}
+                            disabled={pending || Boolean(state?.message)}
                             className="w-full"
                         >
                             {pending && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                            Link to reset email password
+                            Send password reset link
                         </Button>
                     </div>
                 </form>

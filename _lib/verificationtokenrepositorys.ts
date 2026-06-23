@@ -83,6 +83,26 @@ export const verificationTokenRepository = {
     },
 
     // -------------------------------------------------------------------------
+    // Valida token apenas pelo hash, travando a linha para uso transacional
+    // (ex: reset de senha) — evita reuso concorrente do mesmo token.
+    // Só funciona dentro de uma transação (precisa de client com BEGIN ativo).
+    // -------------------------------------------------------------------------
+    async findValidTokenOnlyForUpdate(hashedToken: string, client: QueryExecutor) {
+        const result = await client.query<VerificationToken>(`
+            SELECT *
+            FROM verification_tokens
+            WHERE token = $1
+                AND expires_at > NOW()
+            LIMIT 1
+            FOR UPDATE
+        `,
+            [hashedToken]
+        );
+
+        return result.rows[0] ?? null;
+    },
+
+    // -------------------------------------------------------------------------
     // Remove todos os tokens de um identifier (ex: reenvio de email)
     // -------------------------------------------------------------------------
     async deleteByIdentifier(identifier: string, client?: QueryExecutor) {

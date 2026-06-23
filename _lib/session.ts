@@ -3,6 +3,7 @@ import { SignJWT, jwtVerify } from 'jose';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { UserRole } from '@/_types';
+import { userRepository } from '@/_lib/userrepositorys';
 
 if (!process.env.AUTH_SECRET) throw new Error('SECRET is not defined');
 
@@ -32,9 +33,16 @@ export async function createSession(userId: string, role: UserRole): Promise<voi
     const expTimestamp = now + TOKEN_LIFETIME;
     const expDate = new Date(expTimestamp * 1000);
 
+    // Captura o password_changed_at atual para "ancorar" este JWT a essa versão da senha
+    const user = await userRepository.findActiveById(userId);
+    const passwordChangedAt = user?.password_changed_at
+        ? Math.floor(new Date(user.password_changed_at).getTime() / 1000)
+        : 0;
+
     const session = await new SignJWT({
         userId,
         role,
+        passwordChangedAt,
         iat: now
     })
         .setProtectedHeader({ alg: 'HS256' })
@@ -84,6 +92,24 @@ export async function updateSession() {
         return null;
     };
 
+    // Verifica se a senha foi trocada depois deste JWT ter sido emitido.
+    // Se sim, a sessão é considerada inválida — força novo login.
+    const user = await userRepository.findActiveById(String(payload.userId));
+    if (!user) {
+        (await cookies()).delete('sessionAuth');
+        return null;
+    }
+
+    const currentPasswordChangedAt = user.password_changed_at
+        ? Math.floor(new Date(user.password_changed_at).getTime() / 1000)
+        : 0;
+    const tokenPasswordChangedAt = typeof payload.passwordChangedAt === 'number' ? payload.passwordChangedAt : 0;
+
+    if (currentPasswordChangedAt > tokenPasswordChangedAt) {
+        (await cookies()).delete('sessionAuth');
+        return null;
+    }
+
     if (timeLeft < RENEW_THRESHOLD) {
         const newExp = now + TOKEN_LIFETIME;
         const newExpDate = new Date(newExp * 1000);
@@ -91,6 +117,7 @@ export async function updateSession() {
         const newToken = await new SignJWT({
             userId: payload.userId,
             role: payload.role,
+            passwordChangedAt: tokenPasswordChangedAt,
             iat: payload.iat
         })
             .setProtectedHeader({ alg: 'HS256' })

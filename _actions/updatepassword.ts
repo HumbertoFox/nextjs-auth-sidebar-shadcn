@@ -8,6 +8,9 @@ import z from 'zod';
 import { userRepository } from '@/_lib/userrepositorys';
 import { revalidatePath } from 'next/cache';
 import { regenerateCsrfToken, validateCsrfToken } from '@/_lib/csrf';
+import { createSession } from '@/_lib/session';
+import { getTransactionClient } from '@/_lib/db';
+import { UserRole } from '@/_types';
 
 export async function updatePassword(_: FormStatePasswordUpdate, formData: FormData): Promise<FormStatePasswordUpdate> {
     const sessionUser = await getUser();
@@ -27,19 +30,50 @@ export async function updatePassword(_: FormStatePasswordUpdate, formData: FormD
 
     const { current_password, password } = validatedFields.data;
 
-    const authUser = await userRepository.findActiveById(sessionUser.id);
+    const client = await getTransactionClient();
+    let userRole: UserRole;
 
-    if (!authUser) return redirect('/');
+    try {
+        await client.query('BEGIN');
 
-    const isValid = await compare(current_password, authUser.password);
+        const authUser = await userRepository.findActiveById(sessionUser.id, client);
 
-    if (!isValid) return { errors: { current_password: ['The current password is incorrect.'] } };
+        if (!authUser) {
+            await client.query('ROLLBACK');
+            return redirect('/login');
+        }
 
-    if (current_password === password) return { errors: { password: ['The new password cannot be the same as the old one.'] } };
+        // password sempre definida neste fluxo (sem contas OAuth/SSO aqui).
+        const isValid = await compare(current_password, authUser.password!);
 
-    const hashedPassword = await hash(password, 12);
+        if (!isValid) {
+            await client.query('ROLLBACK');
+            return { errors: { current_password: ['The current password is incorrect.'] } };
+        }
 
-    await userRepository.updatePassword(sessionUser.id, hashedPassword);
+        if (current_password === password) {
+            await client.query('ROLLBACK');
+            return { errors: { password: ['The new password cannot be the same as the old one.'] } };
+        }
+
+        const hashedPassword = await hash(password, 12);
+
+        await userRepository.updatePassword(sessionUser.id, hashedPassword, client);
+
+        userRole = authUser.role;
+
+        await client.query('COMMIT');
+    } catch (error) {
+        await client.query('ROLLBACK');
+        console.error(error);
+        return { errors: { current_password: ['Something went wrong. Please try again later.'] } };
+    } finally {
+        client.release();
+    }
+
+    // Reemite a sessão com o novo passwordChangedAt, evitando que o próprio
+    // usuário seja deslogado imediatamente após trocar sua própria senha.
+    await createSession(sessionUser.id, userRole);
 
     revalidatePath('/dashboard/settings/password');
 

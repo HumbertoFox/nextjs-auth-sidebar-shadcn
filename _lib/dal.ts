@@ -13,9 +13,7 @@ export const getUser = cache(async () => {
 
         if (!user) return null;
 
-        const { password: _, ...safeUser } = user;
-
-        return safeUser as UserDetailsProps;
+        return user as UserDetailsProps;
     } catch (error) {
         console.log('Failed to fetch user', error);
         return null;

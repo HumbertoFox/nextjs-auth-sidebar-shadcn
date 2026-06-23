@@ -16,7 +16,7 @@ function buildSetClause(data: Record<string, unknown>, allowed: ReadonlySet<stri
     return { setClause, values };
 }
 
-const USER_PUBLIC_COLUMNS = ` id, name, email, role, avatar, email_verified, deleted_at, created_at, updated_at `;
+const USER_PUBLIC_COLUMNS = ` id, name, email, role, avatar, email_verified, password_changed_at, deleted_at, created_at, updated_at `;
 
 export const userRepository = {
     // -------------------------------------------------------------------------
@@ -249,9 +249,10 @@ export const userRepository = {
     async updateByAdminUser(id: string, data: Partial<Pick<User, 'name' | 'email' | 'role' | 'password' | 'avatar'>>, client?: QueryExecutor) {
         const executor = client ?? pool;
         const { setClause, values } = buildSetClause(data as Record<string, unknown>, ALLOWED_UPDATE_COLUMNS_ADMIN);
+        const passwordClause = 'password' in data ? `, password_changed_at = NOW()` : '';
         const result = await executor.query<User>(`
             UPDATE users
-            SET ${setClause}
+            SET ${setClause}${passwordClause}
             WHERE id = $1
             RETURNING ${USER_PUBLIC_COLUMNS}
         `,
