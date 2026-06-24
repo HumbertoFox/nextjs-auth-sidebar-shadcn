@@ -164,7 +164,7 @@ export async function createUpdateAdminUser(_: FormStateCreateUpdateAdminUser, f
             const hashedPassword = await bcrypt.hash(password, 12);
 
             const newUser = await userRepository.create({
-                name, email, password: hashedPassword, role,
+                name, email, password: hashedPassword, role
             }, client);
 
             await verificationTokenRepository.deleteByIdentifier(email, client);

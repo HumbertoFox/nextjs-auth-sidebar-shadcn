@@ -53,7 +53,7 @@ export function LoginClient({ csrfToken }: csrfTokenProps) {
         if (state?.retryAfterSeconds) {
             setSecondsLeft(state.retryAfterSeconds);
         }
-    }, [state]);
+    }, [state?.retryAfterSeconds]);
     useEffect(() => {
         if (!secondsLeft) return;
 
