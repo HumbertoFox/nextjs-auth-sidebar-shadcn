@@ -133,7 +133,7 @@ Equivale a `db:reset` seguido de `db:migrate`.
 
 - **Views públicas** (`sem password`): `users_public`, `users_admin_public`, `users_public_active`.
 
-- **View interna** (com `password`, somente backend): `users_active`.
+- **View interna** (com `password` e `password_changed_at`, somente backend): `users_active`.
 
 - **Role**: `<nome_do_banco>_backend_role` — gerada automaticamente a partir do nome do banco definido na `DATABASE_URL`. Acesso exclusivo às tabelas `users`, `verification_tokens` e `rate_limits`, e à view `users_active`.
 
