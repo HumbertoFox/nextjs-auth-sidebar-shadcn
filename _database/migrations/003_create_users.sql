@@ -8,7 +8,7 @@
 --   - Timestamps automáticos de auditoria
 -- ============================================================================
 CREATE TABLE IF NOT EXISTS users (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     name                TEXT NOT NULL,                      -- Nome completo do usuário
     email               CITEXT UNIQUE NOT NULL,             -- Email único (case-insensitive)
     password            TEXT NULL,                          -- Hash da senha (NULL para OAuth/SSO)

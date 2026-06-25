@@ -5,7 +5,6 @@ import SettingsLayoutClient from './settings-layout-client';
 import { getUser } from '@/_lib/dal';
 import { UserProfilePageProps } from '@/_types';
 
-
 export default async function SettingsLayout({ children }: PropsWithChildren) {
     const user = await getUser() as UserProfilePageProps;
     return (

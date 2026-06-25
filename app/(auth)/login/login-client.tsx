@@ -50,9 +50,7 @@ export function LoginClient({ csrfToken }: csrfTokenProps) {
         router.push('/dashboard');
     }, [state, router]);
     useEffect(() => {
-        if (state?.retryAfterSeconds) {
-            setSecondsLeft(state.retryAfterSeconds);
-        }
+        if (state?.retryAfterSeconds) setSecondsLeft(state.retryAfterSeconds);
     }, [state?.retryAfterSeconds]);
     useEffect(() => {
         if (!secondsLeft) return;
