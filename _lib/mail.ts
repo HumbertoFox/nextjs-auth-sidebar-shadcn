@@ -1,5 +1,6 @@
 import nodemailer from 'nodemailer';
 
+const WEPP_NAME = process.env.NEXT_PUBLIC_APP_NAME;
 const SMTP_HOST = process.env.SMTP_HOST;
 const SMTP_PORT = Number(process.env.SMTP_PORT);
 const SMTP_USER = process.env.SMTP_USER;
@@ -10,7 +11,7 @@ export const transporter = nodemailer.createTransport({ host: SMTP_HOST, port: S
 export const sendPasswordResetEmail = async (to: string, resetLink: string) => {
     try {
         const result = await transporter.sendMail({
-            from: `"nextjs-starter-kit" <${SMTP_USER}>`,
+            from: `${WEPP_NAME} <${SMTP_USER}>`,
             to,
             subject: 'Password reset',
             html: `
@@ -30,7 +31,7 @@ export const sendPasswordResetEmail = async (to: string, resetLink: string) => {
 export const sendEmailVerification = async (to: string, link: string, linkSession?: string) => {
     try {
         const result = await transporter.sendMail({
-            from: `"nextjs-starter-kit" <${SMTP_USER}>`,
+            from: `${WEPP_NAME} <${SMTP_USER}>`,
             to,
             subject: 'Check your email.',
             html: `
@@ -51,7 +52,7 @@ export const sendEmailVerification = async (to: string, link: string, linkSessio
 export const sendCreatedEmailAccountVerification = async (to: string, link: string, linkSession?: string) => {
     try {
         const result = await transporter.sendMail({
-            from: `"nextjs-starter-kit" <${SMTP_USER}>`,
+            from: `${WEPP_NAME} <${SMTP_USER}>`,
             to,
             subject: 'Check your email.',
             html: `
