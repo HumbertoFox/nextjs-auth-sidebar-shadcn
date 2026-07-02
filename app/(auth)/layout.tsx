@@ -1,5 +1,5 @@
 import { type PropsWithChildren } from 'react';
-import AuthSplitLayoutClient from './auth-split-layout-client';
+import { AuthSplitLayoutClient } from './auth-split-layout-client';
 
 export default function SettingsLayout({
     children,

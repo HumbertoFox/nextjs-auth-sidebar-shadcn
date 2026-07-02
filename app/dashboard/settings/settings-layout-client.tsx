@@ -1,7 +1,6 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import { Button } from '@/_components/ui/button';
 import Link from 'next/link';
 import { cn } from '@/_lib/utils';
 import { SidebarNavItemProps } from '@/_types';
@@ -21,22 +20,19 @@ export default function SettingsLayoutClient({ emailVerified }: { emailVerified:
         item.href !== '/dashboard/settings/verify-email' || !emailVerified
     );
     return (
-        <aside className="w-full max-w-xl lg:w-48">
+        <aside className="w-full max-w-xl lg:w-32">
             <nav className="flex flex-col space-y-1 space-x-0">
                 {visibleItems.map((item, index) => (
-                    <Button
+                    <Link
                         key={`${item.href}-${index}`}
-                        size="sm"
-                        variant="ghost"
-                        asChild
-                        className={cn('w-full justify-start', {
-                            'bg-muted': currentPath === item.href,
+                        href={item.href}
+                        className={cn('text-sm hover:text-blue-500 mr-auto p-1 transition-colors duration-200', {
+                            'text-blue-500 font-medium italic': currentPath === item.href,
                         })}
+                        prefetch
                     >
-                        <Link href={item.href} prefetch>
-                            {item.text}
-                        </Link>
-                    </Button>
+                        {item.text}
+                    </Link>
                 ))}
             </nav>
         </aside>

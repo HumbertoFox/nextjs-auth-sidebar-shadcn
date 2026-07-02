@@ -19,7 +19,7 @@ const providers: Record<string, { name: string; url: string }> = {
     'live.com': { name: 'Outlook', url: 'https://mail.live.com' },
 };
 
-export function ProfilePageClient({ name, email, avatar, mustVerifyEmail, csrfToken }: ProfileFormClientProps) {
+export default function ProfilePageClient({ name, email, avatar, mustVerifyEmail, csrfToken }: ProfileFormClientProps) {
     const domain = email?.split('@')[1];
     const [state, action, pending] = useActionState(updateUser, undefined);
     const [imagePreview, setImagePreview] = useState<string | null | undefined>(avatar);

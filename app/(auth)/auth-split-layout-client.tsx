@@ -10,7 +10,7 @@ import Image from 'next/image';
 
 const APP_NAME = process.env.NEXT_PUBLIC_APP_NAME ?? 'NextJs + Shadcn + Neon';
 
-export default function AuthSplitLayoutClient() {
+export function AuthSplitLayoutClient() {
     const logoNextRef = useRef<HTMLDivElement>(null);
     const logoPlusOneRef = useRef<HTMLDivElement>(null);
     const logoVercelRef = useRef<HTMLDivElement>(null);
