@@ -91,7 +91,7 @@ export default function RegisterAdminClient({ TitleIntl, csrfToken }: { TitleInt
                             <Label
                                 htmlFor="file"
                                 title={imageError ? "Click on Select image and then Cancel." : "Select profile picture"}
-                                className="cursor-pointer px-3 py-1 text-sm border rounded-md hover:bg-gray-50"
+                                className="cursor-pointer px-3 py-1 text-sm border rounded-md hover:bg-gray-50 dark:hover:bg-gray-800"
                             >
                                 Select image
                             </Label>
