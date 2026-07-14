@@ -104,7 +104,6 @@ export type LoginFormProps = {
 export type RegisterFormProps = LoginFormProps & {
     readonly name: string;
     readonly password_confirmation: string;
-    readonly avatar?: File;
 }
 
 export type UserFormProps = ProfileForm & {

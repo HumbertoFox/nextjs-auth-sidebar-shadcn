@@ -29,23 +29,18 @@ export default function VerifyEmailSettingsClient({ csrfToken }: csrfTokenProps)
         }
     }, [email, token, csrfToken, action]);
 
-    const handleResend = () => {
-        startTransition(() => resendAction());
-    };
+    const handleResend = () => startTransition(() => resendAction());
 
     const isVerified = Boolean(state?.success);
     const resentOk = resendState === 'verification-link-sent';
     const resentError = resendState === 'verification-error';
-
     return (
         <div className="space-y-6">
             <div className="mb-8 my-1 space-y-0.5">
                 <h2 className="text-xl font-semibold tracking-tight">Email verification</h2>
                 <p className="text-muted-foreground text-sm">
                     Verify your email address to access all features.
-                    {email && (
-                        <> A link was sent to <span className="font-medium text-foreground">{email}</span>.</>
-                    )}
+                    {email && <> A link was sent to <span className="font-medium text-foreground">{email}</span>.</>}
                 </p>
             </div>
 

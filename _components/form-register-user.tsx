@@ -1,7 +1,7 @@
 'use client';
 
 import { Eye, EyeClosed, LoaderCircle } from 'lucide-react';
-import { startTransition, useActionState, useRef, useState } from 'react';
+import { ChangeEvent, useActionState, useState } from 'react';
 import { InputError } from '@/_components/input-error';
 import { Button } from '@/_components/ui/button';
 import { Input } from '@/_components/ui/input';
@@ -14,35 +14,32 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { PasswordChecklist } from '@/_components/password-checklist';
 
 export default function RegisterUpdateUserForm({ user, isEdit, titleForm, valueButton, csrfToken }: RegisterFormUserProps) {
-    const emailRef = useRef<HTMLInputElement>(null);
     const [state, action, pending] = useActionState(createUpdateAdminUser, undefined);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
-    const [imageFile, setImageFile] = useState<File | null>(null);
     const [imageError, setImageError] = useState<string | null>(null);
-    const [showPassword, setShowPassword] = useState<boolean>(false);
-    const [showPasswordConfirm, setShowPasswordConfirm] = useState<boolean>(false);
-    const [data, setData] = useState<UserFormProps>({ id: user?.id ?? '', name: user?.name ?? '', email: user?.email ?? '', role: user?.role ?? 'USER', password: '', password_confirmation: '', avatar: user?.avatar ?? undefined });
+    const [showPassword, setShowPassword] = useState(false);
+    const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
+    const [data, setData] = useState<UserFormProps>({
+        id: user?.id ?? '',
+        name: user?.name ?? '',
+        email: user?.email ?? '',
+        role: user?.role ?? 'USER',
+        password: '',
+        password_confirmation: '',
+        avatar: user?.avatar ?? undefined
+    });
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { id, value } = e.target;
-        setData({ ...data, [id]: value });
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setData(prev => ({ ...prev, [name]: value }));
     };
-    const onImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { file, preview, error } = await handleImageChange(e);
-        setImageFile(file);
+    const onImageChange = async (e: ChangeEvent<HTMLInputElement>) => {
+        const { preview, error } = await handleImageChange(e);
         setImagePreview(preview);
         setImageError(error);
     };
     const toggleShowPassword = () => setShowPassword(prev => !prev);
     const toggleShowPasswordConfirm = () => setShowPasswordConfirm(prev => !prev);
-    const submit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        if (imageError) return;
-        const formData = new FormData(e.currentTarget);
-        if (imageFile) formData.append('file', imageFile);
-        if (csrfToken) formData.append('csrfToken', csrfToken);
-        startTransition(() => action(formData));
-    };
     return (
         <div className="max-w-96 space-y-6 p-2 mx-auto md:mx-0">
             <div className="flex flex-col items-center gap-2 text-center mx-auto">
@@ -53,9 +50,14 @@ export default function RegisterUpdateUserForm({ user, isEdit, titleForm, valueB
                 {state?.warning && <p className="mb-4 text-center text-sm font-medium text-orange-400">{state.warning}</p>}
             </div>
             <form
-                onSubmit={submit}
+                action={action}
                 className="w-full flex flex-col gap-6"
             >
+                <input
+                    type="hidden"
+                    name="csrfToken"
+                    value={csrfToken ?? ''}
+                />
                 <div className="grid gap-6">
                     <div className="grid gap-2">
                         <Label
@@ -145,7 +147,6 @@ export default function RegisterUpdateUserForm({ user, isEdit, titleForm, valueB
                             id="email"
                             name="email"
                             type="email"
-                            ref={emailRef}
                             required
                             tabIndex={3}
                             autoComplete="email"

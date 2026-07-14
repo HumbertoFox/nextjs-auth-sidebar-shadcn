@@ -1,6 +1,6 @@
 'use client';
 
-import { startTransition, useActionState, useEffect, useState } from 'react';
+import { ChangeEvent, startTransition, useActionState, useEffect, useState } from 'react';
 import DeleteUser from '@/_components/delete-user';
 import { InputError } from '@/_components/input-error';
 import { Button } from '@/_components/ui/button';
@@ -23,20 +23,22 @@ export default function ProfilePageClient({ name, email, avatar, mustVerifyEmail
     const domain = email?.split('@')[1];
     const [state, action, pending] = useActionState(updateUser, undefined);
     const [imagePreview, setImagePreview] = useState<string | null | undefined>(avatar);
-    const [imageFile, setImageFile] = useState<File | null>(null);
     const [imageError, setImageError] = useState<string | null>(null);
     const [status, setStatus] = useState<string | null>(null);
     const [recentlySuccessful, setRecentlySuccessful] = useState<boolean>(false);
     const provider = domain ? providers[domain] : null;
-    const [data, setData] = useState<ProfileForm>({ name: name, email: email, avatar: avatar });
+    const [data, setData] = useState<ProfileForm>({
+        name: name,
+        email: email,
+        avatar: avatar
+    });
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { id, value } = e.target;
-        setData({ ...data, [id]: value });
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setData(prev => ({ ...prev, [name]: value }));
     };
-    const onImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { file, preview, error } = await handleImageChange(e);
-        setImageFile(file);
+    const onImageChange = async (e: ChangeEvent<HTMLInputElement>) => {
+        const { preview, error } = await handleImageChange(e);
         setImagePreview(preview ?? avatar);
         setImageError(error);
     };
@@ -45,14 +47,6 @@ export default function ProfilePageClient({ name, email, avatar, mustVerifyEmail
             if (imagePreview && imagePreview.startsWith('blob:')) URL.revokeObjectURL(imagePreview);
         };
     }, [imagePreview]);
-    const submit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        if (imageError) return;
-        const formData = new FormData(e.currentTarget);
-        if (imageFile) formData.append('file', imageFile);
-        if (csrfToken) formData.append('csrfToken', csrfToken);
-        startTransition(() => action(formData));
-    };
     const handleVerifildEmail = async () => {
         const result = await emailVerifiedChecked();
         setStatus(result);
@@ -64,7 +58,7 @@ export default function ProfilePageClient({ name, email, avatar, mustVerifyEmail
 
         const timeout = setTimeout(() => {
             setRecentlySuccessful(false);
-        }, 1000);
+        }, 2000);
 
         return () => clearTimeout(timeout);
     }, [state?.ts]);
@@ -75,7 +69,17 @@ export default function ProfilePageClient({ name, email, avatar, mustVerifyEmail
                     <h2 className="text-xl font-semibold tracking-tight">Profile information</h2>
                     <p className="text-muted-foreground text-sm">Update your picture, name, and email address.</p>
                 </div>
-                <form onSubmit={submit} className="space-y-6">
+                <form
+                    action={action}
+                    className="space-y-6"
+                >
+                    {/* CSRF Token nativo e invisível no formulário */}
+                    <input
+                        type="hidden"
+                        name="csrfToken"
+                        value={csrfToken ?? ''}
+                    />
+
                     <div className="flex flex-col-reverse justify-between lg:flex-row gap-6">
                         <div className="min-w-2/3 flex flex-col flex-1 gap-6">
                             <div className="grid gap-2">
@@ -197,7 +201,12 @@ export default function ProfilePageClient({ name, email, avatar, mustVerifyEmail
                     </div>
 
                     <div className="flex items-center gap-4">
-                        <Button disabled={pending || Boolean(imageError)}>Save</Button>
+                        <Button
+                            type='submit'
+                            disabled={pending || Boolean(imageError)}
+                        >
+                            Save
+                        </Button>
 
                         <p className={`text-sm text-neutral-600 transition ease-in-out ${recentlySuccessful ? 'opacity-100' : 'opacity-0'}`}>Saved</p>
                     </div>

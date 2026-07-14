@@ -1,7 +1,7 @@
 'use client';
 
 import { Eye, EyeClosed, LoaderCircle } from 'lucide-react';
-import { startTransition, useActionState, useEffect, useRef, useState } from 'react';
+import { ChangeEvent, startTransition, useActionState, useEffect, useRef, useState } from 'react';
 import { InputError } from '@/_components/input-error';
 import { TextLink } from '@/_components/text-link';
 import { Button } from '@/_components/ui/button';
@@ -23,18 +23,15 @@ export function LoginClient({ csrfToken }: csrfTokenProps) {
     const [state, action, pending] = useActionState(loginUser, undefined);
     const [secondsLeft, setSecondsLeft] = useState<number | null>(null);
     const [isVisibledPassword, setIsVisibledPassword] = useState<boolean>(false);
-    const [data, setData] = useState<LoginFormProps>({ email: emailFromParams, password: '' });
+    const [data, setData] = useState<LoginFormProps>({
+        email: emailFromParams,
+        password: ''
+    });
 
     const togglePasswordVisibility = () => setIsVisibledPassword(!isVisibledPassword);
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { id, value } = e.target;
-        setData({ ...data, [id]: value });
-    };
-    const submit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        const formData = new FormData(e.currentTarget);
-        if (csrfToken) formData.append('csrfToken', csrfToken);
-        startTransition(() => action(formData));
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setData(prev => ({ ...prev, [name]: value }));
     };
     useEffect(() => {
         if (state?.warning && emailRef.current) {
@@ -45,7 +42,10 @@ export function LoginClient({ csrfToken }: csrfTokenProps) {
         if (!state?.message) return;
 
         startTransition(() => {
-            setData({ email: '', password: '' });
+            setData({
+                email: '',
+                password: ''
+            });
         });
         router.push('/dashboard');
     }, [state, router]);
@@ -82,9 +82,16 @@ export function LoginClient({ csrfToken }: csrfTokenProps) {
                 </p>
             </div>
             <form
-                onSubmit={submit}
+                action={action}
                 className="w-full max-w-xs flex flex-col gap-6 mx-auto"
             >
+                {/* CSRF Token nativo e invisível no formulário */}
+                <input
+                    type="hidden"
+                    name="csrfToken"
+                    value={csrfToken ?? ''}
+                />
+
                 <div className="grid gap-6">
                     <div className="grid gap-2">
                         <Label htmlFor="email">Email address</Label>

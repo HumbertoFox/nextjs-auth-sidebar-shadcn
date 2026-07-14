@@ -1,53 +1,45 @@
 'use client';
 
 import { InputError } from '@/_components/input-error';
-import { startTransition, useActionState, useEffect, useRef, useState } from 'react';
+import { useActionState, useEffect, useRef, useState } from 'react';
 import { Button } from '@/_components/ui/button';
 import { Input } from '@/_components/ui/input';
 import { Label } from '@/_components/ui/label';
-import { Eye, EyeClosed } from 'lucide-react';
+import { Eye, EyeClosed, LoaderCircle } from 'lucide-react';
 import { updatePassword } from '@/_actions/updatepassword';
 import { csrfTokenProps } from '@/_types';
 import { PasswordChecklist } from '@/_components/password-checklist';
 
 export default function PasswordPageClient({ csrfToken }: csrfTokenProps) {
-    const passwordInput = useRef<HTMLInputElement>(null);
-    const currentPasswordInput = useRef<HTMLInputElement>(null);
-    const [state, action, pending] = useActionState(updatePassword, undefined);
-    const [showOldPassword, setShowOldPassword] = useState<boolean>(false);
-    const [showPassword, setShowPassword] = useState<boolean>(false);
-    const [showPasswordConfirm, setShowPasswordConfirm] = useState<boolean>(false);
-    const [recentlySuccessful, setrecentlySuccessful] = useState<boolean>(false);
-    const [data, setData] = useState({ current_password: '', password: '', password_confirmation: '' });
+    const formRef = useRef<HTMLFormElement>(null);
+    const currentPasswordInputRef = useRef<HTMLInputElement>(null);
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { id, value } = e.target;
-        setData({ ...data, [id]: value });
-    };
+    const [state, action, pending] = useActionState(updatePassword, undefined);
+
+    const [showOldPassword, setShowOldPassword] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+    const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
+    const [recentlySuccessful, setRecentlySuccessful] = useState<boolean>(false);
+
+    // Estado mínimo e isolado apenas para a checklist em tempo real
+    const [passwordVal, setPasswordVal] = useState('');
+
     const toggleShowOldPassword = () => setShowOldPassword(!showOldPassword);
     const toggleShowPassword = () => setShowPassword(!showPassword);
     const toggleShowPasswordConfirm = () => setShowPasswordConfirm(!showPasswordConfirm);
-    const submit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        const formData = new FormData(e.currentTarget);
-        if (csrfToken) formData.append('csrfToken', csrfToken);
-        startTransition(() => action(formData));
-    };
 
     useEffect(() => {
         if (!state?.ts) return;
 
-        startTransition(() => setrecentlySuccessful(true));
+        // Se o servidor retornou um timestamp de sucesso, avisa o usuário
+        setRecentlySuccessful(true);
+        formRef.current?.reset();
+        setPasswordVal(''); // Limpa o estado visual da checklist
+        currentPasswordInputRef.current?.focus();
 
         const timeout = setTimeout(() => {
-            setrecentlySuccessful(false);
-            setData({
-                current_password: '',
-                password: '',
-                password_confirmation: ''
-            });
-            currentPasswordInput.current?.focus();
-        }, 1000);
+            setRecentlySuccessful(false);
+        }, 2000); // 2 segundos costuma ser um tempo mais confortável para ler o "Saved"
 
         return () => clearTimeout(timeout);
     }, [state?.ts]);
@@ -58,10 +50,19 @@ export default function PasswordPageClient({ csrfToken }: csrfTokenProps) {
                     <h2 className="text-xl font-semibold tracking-tight">Update password</h2>
                     <p className="text-muted-foreground text-sm">Make sure your account uses a long, random password to stay secure.</p>
                 </div>
+
                 <form
-                    onSubmit={submit}
+                    ref={formRef}
+                    action={action}
                     className="space-y-6"
                 >
+                    {/* CSRF Token nativo e invisível no formulário */}
+                    <input
+                        type="hidden"
+                        name="csrfToken"
+                        value={csrfToken ?? ''}
+                    />
+
                     <div className="grid gap-2">
                         <Label htmlFor="current_password">Current password</Label>
                         <div className="relative">
@@ -70,9 +71,7 @@ export default function PasswordPageClient({ csrfToken }: csrfTokenProps) {
                                 name="current_password"
                                 autoComplete="off"
                                 tabIndex={1}
-                                ref={currentPasswordInput}
-                                value={data.current_password}
-                                onChange={handleChange}
+                                ref={currentPasswordInputRef}
                                 type={showOldPassword ? "text" : "password"}
                                 placeholder="Current password"
                                 required
@@ -98,9 +97,7 @@ export default function PasswordPageClient({ csrfToken }: csrfTokenProps) {
                                 name="password"
                                 autoComplete="off"
                                 tabIndex={2}
-                                ref={passwordInput}
-                                value={data.password}
-                                onChange={handleChange}
+                                onChange={(e) => setPasswordVal(e.target.value)}
                                 type={showPassword ? "text" : "password"}
                                 placeholder="New Password"
                                 required
@@ -115,7 +112,7 @@ export default function PasswordPageClient({ csrfToken }: csrfTokenProps) {
                                 {showPassword ? <Eye /> : <EyeClosed />}
                             </button>
                         </div>
-                        <PasswordChecklist password={data.password} />
+                        <PasswordChecklist password={passwordVal} />
                         {state?.errors?.password?.[0] && <InputError message={state.errors.password[0]} />}
                     </div>
 
@@ -127,8 +124,6 @@ export default function PasswordPageClient({ csrfToken }: csrfTokenProps) {
                                 name="password_confirmation"
                                 autoComplete="off"
                                 tabIndex={3}
-                                value={data.password_confirmation}
-                                onChange={handleChange}
                                 type={showPasswordConfirm ? "text" : "password"}
                                 placeholder="Confirm your new password."
                                 required
@@ -148,13 +143,18 @@ export default function PasswordPageClient({ csrfToken }: csrfTokenProps) {
 
                     <div className="flex items-center gap-4">
                         <Button
+                            type="submit"
                             tabIndex={4}
                             disabled={pending}
+                            className="flex items-center gap-2"
                         >
+                            {pending && <LoaderCircle className="h-4 w-4 animate-spin" />}
                             Save password
                         </Button>
 
-                        <p className={`text-sm text-neutral-600 transition ease-in-out ${recentlySuccessful ? 'opacity-100' : 'opacity-0'}`}>Saved</p>
+                        <p className={`text-sm text-green-600 font-medium transition-opacity duration-300 ${recentlySuccessful ? 'opacity-100' : 'opacity-0'}`}>
+                            Saved successfully!
+                        </p>
                     </div>
                 </form>
             </div>

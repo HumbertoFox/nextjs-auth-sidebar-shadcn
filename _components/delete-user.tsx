@@ -1,6 +1,6 @@
 'use client';
 
-import { startTransition, useActionState, useEffect, useRef, useState } from 'react';
+import { useActionState, useEffect, useRef, useState } from 'react';
 import { Button } from '@/_components/ui/button';
 import { Input } from '@/_components/ui/input';
 import { Label } from '@/_components/ui/label';
@@ -14,22 +14,14 @@ export default function DeleteUser({ csrfToken }: { csrfToken?: string; }) {
     const router = useRouter();
     const passwordInput = useRef<HTMLInputElement>(null);
     const [state, action, pending] = useActionState(deleteUser, undefined);
-    const [showPassword, setshowPassword] = useState<boolean>(false);
+    const [showPassword, setshowPassword] = useState(false);
     const [data, setData] = useState<{ password: string }>({ password: '' });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { id, value } = e.target;
-        setData({ ...data, [id]: value });
+        const { name, value } = e.target;
+        setData(prev => ({ ...prev, [name]: value }));
     };
     const toggleShowPassword = () => setshowPassword(!showPassword);
-
-    const submit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        const formData = new FormData();
-        formData.append('password', data.password);
-        if (csrfToken) formData.append('csrfToken', csrfToken);
-        startTransition(() => action(formData));
-    };
     const handleClose = () => setData({ password: '' });
 
     useEffect(() => {
@@ -54,13 +46,23 @@ export default function DeleteUser({ csrfToken }: { csrfToken?: string; }) {
                         <DialogDescription>
                             After deleting your account, all your resources and data will also be permanently deleted. Enter your password to confirm that you want to permanently delete your account.
                         </DialogDescription>
-                        <form className="space-y-6" onSubmit={submit}>
+                        <form
+                            action={action}
+                            className="space-y-6"
+                        >
+                            {/* CSRF Token nativo e invisível no formulário */}
+                            <input
+                                type="hidden"
+                                name="csrfToken"
+                                value={csrfToken ?? ''}
+                            />
+
                             <div className="grid gap-2">
                                 <Label htmlFor="password" className="sr-only">Password</Label>
                                 <div className="relative">
                                     <Input
-                                        id="password"
                                         name="password"
+                                        id="password"
                                         autoComplete="off"
                                         type={showPassword ? "text" : "password"}
                                         ref={passwordInput}

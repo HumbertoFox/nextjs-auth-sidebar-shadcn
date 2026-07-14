@@ -1,7 +1,7 @@
 'use client';
 
 import { Eye, EyeClosed, LoaderCircle } from 'lucide-react';
-import { startTransition, useActionState, useRef, useState } from 'react';
+import { ChangeEvent, useActionState, useState } from 'react';
 import { InputError } from '@/_components/input-error';
 import { Button } from '@/_components/ui/button';
 import { Input } from '@/_components/ui/input';
@@ -10,41 +10,35 @@ import { createAdmin } from '@/_actions/createadmin';
 import { TextLink } from '@/_components/text-link';
 import { handleImageChange } from '@/_lib/handleimagechange';
 import Image from 'next/image';
-import { RegisterFormProps } from '@/_types';
 import { PasswordChecklist } from '@/_components/password-checklist';
 import Link from 'next/link';
 import AppLogoIconSvg from '@/_components/app-logo-icon-svg';
+import { RegisterFormProps } from '@/_types';
 
 export default function RegisterAdminClient({ TitleIntl, csrfToken }: { TitleIntl: string; csrfToken?: string; }) {
-    const emailRef = useRef<HTMLInputElement>(null);
     const [state, action, pending] = useActionState(createAdmin, undefined);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
-    const [imageFile, setImageFile] = useState<File | null>(null);
     const [imageError, setImageError] = useState<string | null>(null);
-    const [showPassword, setShowPassword] = useState<boolean>(false);
-    const [showPasswordConfirm, setShowPasswordConfirm] = useState<boolean>(false);
-    const [data, setData] = useState<RegisterFormProps>({ name: '', email: '', password: '', password_confirmation: '', avatar: undefined });
+    const [showPassword, setShowPassword] = useState(false);
+    const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
+    const [data, setData] = useState<RegisterFormProps>({
+        name: '',
+        email: '',
+        password: '',
+        password_confirmation: ''
+    });
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { id, value } = e.target;
-        setData({ ...data, [id]: value });
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setData(prev => ({ ...prev, [name]: value }));
     };
-    const onImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { file, preview, error } = await handleImageChange(e);
-        setImageFile(file);
+    const onImageChange = async (e: ChangeEvent<HTMLInputElement>) => {
+        const { preview, error } = await handleImageChange(e);
         setImagePreview(preview);
         setImageError(error);
     };
     const toggleShowPassword = () => setShowPassword(prev => !prev);
     const toggleShowPasswordConfirm = () => setShowPasswordConfirm(prev => !prev);
-    const submit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        if (imageError) return;
-        const formData = new FormData(e.currentTarget);
-        if (imageFile) formData.append('file', imageFile);
-        if (csrfToken) formData.append('csrfToken', csrfToken);
-        startTransition(() => action(formData));
-    };
     return (
         <div className="space-y-6 w-full py-2 2xl:w-2/4">
             <div className="flex flex-col items-center gap-2 text-center mx-auto">
@@ -60,9 +54,16 @@ export default function RegisterAdminClient({ TitleIntl, csrfToken }: { TitleInt
                 </p>
             </div>
             <form
-                onSubmit={submit}
+                action={action}
                 className="w-full max-w-80 flex flex-col gap-6 mx-auto"
             >
+                {/* CSRF Token nativo e invisível no formulário */}
+                <input
+                    type="hidden"
+                    name="csrfToken"
+                    value={csrfToken ?? ''}
+                />
+                
                 <div className="grid gap-6">
                     <div className="grid gap-2">
                         <Label
@@ -134,7 +135,6 @@ export default function RegisterAdminClient({ TitleIntl, csrfToken }: { TitleInt
                             id="email"
                             name="email"
                             type="email"
-                            ref={emailRef}
                             required
                             tabIndex={3}
                             autoComplete="email"

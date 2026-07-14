@@ -1,7 +1,7 @@
 'use client';
 
 import { LoaderCircle } from 'lucide-react';
-import { FormEvent, startTransition, useActionState, useEffect } from 'react';
+import { startTransition, useActionState, useEffect, useRef } from 'react';
 import { TextLink } from '@/_components/text-link';
 import { Button } from '@/_components/ui/button';
 import { useSearchParams } from 'next/navigation';
@@ -17,18 +17,19 @@ export default function VerifyEmailClient({ csrfToken }: csrfTokenProps) {
     const email = searchParams.get('email');
     const token = searchParams.get('token');
     const [state, action, pending] = useActionState(handleEmailVerification, undefined);
-    const submit = async (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        const formData = new FormData(e.currentTarget);
-        if (csrfToken) formData.append('csrfToken', csrfToken);
-        startTransition(() => action(formData));
-    };
+
+    // Evita que a verificação automática rode duas vezes seguidas em StrictMode
+    const hasCalledRef = useRef(false);
+
     useEffect(() => {
-        if (email && token) {
+        if (email && token && !hasCalledRef.current) {
+            hasCalledRef.current = true;
+
             const formData = new FormData();
             formData.append('email', email);
             formData.append('token', token);
             if (csrfToken) formData.append('csrfToken', csrfToken);
+
             startTransition(() => action(formData));
         }
     }, [email, token, csrfToken, action]);
@@ -46,13 +47,21 @@ export default function VerifyEmailClient({ csrfToken }: csrfTokenProps) {
                     Please verify your email address by clicking the link we just sent you.
                 </p>
             </div>
+
             {state?.success && <p className="mb-4 text-center text-sm font-medium text-blue-600">{state.success}</p>}
             {state?.error && <p className="mb-4 text-center text-sm font-medium text-red-600">{state.error}</p>}
 
             <form
-                onSubmit={submit}
+                action={action}
                 className="w-full max-w-xs flex flex-col gap-6 mx-auto"
             >
+                {/* CSRF Token nativo e invisível no formulário */}
+                <input
+                    type="hidden"
+                    name="csrfToken"
+                    value={csrfToken ?? ''}
+                />
+
                 <div className="grid gap-6">
                     <div className="grid gap-2">
                         <Label htmlFor="email">Email</Label>
@@ -80,6 +89,7 @@ export default function VerifyEmailClient({ csrfToken }: csrfTokenProps) {
                         />
                     </div>
                 </div>
+
                 <Button
                     type="submit"
                     variant="secondary"

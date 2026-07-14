@@ -1,7 +1,7 @@
 'use client';
 
 import { LoaderCircle } from 'lucide-react';
-import { ChangeEvent, FormEvent, startTransition, useActionState, useState } from 'react';
+import { ChangeEvent, useActionState, useState } from 'react';
 import { InputError } from '@/_components/input-error';
 import { TextLink } from '@/_components/text-link';
 import { Button } from '@/_components/ui/button';
@@ -17,14 +17,8 @@ export default function ForgotPasswordClient({ csrfToken }: csrfTokenProps) {
     const [data, setData] = useState<Required<{ email: string }>>({ email: '' });
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-        const { id, value } = e.target;
-        setData({ ...data, [id]: value });
-    };
-    const submit = async (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        const formData = new FormData(e.currentTarget);
-        if (csrfToken) formData.append('csrfToken', csrfToken);
-        startTransition(() => action(formData));
+        const { name, value } = e.target;
+        setData(prev => ({ ...prev, [name]: value }));
     };
     return (
         <div className="space-y-6 w-full 2xl:w-2/4">
@@ -45,9 +39,16 @@ export default function ForgotPasswordClient({ csrfToken }: csrfTokenProps) {
 
             <div className="space-y-6">
                 <form
-                    onSubmit={submit}
+                    action={action}
                     className="w-full max-w-xs flex flex-col gap-6 mx-auto"
                 >
+                    {/* CSRF Token nativo e invisível no formulário */}
+                    <input
+                        type="hidden"
+                        name="csrfToken"
+                        value={csrfToken ?? ''}
+                    />
+
                     <div className="grid gap-2">
                         <Label htmlFor="email">Email address</Label>
                         <Input
