@@ -217,14 +217,14 @@ export default function RegisterUpdateUserForm({ user, isEdit, titleForm, valueB
                         <Label htmlFor="role">Account type</Label>
                         <Select
                             required
+                            name="role"
                             value={data.role}
                             onValueChange={(value: UserRole) => setData((prev) => ({ ...prev, role: value }))}
                             disabled={pending}
                         >
                             <SelectTrigger
                                 id="role"
-                                name="role"
-                                title="Select the account type."
+                                title="Select the account type!"
                                 tabIndex={6}
                             >
                                 <SelectValue placeholder="Account type" />
@@ -239,11 +239,6 @@ export default function RegisterUpdateUserForm({ user, isEdit, titleForm, valueB
                         </Select>
                         {state?.errors?.role?.[0] && <InputError message={state.errors.role[0]} />}
                     </div>
-                    <input
-                        type="hidden"
-                        name="role"
-                        value={data.role}
-                    />
 
                     <Button
                         type="submit"
