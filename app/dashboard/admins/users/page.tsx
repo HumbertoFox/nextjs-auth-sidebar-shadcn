@@ -6,6 +6,9 @@ import getVisiblePagination from '@/_lib/getvisiblepagination';
 import { userRepository } from '@/_lib/userrepositorys';
 import { Metadata } from 'next';
 import { UserActionButtons } from '@/_components/user-action-buttons';
+import Image from 'next/image';
+import { getInitials } from '@/_lib/get-initials';
+import { Check, ClockAlert, ClockCheck } from 'lucide-react';
 
 export const generateMetadata = async (): Promise<Metadata> => {
     return { title: 'Users' };
@@ -51,8 +54,31 @@ export default async function UsersPage(props: { searchParams?: Promise<{ page?:
                                 <TableRow key={user.id} className="cursor-default">
                                     <TableCell>{(currentPage - 1) * 10 + index + 1}</TableCell>
                                     <TableCell className="max-lg:hidden">{user.id}</TableCell>
-                                    <TableCell className="max-lg:hidden">{user.name}</TableCell>
-                                    <TableCell>{user.email}</TableCell>
+                                    <TableCell className="max-lg:hidden">
+                                        <div className="flex items-center justify-center gap-1">
+                                            {user.avatar ? (
+                                                <Image
+                                                    src={user.avatar}
+                                                    width={28}
+                                                    height={28}
+                                                    alt={`Avatar of ${user.name}`}
+                                                    className="rounded-full"
+                                                />
+                                            ) : (
+                                                <span className="font-medium text-black dark:text-white">
+                                                    {getInitials(user.name)}
+                                                </span>
+                                            )}
+                                            <span>-</span>
+                                            {user.name}
+                                        </div>
+                                    </TableCell>
+                                    <TableCell title={user.email_verified ? 'Email verified' : 'Email not verified'}>
+                                        <div className='flex items-center justify-center gap-1'>
+                                            {user.email}
+                                            {user.email_verified ? <ClockCheck className="size-5 text-green-500" /> : <ClockAlert className=" size-5 text-orange-500" />}
+                                        </div>
+                                    </TableCell>
                                     <TableCell className="flex justify-evenly items-center my-1">
                                         <UserActionButtons
                                             user={user}

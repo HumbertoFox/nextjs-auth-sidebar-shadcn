@@ -6,6 +6,9 @@ import { userRepository } from '@/_lib/userrepositorys';
 import { UserDetailsProps } from '@/_types';
 import { Metadata } from 'next';
 import { AdminActionButtons } from '@/_components/admin-action-buttons';
+import Image from 'next/image';
+import { getInitials } from '@/_lib/get-initials';
+import { ClockAlert, ClockCheck } from 'lucide-react';
 
 export const generateMetadata = async (): Promise<Metadata> => {
     return { title: 'Administrators' };
@@ -19,7 +22,10 @@ const breadcrumbItems = [
 export default async function AdminsPage() {
     const user = await getUser() as UserDetailsProps;
     const loggedAdmin = user.id;
-    const [admins, csrfToken] = await Promise.all([userRepository.findAllAdmins(), getCsrfToken()]);
+    const [admins, csrfToken] = await Promise.all([
+        userRepository.findAllAdmins(),
+        getCsrfToken()
+    ]);
     return (
         <>
             <DashboardSidebarHeader items={breadcrumbItems} />
@@ -45,8 +51,31 @@ export default async function AdminsPage() {
                                 <TableRow key={admin.id} className="cursor-default">
                                     <TableCell>{index + 1}</TableCell>
                                     <TableCell className="max-lg:hidden">{admin.id}</TableCell>
-                                    <TableCell className="max-lg:hidden">{admin.name}</TableCell>
-                                    <TableCell>{admin.email}</TableCell>
+                                    <TableCell className="max-lg:hidden">
+                                        <div className="flex items-center justify-center gap-1">
+                                            {admin.avatar ? (
+                                                <Image
+                                                    src={admin.avatar}
+                                                    width={28}
+                                                    height={28}
+                                                    alt={`Avatar of ${admin.name}`}
+                                                    className="rounded-full"
+                                                />
+                                            ) : (
+                                                <span className="font-medium text-black dark:text-white">
+                                                    {getInitials(admin.name)}
+                                                </span>
+                                            )}
+                                            <span>-</span>
+                                            {admin.name}
+                                        </div>
+                                    </TableCell>
+                                    <TableCell title={admin.email_verified ? 'Email verified' : 'Email not verified'}>
+                                        <div className='flex items-center justify-center gap-1'>
+                                            {admin.email}
+                                            {admin.email_verified ? <ClockCheck className="size-5 text-green-500" /> : <ClockAlert className=" size-5 text-orange-500" />}
+                                        </div>
+                                    </TableCell>
                                     <TableCell className="flex justify-evenly items-center my-1">
                                         <AdminActionButtons
                                             admin={admin}
