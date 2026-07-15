@@ -8,7 +8,7 @@ import { Metadata } from 'next';
 import { UserActionButtons } from '@/_components/user-action-buttons';
 import Image from 'next/image';
 import { getInitials } from '@/_lib/get-initials';
-import { Check, ClockAlert, ClockCheck } from 'lucide-react';
+import { ClockAlert, ClockCheck } from 'lucide-react';
 
 export const generateMetadata = async (): Promise<Metadata> => {
     return { title: 'Users' };
