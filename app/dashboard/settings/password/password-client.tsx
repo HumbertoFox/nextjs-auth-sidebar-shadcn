@@ -15,6 +15,7 @@ export default function PasswordPageClient({ csrfToken }: csrfTokenProps) {
     const currentPasswordInputRef = useRef<HTMLInputElement>(null);
 
     const [state, action, pending] = useActionState(updatePassword, undefined);
+    const [lastTs, setLastTs] = useState(state?.ts);
 
     const [showOldPassword, setShowOldPassword] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
@@ -28,21 +29,22 @@ export default function PasswordPageClient({ csrfToken }: csrfTokenProps) {
     const toggleShowPassword = () => setShowPassword(!showPassword);
     const toggleShowPasswordConfirm = () => setShowPasswordConfirm(!showPasswordConfirm);
 
+    if (state?.ts && state.ts !== lastTs) {
+        setLastTs(state.ts);
+        setRecentlySuccessful(true);
+        setPasswordVal('');
+    }
+    
     useEffect(() => {
         if (!state?.ts) return;
-
-        // Se o servidor retornou um timestamp de sucesso, avisa o usuário
-        setRecentlySuccessful(true);
         formRef.current?.reset();
-        setPasswordVal(''); // Limpa o estado visual da checklist
         currentPasswordInputRef.current?.focus();
-
-        const timeout = setTimeout(() => {
-            setRecentlySuccessful(false);
-        }, 2000); // 2 segundos costuma ser um tempo mais confortável para ler o "Saved"
-
-        return () => clearTimeout(timeout);
     }, [state?.ts]);
+    useEffect(() => {
+        if (!recentlySuccessful) return;
+        const timeout = setTimeout(() => setRecentlySuccessful(false), 2000);
+        return () => clearTimeout(timeout);
+    }, [recentlySuccessful]);
     return (
         <>
             <div className="space-y-6">

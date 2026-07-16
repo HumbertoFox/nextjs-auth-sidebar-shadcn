@@ -56,9 +56,7 @@ export default function ProfilePageClient({ name, email, avatar, mustVerifyEmail
 
         startTransition(() => setRecentlySuccessful(true));
 
-        const timeout = setTimeout(() => {
-            setRecentlySuccessful(false);
-        }, 2000);
+        const timeout = setTimeout(() => setRecentlySuccessful(false), 2000);
 
         return () => clearTimeout(timeout);
     }, [state?.ts]);

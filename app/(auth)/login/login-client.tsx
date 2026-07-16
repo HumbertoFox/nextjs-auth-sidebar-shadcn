@@ -22,11 +22,17 @@ export function LoginClient({ csrfToken }: csrfTokenProps) {
     const passwordRef = useRef<HTMLInputElement>(null);
     const [state, action, pending] = useActionState(loginUser, undefined);
     const [secondsLeft, setSecondsLeft] = useState<number | null>(null);
+    const [lastSeenRetryAfterSeconds, setLastSeenRetryAfterSeconds] = useState(state?.retryAfterSeconds);
     const [isVisibledPassword, setIsVisibledPassword] = useState<boolean>(false);
     const [data, setData] = useState<LoginFormProps>({
         email: emailFromParams,
         password: ''
     });
+
+    if (state?.retryAfterSeconds !== lastSeenRetryAfterSeconds) {
+        setLastSeenRetryAfterSeconds(state?.retryAfterSeconds);
+        if (state?.retryAfterSeconds) setSecondsLeft(state.retryAfterSeconds);
+    }
 
     const togglePasswordVisibility = () => setIsVisibledPassword(!isVisibledPassword);
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -49,9 +55,6 @@ export function LoginClient({ csrfToken }: csrfTokenProps) {
         });
         router.push('/dashboard');
     }, [state, router]);
-    useEffect(() => {
-        if (state?.retryAfterSeconds) setSecondsLeft(state.retryAfterSeconds);
-    }, [state?.retryAfterSeconds]);
     useEffect(() => {
         if (!secondsLeft) return;
 

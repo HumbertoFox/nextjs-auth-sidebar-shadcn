@@ -17,6 +17,7 @@ import AppLogoIconSvg from '@/_components/app-logo-icon-svg';
 export default function ResetPasswordClient({ csrfToken }: csrfTokenProps) {
     const searchParams = useSearchParams();
     const [state, action, pending] = useActionState(resetPassword, undefined);
+    const [lastMessage, setLastMessage] = useState(state?.message);
 
     const [showPassword, setShowPassword] = useState(false);
     const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
@@ -31,12 +32,15 @@ export default function ResetPasswordClient({ csrfToken }: csrfTokenProps) {
     const toggleShowPasswordConfirm = () => setShowPasswordConfirm(!showPasswordConfirm);
 
     // Limpa o formulário quando a ação for concluída com sucesso
+    if (state?.message && state.message !== lastMessage) {
+        setLastMessage(state.message);
+        setPasswordVal(''); // Limpa o estado visual da checklist
+    }
+
     useEffect(() => {
-        if (state?.message) {
-            formRef.current?.reset();
-            setPasswordVal(''); // Limpa também o estado visual da checklist
-        }
-    }, [state]);
+        if (!state?.message) return;
+        formRef.current?.reset();
+    }, [state?.message]);
     return (
         <div className="space-y-6 w-full 2xl:w-2/4">
             <div className="flex flex-col items-center gap-2 text-center mx-auto">
