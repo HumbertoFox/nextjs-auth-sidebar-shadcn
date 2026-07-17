@@ -23,7 +23,8 @@ export function LoginClient({ csrfToken }: csrfTokenProps) {
     const [state, action, pending] = useActionState(loginUser, undefined);
     const [secondsLeft, setSecondsLeft] = useState<number | null>(null);
     const [lastSeenRetryAfterSeconds, setLastSeenRetryAfterSeconds] = useState(state?.retryAfterSeconds);
-    const [isVisibledPassword, setIsVisibledPassword] = useState<boolean>(false);
+    const [isVisibledPassword, setIsVisibledPassword] = useState(false);
+    const [rateLimitExpired, setRateLimitExpired] = useState(false);
     const [data, setData] = useState<LoginFormProps>({
         email: emailFromParams,
         password: ''
@@ -31,7 +32,10 @@ export function LoginClient({ csrfToken }: csrfTokenProps) {
 
     if (state?.retryAfterSeconds !== lastSeenRetryAfterSeconds) {
         setLastSeenRetryAfterSeconds(state?.retryAfterSeconds);
-        if (state?.retryAfterSeconds) setSecondsLeft(state.retryAfterSeconds);
+        if (state?.retryAfterSeconds) {
+            setSecondsLeft(state.retryAfterSeconds);
+            setRateLimitExpired(false);
+        }
     }
 
     const togglePasswordVisibility = () => setIsVisibledPassword(!isVisibledPassword);
@@ -62,6 +66,7 @@ export function LoginClient({ csrfToken }: csrfTokenProps) {
             setSecondsLeft(prev => {
                 if (prev === null || prev <= 1) {
                     clearInterval(interval);
+                    setRateLimitExpired(true);
                     return null;
                 }
                 return prev - 1;
@@ -177,7 +182,7 @@ export function LoginClient({ csrfToken }: csrfTokenProps) {
             </form>
 
             {state?.message && <p className="mb-4 text-center text-sm font-medium text-blue-600">{state.message}</p>}
-            {!state?.message && state?.warning && (
+            {!state?.message && state?.warning && !rateLimitExpired && (
                 <p className="mb-4 text-center text-sm font-medium text-red-400">
                     {secondsLeft !== null
                         ? `Too many login attempts. Please try again in ${secondsLeft < 60
