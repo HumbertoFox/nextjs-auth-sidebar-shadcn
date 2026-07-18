@@ -5,7 +5,7 @@ import { Skeleton } from '@/_components/ui/skeleton';
 export function LoadingRegister() {
     return (
         <div className="w-full 2xl:w-2/4 2xl:p-8">
-            <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-72">
+            <div className="flex w-80 flex-col justify-center space-y-6 mx-auto">
                 <Skeleton className="size-16 2xl:hidden rounded-full mx-auto mb-4" />
 
                 <div className="grid justify-items-center gap-4">

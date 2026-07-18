@@ -5,7 +5,7 @@ import { Skeleton } from '@/_components/ui/skeleton';
 export function LoadingVerifyEmail() {
     return (
         <div className="w-full 2xl:w-2/4 2xl:p-8">
-            <div className="flex w-full flex-col items-center gap-6 sm:w-96 mx-auto">
+            <div className="flex w-80 flex-col items-center gap-6 mx-auto">
                 <Skeleton className="size-16 2xl:hidden rounded-full mx-auto" />
 
                 <div className="w-full grid gap-2">
