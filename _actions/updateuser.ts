@@ -17,7 +17,7 @@ import { sendCreatedEmailAccountVerification } from '@/_lib/mail';
 
 export async function updateUser(_: FormStateUserUpdate, formData: FormData): Promise<FormStateUserUpdate> {
     const sessionUser = await getUser();
-    if (!sessionUser || !sessionUser?.id) return redirect('/login');
+    if (!sessionUser || !sessionUser?.id) return redirect('/logout');
 
     const csrfToken = formData.get('csrfToken') as string;
     const isValidCsrf = await validateCsrfToken(csrfToken);

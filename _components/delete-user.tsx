@@ -1,6 +1,6 @@
 'use client';
 
-import { useActionState, useEffect, useRef, useState } from 'react';
+import { ChangeEvent, useActionState, useEffect, useRef, useState } from 'react';
 import { Button } from '@/_components/ui/button';
 import { Input } from '@/_components/ui/input';
 import { Label } from '@/_components/ui/label';
@@ -17,7 +17,7 @@ export default function DeleteUser({ csrfToken }: { csrfToken?: string; }) {
     const [showPassword, setshowPassword] = useState(false);
     const [data, setData] = useState<{ password: string }>({ password: '' });
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setData(prev => ({ ...prev, [name]: value }));
     };
@@ -25,9 +25,7 @@ export default function DeleteUser({ csrfToken }: { csrfToken?: string; }) {
     const handleClose = () => setData({ password: '' });
 
     useEffect(() => {
-        if (state?.message) {
-            router.push('/logout');
-        };
+        if (state?.message) router.push('/logout');
     }, [state?.message, router]);
     return (
         <div className="space-y-6">

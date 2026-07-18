@@ -205,7 +205,8 @@ export default function ProfilePageClient({ name, email, avatar, mustVerifyEmail
                         >
                             Save
                         </Button>
-
+                        
+                        {state?.message && <p className="text-sm text-orange-500 transition ease-in-out">{state.message}</p>}
                         <p className={`text-sm text-neutral-600 transition ease-in-out ${recentlySuccessful ? 'opacity-100' : 'opacity-0'}`}>Saved</p>
                     </div>
                 </form>

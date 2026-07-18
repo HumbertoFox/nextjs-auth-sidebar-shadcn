@@ -7,10 +7,11 @@ import z from 'zod';
 import { userRepository } from '@/_lib/userrepositorys';
 import { regenerateCsrfToken, validateCsrfToken } from '@/_lib/csrf';
 import { redirect } from 'next/navigation';
+import { revalidatePath } from 'next/cache';
 
 export async function deleteUser(_: FormStateUserDelete, formData: FormData): Promise<FormStateUserDelete> {
     const sessionUser = await getUser();
-    if (!sessionUser || !sessionUser?.id) return redirect('/login');
+    if (!sessionUser || !sessionUser?.id) return redirect('/logout');
 
     const csrfToken = formData.get('csrfToken') as string;
     const isValidCsrf = await validateCsrfToken(csrfToken);
@@ -32,11 +33,13 @@ export async function deleteUser(_: FormStateUserDelete, formData: FormData): Pr
 
     const activeAdmins = await userRepository.countActiveAdmins();
 
-    if (activeAdmins <= 1) return { errors: { password: [`It's not possible to delete an ADMIN account when there's only one active account!`] } };
+    if (activeAdmins <= 1 && sessionUser.role === 'ADMIN') return { errors: { password: [`It's not possible to delete an ADMIN account when there's only one active account!`] } };
 
     await userRepository.softDeleteById(sessionUser.id);
 
     await regenerateCsrfToken();
+
+    revalidatePath('/dashboard/layout');
 
     return { message: true };
 }

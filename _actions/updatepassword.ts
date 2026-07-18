@@ -14,7 +14,7 @@ import { UserRole } from '@/_types';
 
 export async function updatePassword(_: FormStatePasswordUpdate, formData: FormData): Promise<FormStatePasswordUpdate> {
     const sessionUser = await getUser();
-    if (!sessionUser || !sessionUser?.id) return redirect('/login');
+    if (!sessionUser || !sessionUser?.id) return redirect('/logout');
 
     const csrfToken = formData.get('csrfToken') as string;
     const isValidCsrf = await validateCsrfToken(csrfToken);

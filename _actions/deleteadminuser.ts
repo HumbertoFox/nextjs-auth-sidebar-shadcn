@@ -4,10 +4,11 @@ import { regenerateCsrfToken, validateCsrfToken } from '@/_lib/csrf';
 import { getUser } from '@/_lib/dal';
 import { userRepository } from '@/_lib/userrepositorys';
 import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
 
 export async function deleteUserById(formData: FormData) {
     const sessionUser = await getUser();
-    if (!sessionUser || sessionUser.role !== 'ADMIN') return;
+    if (!sessionUser || sessionUser.role !== 'ADMIN') redirect('/logout');
 
     const csrfToken = formData.get('csrfToken') as string;
     const isValidCsrf = await validateCsrfToken(csrfToken);
