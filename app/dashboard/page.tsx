@@ -1,5 +1,5 @@
 import { DashboardSidebarHeader } from '@/_components/dashboard-sidebar-header';
-import { FileSliders, MonitorCog, UserRound } from 'lucide-react';
+import { FileSliders, MonitorCog, UserRound } from '@/_components/icons';
 import { Metadata } from 'next';
 import Link from 'next/link';
 
