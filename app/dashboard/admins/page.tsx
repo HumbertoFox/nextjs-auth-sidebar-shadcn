@@ -8,7 +8,7 @@ import { Metadata } from 'next';
 import { AdminActionButtons } from '@/_components/admin-action-buttons';
 import Image from 'next/image';
 import { getInitials } from '@/_lib/get-initials';
-import { ClockAlert, ClockCheck } from '@/_components/icons';
+import { ClockAlert, ClockCheck } from 'lucide-react';
 
 export const generateMetadata = async (): Promise<Metadata> => {
     return { title: 'Administrators' };
