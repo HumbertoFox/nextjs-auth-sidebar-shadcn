@@ -1,6 +1,7 @@
 import HomeMainComponent from '@/_components/home-main';
-import { Button } from '@/_components/ui/button';
+import { buttonVariants } from '@/_components/ui/button';
 import { getSession } from '@/_lib/session';
+import { cn } from '@/_lib/utils';
 import Link from 'next/link';
 
 export default async function HomePage() {
@@ -9,29 +10,26 @@ export default async function HomePage() {
     <div className="flex flex-col min-h-screen items-center bg-zinc-50 font-sans dark:bg-black">
       <header className="flex justify-end gap-2 w-full max-w-3xl px-1 py-2.5 bg-white dark:bg-black">
         {session ? (
-          <Button
-            asChild
-            variant="outline"
-            size="sm"
+          <Link
+            href="/dashboard"
+            className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
           >
-            <Link href="/dashboard">Dashboard</Link>
-          </Button>
+            Dashboard
+          </Link>
         ) : (
           <>
-            <Button
-              asChild
-              variant="outline"
-              size="sm"
+            <Link
+              href="/login"
+              className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
             >
-              <Link href="/login">Log in</Link>
-            </Button>
-            <Button
-              asChild
-              variant="outline"
-              size="sm"
+              Log in
+            </Link>
+            <Link
+              href="/register"
+              className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
             >
-              <Link href="/register">Sign up</Link>
-            </Button>
+              Sign up
+            </Link>
           </>
         )}
       </header>

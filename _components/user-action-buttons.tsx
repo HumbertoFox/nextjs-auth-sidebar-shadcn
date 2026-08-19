@@ -24,10 +24,14 @@ export function UserActionButtons({ user, csrfToken }: UserActionButtonsProps) {
 
                 <Dialog>
                     <DialogTrigger asChild>
-                        <button type="button" title={`Delete ${user.name}`}>
+                        <button
+                            type="button"
+                            title={`Delete ${user.name}`}
+                            className="cursor-pointer"
+                        >
                             <UserX
                                 aria-label={`Delete ${user.name}`}
-                                className="size-5 text-red-600 cursor-pointer hover:text-red-500 duration-300"
+                                className="size-5 text-red-600 hover:text-red-500 duration-300"
                             />
                         </button>
                     </DialogTrigger>
@@ -41,6 +45,7 @@ export function UserActionButtons({ user, csrfToken }: UserActionButtonsProps) {
                                 <Button
                                     type="button"
                                     variant="secondary"
+                                    className="cursor-pointer"
                                 >
                                     Cancel
                                 </Button>
@@ -51,14 +56,17 @@ export function UserActionButtons({ user, csrfToken }: UserActionButtonsProps) {
                                     name="csrfToken"
                                     value={csrfToken}
                                 />
+
                                 <input
                                     type="hidden"
                                     name="userId"
                                     value={user.id}
                                 />
+
                                 <Button
                                     type="submit"
                                     variant="destructive"
+                                    className="cursor-pointer"
                                 >
                                     Yes, delete!
                                 </Button>
@@ -94,6 +102,7 @@ export function UserActionButtons({ user, csrfToken }: UserActionButtonsProps) {
                         <Button
                             type="button"
                             variant="destructive"
+                            className="cursor-pointer"
                         >
                             Cancel
                         </Button>
@@ -104,14 +113,17 @@ export function UserActionButtons({ user, csrfToken }: UserActionButtonsProps) {
                             name="csrfToken"
                             value={csrfToken}
                         />
+
                         <input
                             type="hidden"
                             name="userId"
                             value={user.id}
                         />
+
                         <Button
                             type="submit"
                             variant="outline"
+                            className="cursor-pointer"
                         >
                             Yes, activate!
                         </Button>
