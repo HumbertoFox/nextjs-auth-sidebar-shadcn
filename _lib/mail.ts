@@ -6,14 +6,24 @@ const SMTP_PORT = Number(process.env.SMTP_PORT);
 const SMTP_USER = process.env.SMTP_USER;
 const SMTP_PASS = process.env.SMTP_PASS;
 
-export const transporter = nodemailer.createTransport({ host: SMTP_HOST, port: SMTP_PORT, secure: false, auth: { user: SMTP_USER, pass: SMTP_PASS, } });
+// secure=true (TLS implícito) somente na porta 465 (SMTPS).
+// Nas demais portas (ex. 587) o TLS é negociado via STARTTLS.
+export const transporter = nodemailer.createTransport({
+    host: SMTP_HOST,
+    port: SMTP_PORT,
+    secure: SMTP_PORT === 465,
+    auth: {
+        user: SMTP_USER,
+        pass: SMTP_PASS,
+    }
+});
 
 export const sendPasswordResetEmail = async (to: string, resetLink: string) => {
     try {
         const result = await transporter.sendMail({
             from: `${WEPP_NAME} <${SMTP_USER}>`,
             to,
-            subject: 'Password reset',
+            subject: "Password reset",
             html: `
                 <p>You requested a password reset.</p>
                 <p>Click the link below to create a new password:</p>
@@ -33,7 +43,7 @@ export const sendEmailVerification = async (to: string, link: string, linkSessio
         const result = await transporter.sendMail({
             from: `${WEPP_NAME} <${SMTP_USER}>`,
             to,
-            subject: 'Check your email.',
+            subject: "Check your email.",
             html: `
                 <h2>Email confirmation</h2>
                 <p>Click the link below to confirm your email:</p>
@@ -54,10 +64,11 @@ export const sendCreatedEmailAccountVerification = async (to: string, link: stri
         const result = await transporter.sendMail({
             from: `${WEPP_NAME} <${SMTP_USER}>`,
             to,
-            subject: 'Check your email.',
+            subject: "Check your email.",
             html: `
                 <h2>Your account has been successfully created!</h2>
-                <p>Click the link below to confirm your email; if the email is not confirmed within 30 days, you will not be able to access your account.</p>
+                <p>Click the link below to confirm your email;</p>
+                <p>if the email is not confirmed within 30 days, you will not be able to access your account.</p>
                 <a href='${link}'>${link}</a>
                 <p>Click the link below to confirm your email (System opens in the same browser):</p>
                 <a href='${linkSession}'>${linkSession}</a>
